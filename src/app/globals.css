@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #050505;
+  --color-ink-soft: #0d0d0f;
+  --color-ink-line: #1c1c20;
+  --color-paper: #ffffff;
+  --color-muted: #8a8a92;
+  --color-brand-red: #ec0016;
+
+  --font-sans: "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  /* Prepisuje se JS-em pri vyberu klubu -> smooth color shift. */
+  --accent: #ec0016;
+  --on-accent: #ffffff;
+
+  color-scheme: dark;
+}
+
+/* Zmena klubu = plynuly prechod akcentu napric celym UI. */
+html {
+  transition: --accent 600ms var(--ease-out-expo);
+}
+
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ec0016;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ---------- Typografie ---------- */
+
+.display {
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ---------- CTA: nalevani barvy zleva ---------- */
+
+/*
+ * Bila plocha najede zleva doprava. Pri odjeti mysi se transform-origin
+ * vrati na "right", takze vypln odteka dal stejnym smerem misto toho, aby
+ * se vracela zpatky — cely pohyb pak drzi jeden smer jako tekouci voda.
+ */
+.cta-fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-paper);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 520ms var(--ease-out-expo);
+}
+
+.cta-fill:hover::before,
+.cta-fill:focus-visible::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-fill::before {
+    transition: none;
+  }
+}
+
+/* ---------- Reveal on scroll ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 900ms var(--ease-out-expo),
+    transform 900ms var(--ease-out-expo);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Bez JS by reveal obsah nikdy neodkryl — necháme ho rovnou viditelný. */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Skryti scrollbaru u horizontalnich pasu ---------- */
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
