@@ -84,12 +84,12 @@ export function CraftSection() {
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
           <Reveal>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl lg:sticky lg:top-28">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-2xl lg:sticky lg:top-28 lg:mx-0 lg:max-w-[460px]">
               <Image
                 src="/foto/ruka-puk-slavia.jpg"
                 alt="Náramek Slavia Praha na hokejovém puku v ruce"
                 fill
-                sizes="(max-width: 1024px) 100vw, 560px"
+                sizes="(max-width: 1024px) 420px, 460px"
                 className="object-cover"
               />
             </div>
