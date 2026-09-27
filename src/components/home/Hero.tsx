@@ -2,35 +2,39 @@
 
 import Image from "next/image";
 import { CtaButton } from "@/components/CtaButton";
-import { useAccent } from "@/components/AccentProvider";
 
 /**
- * HERO — hlavni vizual je skutecna fotka naramku na puku.
+ * HERO — fotka drzi celou pravou polovinu obrazovky pres celou vysku
+ * a vybiha az k okraji okna. Na mobilu je pres celou sirku hned za nadpisem.
  *
- * Fotka ma svetle pozadi, takze na cerne strance funguje jako svetly blok.
- * Klubovy akcent zustava v nadpisu a v CTA, aby prepnuti klubu nize na strance
- * bylo porad videt.
+ * Fotka ma svetle pozadi, proto na ni lezi prechod do cerne: na desktopu
+ * zleva, na mobilu shora i zdola, aby prechod do stranky nebyl ostry rez.
  *
- * Poradi v DOM je poradi na mobilu: nadpis -> fotka -> text, CTA a cisla.
- * Na desktopu se fotka presune do praveho sloupce pres obe radky.
+ * Poradi na mobilu resi `order`, na desktopu je fotka absolutne pozicovana,
+ * takze se do rozlozeni sloupcu nepocita.
  */
 export function Hero() {
-  const { club } = useAccent();
-
   return (
     <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pb-16 pt-24">
-      {/* Akcentni zare klubu */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-[70vh] w-[130vw] -translate-x-1/2 opacity-25 blur-[120px] transition-[background] duration-700"
-        style={{
-          background:
-            "radial-gradient(50% 50% at 50% 30%, var(--accent) 0%, transparent 72%)",
-        }}
-      />
+      {/* ---------- Fotka ---------- */}
+      <div className="relative order-2 -mx-5 mt-9 h-[54svh] md:-mx-8 lg:absolute lg:inset-y-0 lg:right-0 lg:order-none lg:m-0 lg:h-auto lg:w-[47%]">
+        <Image
+          src="/foto/hero-puk-ctyri-kluby.jpg"
+          alt="Čtyři náramky z hokejových tkaniček v barvách různých klubů položené na puku"
+          fill
+          sizes="(max-width: 1024px) 100vw, 47vw"
+          className="object-cover"
+          priority
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505] lg:bg-gradient-to-r lg:from-[#050505] lg:via-[#050505]/35 lg:to-transparent"
+        />
+      </div>
 
-      <div className="relative mx-auto grid w-full max-w-[1400px] gap-8 px-5 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-x-14 lg:gap-y-8">
-        <h1 className="display text-[15vw] leading-[0.84] sm:text-[11vw] lg:col-start-1 lg:row-start-1 lg:self-end lg:text-[6.6rem]">
+      {/* ---------- Nadpis ---------- */}
+      <div className="relative order-1 mx-auto w-full max-w-[1400px] px-5 md:px-8 lg:order-none">
+        <h1 className="display text-[15vw] leading-[0.84] sm:text-[11vw] lg:max-w-[52%] lg:text-[6.6rem]">
           <span className="block animate-[fadeUp_900ms_cubic-bezier(0.16,1,0.3,1)_80ms_both]">
             Nos svůj
           </span>
@@ -41,28 +45,11 @@ export function Hero() {
             Kdekoliv.
           </span>
         </h1>
+      </div>
 
-        {/* ---------- Fotka ---------- */}
-        <figure className="relative animate-[photoIn_900ms_cubic-bezier(0.16,1,0.3,1)_200ms_both] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:ml-auto lg:w-full lg:max-w-[500px] lg:self-center">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
-            <Image
-              src="/foto/hero-puk-tri-kla.jpg"
-              alt="Náramky Třinec a Kladno z hokejových tkaniček položené na puku"
-              fill
-              sizes="(max-width: 1024px) 100vw, 500px"
-              className="object-cover"
-              priority
-            />
-          </div>
-
-          <figcaption className="mt-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
-            <span>Tkanička · kovová písmena</span>
-            <span className="text-white/60">{club.abbr} a dalších 11 klubů</span>
-          </figcaption>
-        </figure>
-
-        {/* ---------- Text, CTA a cisla ---------- */}
-        <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
+      {/* ---------- Text, CTA a cisla ---------- */}
+      <div className="relative order-3 mx-auto mt-9 w-full max-w-[1400px] px-5 md:px-8 lg:order-none">
+        <div className="lg:max-w-[48%]">
           <p className="max-w-lg animate-[fadeUp_900ms_cubic-bezier(0.16,1,0.3,1)_400ms_both] text-base leading-relaxed text-white/60 md:text-lg">
             Náramky vytvořené z originálních hokejových tkaniček. Barva tvého klubu.
             Jeho zkratka. Tvůj tým.
@@ -93,10 +80,6 @@ export function Hero() {
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(28px); }
-          to { opacity: 1; transform: none; }
-        }
-        @keyframes photoIn {
-          from { opacity: 0; transform: scale(1.04); }
           to { opacity: 1; transform: none; }
         }
       `}</style>

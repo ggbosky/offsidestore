@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { ProductCard } from "@/components/ProductCard";
@@ -24,7 +25,19 @@ export function CollectionSection({ products }: { products: Product[] }) {
           </Link>
         </Reveal>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal delay={80}>
+          <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-2xl sm:aspect-[21/9]">
+            <Image
+              src="/foto/naramky-beton.jpg"
+              alt="Náramky v barvách čtyř klubů vedle sebe"
+              fill
+              sizes="(max-width: 1400px) 100vw, 1336px"
+              className="object-cover"
+            />
+          </div>
+        </Reveal>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {products.slice(0, 8).map((p, i) => (
             <Reveal key={p.handle} delay={i * 60}>
               <ProductCard product={p} />
@@ -69,23 +82,41 @@ export function CraftSection() {
           </h2>
         </Reveal>
 
-        <ol className="mt-14 divide-y divide-white/10 border-y border-white/10">
-          {CRAFT.map((item, i) => (
-            <li key={item.title}>
-              <Reveal delay={i * 70}>
-                <div className="grid gap-4 py-8 md:grid-cols-[80px_260px_1fr] md:items-baseline md:gap-8">
-                  <span className="text-sm font-black tabular-nums text-white/25">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="text-xl font-black uppercase tracking-tight">
-                    {item.title}
-                  </h3>
-                  <p className="max-w-2xl leading-relaxed text-white/50">{item.text}</p>
-                </div>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-12 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
+          <Reveal>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl lg:sticky lg:top-28">
+              <Image
+                src="/foto/ruka-puk-slavia.jpg"
+                alt="Náramek Slavia Praha na hokejovém puku v ruce"
+                fill
+                sizes="(max-width: 1024px) 100vw, 560px"
+                className="object-cover"
+              />
+            </div>
+          </Reveal>
+
+          <ol className="divide-y divide-white/10 border-y border-white/10">
+            {CRAFT.map((item, i) => (
+              <li key={item.title}>
+                <Reveal delay={i * 70}>
+                  <div className="py-7">
+                    <div className="flex items-baseline gap-4">
+                      <span className="text-sm font-black tabular-nums text-white/25">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="text-xl font-black uppercase tracking-tight">
+                        {item.title}
+                      </h3>
+                    </div>
+                    <p className="mt-2 pl-10 leading-relaxed text-white/50">
+                      {item.text}
+                    </p>
+                  </div>
+                </Reveal>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   );
