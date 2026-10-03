@@ -1,0 +1,239 @@
+{%- comment -%}
+  OffsideStore — HERO
+  Fotka pres celou sekci, text vlevo. Vse se da menit v editoru motivu:
+  nadpis po radcich, text, obe tlacitka, fotka, sila ztmaveni, vyska
+  sekce i barva akcentu. Cisla dole jsou bloky, takze jdou pridavat,
+  mazat a pretahovat.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="os os-hero"
+  style="
+    --os-accent: {{ section.settings.accent }};
+    --os-on-accent: {{ section.settings.accent_text }};
+    --os-scrim: {{ section.settings.scrim | divided_by: 100.0 }};
+    min-height: {{ section.settings.height }}svh;
+  "
+>
+  {%- if section.settings.image != blank -%}
+    <div class="os-hero__media">
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '640, 960, 1280, 1600, 2000, 2400',
+          alt: section.settings.image.alt | default: section.settings.heading_1
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="os-hero__scrim"></div>
+  <div class="os-hero__foot"></div>
+
+  <div class="os-hero__inner">
+    <div class="os__wrap">
+      <h1 class="os__display os__h1 os-hero__h1">
+        {%- if section.settings.heading_1 != blank -%}
+          <span style="display:block">{{ section.settings.heading_1 }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading_2 != blank -%}
+          <span class="os__accent-text" style="display:block">{{ section.settings.heading_2 }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading_3 != blank -%}
+          <span style="display:block">{{ section.settings.heading_3 }}</span>
+        {%- endif -%}
+      </h1>
+
+      {%- if section.settings.text != blank -%}
+        <div class="os__lead">{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_1_label != blank or section.settings.button_2_label != blank -%}
+        <div class="os__buttons">
+          {%- if section.settings.button_1_label != blank -%}
+            <a
+              class="os__btn os__btn--accent"
+              href="{{ section.settings.button_1_link | default: '#' }}"
+            >
+              {{ section.settings.button_1_label }}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.button_2_label != blank -%}
+            <a
+              class="os__btn os__btn--outline"
+              href="{{ section.settings.button_2_link | default: '#' }}"
+            >
+              {{ section.settings.button_2_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <dl class="os-hero__stats">
+          {%- for block in section.blocks -%}
+            <div {{ block.shopify_attributes }}>
+              <dt class="os-hero__stat-value">{{ block.settings.value }}</dt>
+              <dd class="os-hero__stat-label">{{ block.settings.label }}</dd>
+            </div>
+          {%- endfor -%}
+        </dl>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Offside — Hero",
+  "tag": "section",
+  "class": "offside-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Fotka na pozadí"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Fotka"
+    },
+    {
+      "type": "range",
+      "id": "scrim",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Ztmavení fotky pod textem",
+      "info": "Vyšší hodnota = čitelnější text, méně vidět fotku.",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Výška sekce",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Nadpis"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "První řádek",
+      "default": "Nos svůj"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Druhý řádek (barevný)",
+      "default": "klub."
+    },
+    {
+      "type": "text",
+      "id": "heading_3",
+      "label": "Třetí řádek",
+      "default": "Kdekoliv."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text pod nadpisem",
+      "default": "<p>Náramky vytvořené z originálních hokejových tkaniček. Barva tvého klubu. Jeho zkratka. Tvůj tým.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Tlačítka"
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "První tlačítko — text",
+      "default": "Vybrat svůj klub"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "První tlačítko — odkaz"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Druhé tlačítko — text",
+      "default": "Vytvořit vlastní"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Druhé tlačítko — odkaz"
+    },
+    {
+      "type": "header",
+      "content": "Barvy"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Akcentní barva",
+      "default": "#ec0016"
+    },
+    {
+      "type": "color",
+      "id": "accent_text",
+      "label": "Text na akcentní barvě",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Číslo",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Hodnota",
+          "default": "12"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Popisek",
+          "default": "klubů v nabídce"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Offside — Hero",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": { "value": "12", "label": "klubů v nabídce" }
+        },
+        {
+          "type": "stat",
+          "settings": { "value": "290 Kč", "label": "základní cena" }
+        },
+        {
+          "type": "stat",
+          "settings": { "value": "ručně", "label": "splétaný kus po kuse" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

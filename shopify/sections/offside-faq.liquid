@@ -1,0 +1,132 @@
+{%- comment -%}
+  OffsideStore — ČASTÉ DOTAZY
+  Kazda otazka je blok. Rozbaluje se nativne pres <details>, takze funguje
+  i bez JavaScriptu. Sekce zaroven vklada strukturovana data pro Google.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+<section class="os os-section" style="--os-accent: {{ section.settings.accent }};">
+  <div class="os__wrap" style="max-width: 1100px">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="os__display os__h2">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="os-faq__list">
+        {%- for block in section.blocks -%}
+          <details class="os-faq__item" {{ block.shopify_attributes }}>
+            <summary class="os-faq__q">
+              <span>{{ block.settings.question }}</span>
+              <span class="os-faq__sign" aria-hidden="true">+</span>
+            </summary>
+            <div class="os-faq__a">{{ block.settings.answer }}</div>
+          </details>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="os-produkty__empty">
+        Přidej otázky přes „Přidat blok" v nastavení sekce vlevo.
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- if section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ block.settings.answer | strip_html | json }}
+            }
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Offside — Časté dotazy",
+  "tag": "section",
+  "class": "offside-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Nadpis",
+      "default": "Časté dotazy"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Akcentní barva",
+      "default": "#ec0016"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "otazka",
+      "name": "Otázka",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Otázka",
+          "default": "Z čeho je náramek vyrobený?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Odpověď",
+          "default": "<p>Z originálních hokejových tkaniček — stejného materiálu, jaký hráči používají v bruslích.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Offside — Časté dotazy",
+      "blocks": [
+        {
+          "type": "otazka",
+          "settings": {
+            "question": "Z čeho je náramek vyrobený?",
+            "answer": "<p>Z originálních hokejových tkaniček — stejného materiálu, jaký hráči používají v bruslích. Tkanička je zkrácená, zapletená do náramku a zakončená kovovou koncovkou.</p>"
+          }
+        },
+        {
+          "type": "otazka",
+          "settings": {
+            "question": "Kolik znaků si můžu nechat vyplést?",
+            "answer": "<p>V ceně 290 Kč jsou tři znaky. Každý další stojí 12 Kč, maximum je dvanáct znaků.</p>"
+          }
+        },
+        {
+          "type": "otazka",
+          "settings": {
+            "question": "Jak si vyberu velikost?",
+            "answer": "<p>S odpovídá obvodu zápěstí 16–19 cm, M 17–19 cm a L 19–21 cm. Když si nejsi jistý, vezmi univerzální zakončení s posuvným uzlem.</p>"
+          }
+        },
+        {
+          "type": "otazka",
+          "settings": {
+            "question": "Vydrží náramek ve vodě?",
+            "answer": "<p>Ano. Tkanička i koncovka snesou déšť i sprchu. Vyhni se jen dlouhému máčení ve slané vodě a chlóru.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

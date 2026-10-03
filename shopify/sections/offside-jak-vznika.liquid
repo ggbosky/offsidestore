@@ -1,0 +1,132 @@
+{%- comment -%}
+  OffsideStore — JAK VZNIKÁ
+  Fotka vlevo, ocislovane kroky vpravo. Kazdy krok je blok — da se pridat,
+  smazat i pretahnout, cisla se precisluji sama.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+<section class="os os-section" style="--os-accent: {{ section.settings.accent }};">
+  <div class="os__wrap">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="os__display os__h2">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="os-vznik__grid">
+      {%- if section.settings.image != blank -%}
+        <div class="os-vznik__media">
+          {{
+            section.settings.image
+            | image_url: width: 920
+            | image_tag:
+              loading: 'lazy',
+              sizes: '(max-width: 1024px) 100vw, 460px',
+              widths: '420, 620, 920',
+              alt: section.settings.image.alt | default: section.settings.heading
+          }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ol class="os-vznik__list">
+          {%- for block in section.blocks -%}
+            <li class="os-vznik__item" {{ block.shopify_attributes }}>
+              <div class="os-vznik__item-head">
+                <span class="os-vznik__num">
+                  {{- forloop.index | prepend: '0' | slice: -2, 2 -}}
+                </span>
+                <h3 class="os-vznik__title">{{ block.settings.title }}</h3>
+              </div>
+              {%- if block.settings.text != blank -%}
+                <div class="os-vznik__text">{{ block.settings.text }}</div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Offside — Jak vzniká",
+  "tag": "section",
+  "class": "offside-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Nadpis",
+      "default": "Jak vzniká"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Fotka vlevo"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Akcentní barva",
+      "default": "#ec0016"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "krok",
+      "name": "Krok",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Nadpis kroku",
+          "default": "Tkanička z brusle"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Stejný materiál, jaký drží brusli na noze. Voskované vlákno, které snese pot, mráz i vodu.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Offside — Jak vzniká",
+      "blocks": [
+        {
+          "type": "krok",
+          "settings": {
+            "title": "Tkanička z brusle",
+            "text": "<p>Stejný materiál, jaký drží brusli na noze. Voskované vlákno, které snese pot, mráz i vodu — proto náramek nezplihne po týdnu nošení.</p>"
+          }
+        },
+        {
+          "type": "krok",
+          "settings": {
+            "title": "Barva podle dresu",
+            "text": "<p>Odstín ladíme podle aktuálního dresu, ne podle nejbližší barvy ze skladu. Když si vezmeš náramek na stadion, sedí s tím, co máš na sobě.</p>"
+          }
+        },
+        {
+          "type": "krok",
+          "settings": {
+            "title": "Zkratka v pletení",
+            "text": "<p>Znaky nejsou nalepené ani potištěné. Jsou navlečené na tkaničce a zapletené do splétání, takže se nemají jak setřít.</p>"
+          }
+        },
+        {
+          "type": "krok",
+          "settings": {
+            "title": "Splétáno rukou",
+            "text": "<p>Každý kus splétáme ručně kus po kuse. Drobné odchylky v napětí splétání nejsou vada — jsou důkaz, že to nedělal stroj.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

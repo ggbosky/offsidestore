@@ -1,0 +1,107 @@
+{%- comment -%}
+  OffsideStore — ZÁVĚREČNÉ CTA
+  Velky nadpis na stred a dve tlacitka. Vse se meni v editoru motivu.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="os os-section os-cta"
+  style="--os-accent: {{ section.settings.accent }}; --os-on-accent: {{ section.settings.accent_text }};"
+>
+  <div class="os__wrap" style="max-width: 1100px">
+    <h2 class="os__display" style="font-size: clamp(2.6rem, 13vw, 7rem); line-height: 0.86">
+      {%- if section.settings.heading_1 != blank -%}
+        <span style="display:block">{{ section.settings.heading_1 }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading_2 != blank -%}
+        <span class="os__accent-text" style="display:block">{{ section.settings.heading_2 }}</span>
+      {%- endif -%}
+    </h2>
+
+    {%- if section.settings.text != blank -%}
+      <div class="os__lead">{{ section.settings.text }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.button_1_label != blank or section.settings.button_2_label != blank -%}
+      <div class="os__buttons">
+        {%- if section.settings.button_1_label != blank -%}
+          <a class="os__btn os__btn--accent" href="{{ section.settings.button_1_link | default: '#' }}">
+            {{ section.settings.button_1_label }}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.button_2_label != blank -%}
+          <a class="os__btn os__btn--outline" href="{{ section.settings.button_2_link | default: '#' }}">
+            {{ section.settings.button_2_label }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Offside — Závěrečné CTA",
+  "tag": "section",
+  "class": "offside-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "První řádek",
+      "default": "Nos svůj klub."
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Druhý řádek (barevný)",
+      "default": "Kdekoliv."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text pod nadpisem"
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "První tlačítko — text",
+      "default": "Vytvořit si náramek"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "První tlačítko — odkaz"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Druhé tlačítko — text",
+      "default": "Prohlédnout kolekce"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Druhé tlačítko — odkaz"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Akcentní barva",
+      "default": "#ec0016"
+    },
+    {
+      "type": "color",
+      "id": "accent_text",
+      "label": "Text na akcentní barvě",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Offside — Závěrečné CTA"
+    }
+  ]
+}
+{% endschema %}
