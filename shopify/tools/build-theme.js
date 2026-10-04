@@ -68,15 +68,25 @@ if (fs.existsSync(tplDir)) {
 
 const layoutPath = path.join(DAWN, "layout", "theme.liquid");
 let layout = fs.readFileSync(layoutPath, "utf8");
-const vlozka =
-  "    {{ 'offside-global.css' | asset_url | stylesheet_tag }}\n" +
-  "    {{ 'offside.css' | asset_url | stylesheet_tag }}\n";
 if (!layout.includes("offside-global.css")) {
   const kotva = "{{ 'base.css' | asset_url | stylesheet_tag }}";
   if (!layout.includes(kotva)) throw new Error("v theme.liquid chybi base.css");
-  layout = layout.replace(kotva, kotva + "\n" + vlozka);
+
+  const odkazy =
+    "    {{ 'offside-global.css' | asset_url | stylesheet_tag }}\n" +
+    "    {{ 'offside.css' | asset_url | stylesheet_tag }}\n";
+
+  // V hlavicce kvuli prvnimu vykresleni, jinak problikne bila.
+  layout = layout.replace(kotva, kotva + "\n" + odkazy);
+
+  // A jeste jednou na konci tela. Dawn si styly jednotlivych sekci nacita
+  // az v <body>, takze by nase pravidla jinak prebil: vyhrava to, co je
+  // v dokumentu pozdeji. Soubor uz prohlizec ma, nestahuje ho znovu.
+  if (!layout.includes("</body>")) throw new Error("v theme.liquid chybi </body>");
+  layout = layout.replace("</body>", odkazy + "  </body>");
+
   fs.writeFileSync(layoutPath, layout);
-  console.log("theme.liquid: styly pripojeny");
+  console.log("theme.liquid: styly pripojeny v hlavicce i na konci tela");
 } else {
   console.log("theme.liquid: styly uz pripojeny");
 }
