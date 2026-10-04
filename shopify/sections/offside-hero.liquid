@@ -17,8 +17,8 @@
     min-height: {{ section.settings.height }}svh;
   "
 >
-  {%- if section.settings.image != blank -%}
-    <div class="os-hero__media">
+  <div class="os-hero__media">
+    {%- if section.settings.image != blank -%}
       {{
         section.settings.image
         | image_url: width: 2400
@@ -29,8 +29,21 @@
           widths: '640, 960, 1280, 1600, 2000, 2400',
           alt: section.settings.image.alt | default: section.settings.heading_1
       }}
-    </div>
-  {%- endif -%}
+    {%- else -%}
+      {%- comment -%}
+        Zaloha z assets, aby sekce fungovala hned po nahrani motivu.
+        Jakmile vyberes vlastni fotku v editoru, tahle se prestane pouzivat.
+      {%- endcomment -%}
+      <img
+        src="{{ 'os-hero.jpg' | asset_url }}"
+        alt="{{ section.settings.heading_1 | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        width="2400"
+        height="1500"
+      >
+    {%- endif -%}
+  </div>
 
   <div class="os-hero__scrim"></div>
   <div class="os-hero__foot"></div>

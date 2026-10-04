@@ -13,8 +13,8 @@
     {%- endif -%}
 
     <div class="os-vznik__grid">
-      {%- if section.settings.image != blank -%}
-        <div class="os-vznik__media">
+      <div class="os-vznik__media">
+        {%- if section.settings.image != blank -%}
           {{
             section.settings.image
             | image_url: width: 920
@@ -24,8 +24,16 @@
               widths: '420, 620, 920',
               alt: section.settings.image.alt | default: section.settings.heading
           }}
-        </div>
-      {%- endif -%}
+        {%- else -%}
+          <img
+            src="{{ 'os-vznik.jpg' | asset_url }}"
+            alt="{{ section.settings.heading | escape }}"
+            loading="lazy"
+            width="1242"
+            height="1656"
+          >
+        {%- endif -%}
+      </div>
 
       {%- if section.blocks.size > 0 -%}
         <ol class="os-vznik__list">

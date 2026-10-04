@@ -26,17 +26,27 @@
       {%- endif -%}
     </div>
 
-    {%- if section.settings.banner != blank -%}
+    {%- if section.settings.show_banner -%}
       <div class="os-banner">
-        {{
-          section.settings.banner
-          | image_url: width: 2000
-          | image_tag:
-            loading: 'lazy',
-            sizes: '(max-width: 1400px) 100vw, 1336px',
-            widths: '640, 960, 1280, 1600, 2000',
-            alt: section.settings.banner.alt | default: section.settings.heading
-        }}
+        {%- if section.settings.banner != blank -%}
+          {{
+            section.settings.banner
+            | image_url: width: 2000
+            | image_tag:
+              loading: 'lazy',
+              sizes: '(max-width: 1400px) 100vw, 1336px',
+              widths: '640, 960, 1280, 1600, 2000',
+              alt: section.settings.banner.alt | default: section.settings.heading
+          }}
+        {%- else -%}
+          <img
+            src="{{ 'os-banner.jpg' | asset_url }}"
+            alt="{{ section.settings.heading | escape }}"
+            loading="lazy"
+            width="1242"
+            height="1656"
+          >
+        {%- endif -%}
       </div>
     {%- endif -%}
 
@@ -169,9 +179,16 @@
       "content": "Pás s fotkou nad produkty"
     },
     {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Zobrazit pás s fotkou",
+      "default": true
+    },
+    {
       "type": "image_picker",
       "id": "banner",
-      "label": "Fotka (nepovinné)"
+      "label": "Fotka",
+      "info": "Když nevybereš, použije se fotka dodaná s motivem."
     },
     {
       "type": "header",
