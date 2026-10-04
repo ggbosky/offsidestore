@@ -47,6 +47,21 @@
     );
   }
 
+  /**
+   * Vrati #000 nebo #fff podle toho, co je na dane barve citelnejsi.
+   * Zlute a svetle klubove barvy jinak dostaly bily text a nebyly videt.
+   */
+  function textNaBarve(hex) {
+    var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "");
+    if (!m) return "#ffffff";
+    var r = parseInt(m[1], 16),
+      g = parseInt(m[2], 16),
+      b = parseInt(m[3], 16);
+    // Relativni jas podle WCAG, zjednodusene.
+    var jas = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    return jas > 0.6 ? "#0a0a0a" : "#ffffff";
+  }
+
   function pocetZnaku(text) {
     return (text || "").replace(/\s/g, "").length;
   }
@@ -264,6 +279,7 @@
         stav.klubovaBarva = stav.barva;
         stav.akcent = tile.dataset.accent;
         root.style.setProperty("--os-accent", stav.akcent);
+        root.style.setProperty("--os-on-accent", textNaBarve(stav.akcent));
 
         if (el.vstup) el.vstup.value = stav.zkratka;
         oznacBarvu();

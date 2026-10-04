@@ -77,6 +77,20 @@
     var link = root.querySelector('[data-os-panel-link]');
     var buttonText = root.querySelector('[data-os-panel-button]');
     var buttonLabel = {{ section.settings.button_label | default: 'Koupit' | json }};
+  /**
+     * Vrati #000 nebo #fff podle toho, co je na dane barve citelnejsi.
+     * Zlute a svetle klubove barvy jinak dostaly bily text a nebyly videt.
+     */
+    function textNaBarve(hex) {
+      var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "");
+      if (!m) return "#ffffff";
+      var r = parseInt(m[1], 16),
+        g = parseInt(m[2], 16),
+        b = parseInt(m[3], 16);
+      // Relativni jas podle WCAG, zjednodusene.
+      var jas = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      return jas > 0.6 ? "#0a0a0a" : "#ffffff";
+    }
 
     tiles.forEach(function (tile) {
       tile.addEventListener('click', function () {
@@ -85,7 +99,9 @@
         });
         tile.setAttribute('aria-pressed', 'true');
 
-        root.style.setProperty('--os-accent', tile.dataset.accent || '#ec0016');
+        var akcent = tile.dataset.accent || '#ec0016';
+        root.style.setProperty('--os-accent', akcent);
+        root.style.setProperty('--os-on-accent', textNaBarve(akcent));
         if (name) name.textContent = tile.dataset.name || '';
         if (note) note.textContent = tile.dataset.note || '';
         if (link) link.setAttribute('href', tile.dataset.url || '#');
