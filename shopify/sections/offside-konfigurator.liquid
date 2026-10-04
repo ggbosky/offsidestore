@@ -37,8 +37,24 @@
     {%- endif -%}
 
     {%- if produkt == blank -%}
-      <div class="os-produkty__empty">
-        Vyber v nastavení sekce produkt, který se má vkládat do košíku.
+      {%- comment -%}
+        Bez produktu konfigurator nema co vlozit do kosiku. Misto tiche
+        prazdne sekce rekneme natvrdo, co chybi — jinak to vypada, ze se
+        sekce vubec nenacetla.
+      {%- endcomment -%}
+      <div class="os-konf__chybi">
+        <p class="os-konf__chybi-nadpis">Konfigurátor čeká na produkty</p>
+        <p>
+          V nastavení této sekce vlevo vyber dva produkty:
+        </p>
+        <ol>
+          <li><strong>Náramek</strong> — s variantami UNI, S, M, L za 290 Kč</li>
+          <li><strong>Příplatek za znak</strong> — skrytý produkt za 12 Kč</li>
+        </ol>
+        <p>
+          Jakmile je vybereš, objeví se tu celý konfigurátor i s náhledem
+          náramku. Tenhle text vidíš jen do té doby.
+        </p>
       </div>
     {%- else -%}
       <div class="os-konf">

@@ -215,20 +215,25 @@
 .os-hero__stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px 40px;
-  margin: 48px 0 0;
+  gap: 24px 56px;
+  margin: 56px 0 0;
 }
 
 .os-hero__stat-value {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
   font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 .os-hero__stat-label {
-  margin: 2px 0 0;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.5);
+  margin: 8px 0 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 /* ---------- Spolecne sekce ---------- */
@@ -1427,4 +1432,33 @@
 
 .os-paticka__spodek p {
   margin: 0;
+}
+
+/* Konfigurátor bez vybraných produktů — ať je jasné, že sekce funguje. */
+
+.os-konf__chybi {
+  margin-top: 40px;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  padding: 32px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+}
+
+.os-konf__chybi-nadpis {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--os-accent);
+}
+
+.os-konf__chybi ol {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+
+.os-konf__chybi li {
+  margin-bottom: 6px;
 }
