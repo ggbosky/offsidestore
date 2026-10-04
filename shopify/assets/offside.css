@@ -1463,3 +1463,43 @@
 .os-konf__chybi li {
   margin-bottom: 6px;
 }
+
+/* Panel pod dlaždicemi klubů */
+
+.os-kluby__akce {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.os-kluby__cena {
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.os-kluby__detail {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+}
+
+.os-kluby__detail:hover {
+  color: var(--os-paper);
+}
+
+.os-kluby__panel [data-os-panel-koupit][disabled] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.os-kluby__stav {
+  margin: 16px 0 0;
+  font-size: 0.875rem;
+  color: var(--os-accent);
+  min-height: 1.2em;
+}

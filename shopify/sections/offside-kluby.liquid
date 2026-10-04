@@ -1,15 +1,20 @@
 {%- comment -%}
   OffsideStore — KOMU FANDÍŠ
-  Dlazdice klubu. Kazdy klub je blok, takze se da pridat, smazat i pretahnout
-  a ma vlastni zkratku, nazev, dve barvy prechodu a odkaz. Kliknuti na dlazdici
-  prepne panel pod mrizkou (nazev + odkaz na koupi) a akcentni barvu sekce.
+
+  Kazdy klub je blok a ma vlastni produkt. Kliknuti na dlazdici prepne panel
+  pod mrizkou, tlacitko pak vlozi produkt toho klubu rovnou do kosiku pres
+  Shopify Cart API. Vedle je odkaz na detail, kdyz si ho chce zakaznik
+  nejdriv upravit.
+
+  Kdyz blok produkt nema, tlacitko se zmeni na odkaz — at nikdy nevede
+  do prazdna.
 {%- endcomment -%}
 
 {{ 'offside.css' | asset_url | stylesheet_tag }}
 
 <section
   class="os os-section"
-  id="os-kluby-{{ section.id }}"
+  id="os-kluby"
   data-os-kluby
   style="--os-accent: {{ section.settings.accent }};"
 >
@@ -21,6 +26,8 @@
     {%- if section.blocks.size > 0 -%}
       <div class="os-kluby__grid">
         {%- for block in section.blocks -%}
+          {%- assign p = block.settings.product -%}
+          {%- assign varianta = p.selected_or_first_available_variant -%}
           <button
             type="button"
             class="os-klub"
@@ -30,8 +37,11 @@
             data-accent="{{ block.settings.color_from }}"
             data-name="{{ block.settings.name | escape }}"
             data-abbr="{{ block.settings.abbr | escape }}"
-            data-url="{{ block.settings.link }}"
             data-note="{{ block.settings.note | escape }}"
+            data-url="{{ p.url | default: block.settings.link }}"
+            data-variant="{% if varianta %}{{ varianta.id }}{% endif %}"
+            data-cena="{% if varianta %}{{ varianta.price | money }}{% endif %}"
+            data-skladem="{% if varianta and varianta.available %}1{% else %}0{% endif %}"
             style="background: linear-gradient(135deg, {{ block.settings.color_from }} 0%, {{ block.settings.color_to }} 100%); color: {{ block.settings.ink }};"
           >
             <span class="os-klub__abbr">{{ block.settings.abbr }}</span>
@@ -41,23 +51,34 @@
       </div>
 
       {%- assign prvni = section.blocks.first -%}
+      {%- assign prvni_produkt = prvni.settings.product -%}
       <div class="os-kluby__panel">
         <div>
           <p class="os-kluby__panel-name" data-os-panel-name>{{ prvni.settings.name }}</p>
           <p class="os-kluby__panel-note" data-os-panel-note>{{ prvni.settings.note }}</p>
         </div>
-        {%- if section.settings.button_label != blank -%}
-          <a
-            class="os__btn os__btn--accent"
-            data-os-panel-link
-            href="{{ prvni.settings.link | default: '#' }}"
-          >
-            <span data-os-panel-button>
+
+        <div class="os-kluby__akce">
+          <span class="os-kluby__cena" data-os-panel-cena>
+            {%- if prvni_produkt.selected_or_first_available_variant -%}
+              {{ prvni_produkt.selected_or_first_available_variant.price | money }}
+            {%- endif -%}
+          </span>
+
+          <button type="button" class="os__btn os__btn--accent" data-os-panel-koupit>
+            <span data-os-panel-popisek>
               {{ section.settings.button_label }} {{ prvni.settings.abbr }}
             </span>
+          </button>
+
+          <a class="os-kluby__detail" data-os-panel-detail
+             href="{{ prvni_produkt.url | default: prvni.settings.link | default: '#' }}">
+            Detail &rarr;
           </a>
-        {%- endif -%}
+        </div>
       </div>
+
+      <p class="os-kluby__stav" data-os-panel-stav role="status"></p>
     {%- else -%}
       <div class="os-produkty__empty">
         Přidej kluby přes „Přidat blok" v nastavení sekce vlevo.
@@ -68,48 +89,97 @@
 
 <script>
   (function () {
-    var root = document.getElementById('os-kluby-{{ section.id }}');
+    var root = document.getElementById('os-kluby');
     if (!root) return;
 
     var tiles = root.querySelectorAll('[data-os-klub]');
     var name = root.querySelector('[data-os-panel-name]');
     var note = root.querySelector('[data-os-panel-note]');
-    var link = root.querySelector('[data-os-panel-link]');
-    var buttonText = root.querySelector('[data-os-panel-button]');
-    var buttonLabel = {{ section.settings.button_label | default: 'Koupit' | json }};
-  /**
+    var cena = root.querySelector('[data-os-panel-cena]');
+    var detail = root.querySelector('[data-os-panel-detail]');
+    var koupit = root.querySelector('[data-os-panel-koupit]');
+    var popisek = root.querySelector('[data-os-panel-popisek]');
+    var stav = root.querySelector('[data-os-panel-stav]');
+    var popisekZaklad = {{ section.settings.button_label | default: 'Koupit' | json }};
+
+    var vybrany = tiles[0];
+
+    /**
      * Vrati #000 nebo #fff podle toho, co je na dane barve citelnejsi.
-     * Zlute a svetle klubove barvy jinak dostaly bily text a nebyly videt.
+     * Zlute kluby jinak dostaly bily text a tlacitko nebylo videt.
      */
     function textNaBarve(hex) {
-      var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "");
-      if (!m) return "#ffffff";
-      var r = parseInt(m[1], 16),
-        g = parseInt(m[2], 16),
-        b = parseInt(m[3], 16);
-      // Relativni jas podle WCAG, zjednodusene.
-      var jas = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-      return jas > 0.6 ? "#0a0a0a" : "#ffffff";
+      var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '');
+      if (!m) return '#ffffff';
+      var jas =
+        (0.2126 * parseInt(m[1], 16) +
+          0.7152 * parseInt(m[2], 16) +
+          0.0722 * parseInt(m[3], 16)) /
+        255;
+      return jas > 0.6 ? '#0a0a0a' : '#ffffff';
+    }
+
+    function vyber(tile) {
+      vybrany = tile;
+      tiles.forEach(function (t) {
+        t.setAttribute('aria-pressed', t === tile ? 'true' : 'false');
+      });
+
+      var akcent = tile.dataset.accent || '#ec0016';
+      root.style.setProperty('--os-accent', akcent);
+      root.style.setProperty('--os-on-accent', textNaBarve(akcent));
+
+      if (name) name.textContent = tile.dataset.name || '';
+      if (note) note.textContent = tile.dataset.note || '';
+      if (cena) cena.textContent = tile.dataset.cena || '';
+      if (detail) detail.setAttribute('href', tile.dataset.url || '#');
+      if (popisek) popisek.textContent = popisekZaklad + ' ' + (tile.dataset.abbr || '');
+      if (stav) stav.textContent = '';
+
+      if (koupit) {
+        var lze = tile.dataset.variant && tile.dataset.skladem === '1';
+        koupit.disabled = !lze;
+        koupit.title = lze ? '' : 'Tento klub zatím nemá produkt nebo není skladem.';
+      }
     }
 
     tiles.forEach(function (tile) {
       tile.addEventListener('click', function () {
-        tiles.forEach(function (t) {
-          t.setAttribute('aria-pressed', 'false');
-        });
-        tile.setAttribute('aria-pressed', 'true');
-
-        var akcent = tile.dataset.accent || '#ec0016';
-        root.style.setProperty('--os-accent', akcent);
-        root.style.setProperty('--os-on-accent', textNaBarve(akcent));
-        if (name) name.textContent = tile.dataset.name || '';
-        if (note) note.textContent = tile.dataset.note || '';
-        if (link) link.setAttribute('href', tile.dataset.url || '#');
-        if (buttonText) {
-          buttonText.textContent = buttonLabel + ' ' + (tile.dataset.abbr || '');
-        }
+        vyber(tile);
       });
     });
+
+    if (koupit) {
+      koupit.addEventListener('click', function () {
+        var id = vybrany && vybrany.dataset.variant;
+        if (!id) return;
+
+        koupit.disabled = true;
+        if (stav) stav.textContent = 'Přidávám do košíku…';
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ items: [{ id: Number(id), quantity: 1 }] }),
+        })
+          .then(function (r) {
+            if (!r.ok) throw new Error('cart');
+            return r.json();
+          })
+          .then(function () {
+            if (stav) stav.textContent = 'Přidáno do košíku, otevírám ho…';
+            setTimeout(function () {
+              window.location.href = '/cart';
+            }, 600);
+          })
+          .catch(function () {
+            if (stav) stav.textContent = 'Nepodařilo se přidat do košíku. Zkus to prosím znovu.';
+            koupit.disabled = false;
+          });
+      });
+    }
+
+    if (tiles.length) vyber(tiles[0]);
   })();
 </script>
 
@@ -145,122 +215,32 @@
       "name": "Klub",
       "settings": [
         {
-          "type": "text",
-          "id": "abbr",
-          "label": "Zkratka",
-          "default": "SPA"
+          "type": "product",
+          "id": "product",
+          "label": "Produkt klubu",
+          "info": "Tenhle produkt se vloží do košíku po kliknutí na tlačítko."
         },
-        {
-          "type": "text",
-          "id": "name",
-          "label": "Název klubu",
-          "default": "Sparta Praha"
-        },
+        { "type": "text", "id": "abbr", "label": "Zkratka", "default": "SPA" },
+        { "type": "text", "id": "name", "label": "Název klubu", "default": "Sparta Praha" },
         {
           "type": "text",
           "id": "note",
           "label": "Popisek pod názvem",
           "default": "Zkratka SPA · univerzální i na míru"
         },
-        {
-          "type": "color",
-          "id": "color_from",
-          "label": "Barva přechodu — začátek",
-          "default": "#b01e28"
-        },
-        {
-          "type": "color",
-          "id": "color_to",
-          "label": "Barva přechodu — konec",
-          "default": "#340a0e"
-        },
-        {
-          "type": "color",
-          "id": "ink",
-          "label": "Barva zkratky",
-          "default": "#ffffff"
-        },
+        { "type": "color", "id": "color_from", "label": "Přechod — začátek", "default": "#b01e28" },
+        { "type": "color", "id": "color_to", "label": "Přechod — konec", "default": "#340a0e" },
+        { "type": "color", "id": "ink", "label": "Barva zkratky", "default": "#ffffff" },
         {
           "type": "url",
           "id": "link",
-          "label": "Odkaz na produkt"
+          "label": "Odkaz (záloha)",
+          "info": "Použije se, jen když není vybraný produkt."
         }
       ]
     }
   ],
   "max_blocks": 24,
-  "presets": [
-    {
-      "name": "Offside — Komu fandíš",
-      "blocks": [
-        {
-          "type": "klub",
-          "settings": {
-            "abbr": "JIH",
-            "name": "Dukla Jihlava",
-            "note": "Zkratka JIH · univerzální i na míru",
-            "color_from": "#d6122b",
-            "color_to": "#3e0810",
-            "ink": "#ffffff"
-          }
-        },
-        {
-          "type": "klub",
-          "settings": {
-            "abbr": "KOM",
-            "name": "Kometa Brno",
-            "note": "Zkratka KOM · univerzální i na míru",
-            "color_from": "#0b4ea2",
-            "color_to": "#061e3c",
-            "ink": "#ffffff"
-          }
-        },
-        {
-          "type": "klub",
-          "settings": {
-            "abbr": "SPA",
-            "name": "Sparta Praha",
-            "note": "Zkratka SPA · univerzální i na míru",
-            "color_from": "#b01e28",
-            "color_to": "#340a0e",
-            "ink": "#ffffff"
-          }
-        },
-        {
-          "type": "klub",
-          "settings": {
-            "abbr": "VSE",
-            "name": "VHK Vsetín",
-            "note": "Zkratka VSE · univerzální i na míru",
-            "color_from": "#0f9d4f",
-            "color_to": "#f5c518",
-            "ink": "#0a2a14"
-          }
-        },
-        {
-          "type": "klub",
-          "settings": {
-            "abbr": "PCE",
-            "name": "Dynamo Pardubice",
-            "note": "Zkratka PCE · univerzální i na míru",
-            "color_from": "#e01b24",
-            "color_to": "#3a0a0e",
-            "ink": "#ffffff"
-          }
-        },
-        {
-          "type": "klub",
-          "settings": {
-            "abbr": "ZLN",
-            "name": "PSG Berani Zlín",
-            "note": "Zkratka ZLN · univerzální i na míru",
-            "color_from": "#f5c518",
-            "color_to": "#101010",
-            "ink": "#ffffff"
-          }
-        }
-      ]
-    }
-  ]
+  "presets": [{ "name": "Offside — Komu fandíš" }]
 }
 {% endschema %}

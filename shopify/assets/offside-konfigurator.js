@@ -88,7 +88,19 @@
     }
 
     var mena = data.mena || "Kč";
-    var zakladniCena = data.varianty.length ? data.varianty[0].cena : 0;
+
+    // Konfigurator na homepage ma varianty po klubech, produktova stranka
+    // jeden seznam. Srovname to na jeden tvar, at zbytek kodu nemusi vedet,
+    // odkud data prisla.
+    var klubyData = data.kluby || [{ zkratka: "", nazev: "", varianty: data.varianty || [] }];
+    var indexKlubu = 0;
+
+    function variantyKlubu() {
+      var k = klubyData[indexKlubu] || klubyData[0] || { varianty: [] };
+      return k.varianty || [];
+    }
+
+    var zakladniCena = variantyKlubu().length ? variantyKlubu()[0].cena : 0;
 
     function penize(halere) {
       return Math.round(halere / 100).toLocaleString("cs-CZ") + " " + mena;
@@ -201,12 +213,13 @@
     }
 
     function najdiVariantu() {
+      var seznam = variantyKlubu();
       var hledany = stav.zakonceni === "UNI" ? "UNI" : stav.velikost;
       var nalezena = null;
-      data.varianty.forEach(function (v) {
+      seznam.forEach(function (v) {
         if (!nalezena && v.nazev.toUpperCase().indexOf(hledany) !== -1) nalezena = v;
       });
-      return nalezena || data.varianty[0] || null;
+      return nalezena || seznam[0] || null;
     }
 
     /* ---------- Prekresleni rozhrani ---------- */
@@ -242,6 +255,8 @@
         }
       }
 
+      var zakladEl = root.querySelector("[data-os-cena-zaklad]");
+      if (zakladEl) zakladEl.textContent = penize(cena.zaklad);
       if (el.cenaCelkem) el.cenaCelkem.textContent = penize(cena.celkem);
 
       var popisek = "Přidat do košíku — " + penize(cena.celkem);
@@ -273,6 +288,7 @@
         });
         tile.setAttribute("aria-pressed", "true");
 
+        indexKlubu = Number(tile.dataset.index || 0);
         stav.klub = tile.dataset.name || "";
         stav.zkratka = ocisti(tile.dataset.abbr || "");
         stav.barva = tile.dataset.lace || stav.barva;
@@ -362,7 +378,13 @@
 
     function vlozDoKosiku() {
       var varianta = najdiVariantu();
-      if (!varianta) return;
+      if (!varianta) {
+        if (el.stavText) {
+          el.stavText.textContent =
+            "Tenhle klub zatím nemá v obchodě produkt. Vyber jiný.";
+        }
+        return;
+      }
 
       var cena = spocitej();
       var polozky = [
@@ -430,6 +452,7 @@
 
     var prvni = root.querySelector("[data-os-klub]");
     if (prvni) {
+      indexKlubu = Number(prvni.dataset.index || 0);
       stav.klub = prvni.dataset.name || "";
       stav.zkratka = ocisti(prvni.dataset.abbr || "");
       stav.barva = prvni.dataset.lace || stav.barva;

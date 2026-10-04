@@ -201,18 +201,6 @@
         "accent": "#d6122b"
       }
     },
-    "os_edice": {
-      "type": "offside-edice",
-      "settings": {
-        "heading": "Hotové edice",
-        "products_count": 8,
-        "columns": 4,
-        "show_price": true,
-        "link_label": "Všechny kluby →",
-        "show_banner": true,
-        "accent": "#ec0016"
-      }
-    },
     "os_konfigurator": {
       "type": "offside-konfigurator",
       "blocks": {
@@ -499,7 +487,6 @@
   "order": [
     "os_hero",
     "os_kluby",
-    "os_edice",
     "os_konfigurator",
     "os_vznik",
     "os_faq",

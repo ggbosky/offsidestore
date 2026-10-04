@@ -17,9 +17,9 @@
 
 {{ 'offside.css' | asset_url | stylesheet_tag }}
 
-{%- assign produkt = section.settings.product -%}
 {%- assign priplatek = section.settings.addon_product -%}
-{%- assign zakladni_cena = produkt.price | default: 29000 -%}
+{%- assign prvni_klub = section.blocks.first -%}
+{%- assign zakladni_cena = prvni_klub.settings.product.price | default: 29000 -%}
 {%- assign cena_znaku = priplatek.price | default: 1200 -%}
 
 <section
@@ -36,24 +36,17 @@
       <div class="os__lead">{{ section.settings.text }}</div>
     {%- endif -%}
 
-    {%- if produkt == blank -%}
+    {%- if section.blocks.size == 0 -%}
       {%- comment -%}
         Bez produktu konfigurator nema co vlozit do kosiku. Misto tiche
         prazdne sekce rekneme natvrdo, co chybi — jinak to vypada, ze se
         sekce vubec nenacetla.
       {%- endcomment -%}
       <div class="os-konf__chybi">
-        <p class="os-konf__chybi-nadpis">Konfigurátor čeká na produkty</p>
+        <p class="os-konf__chybi-nadpis">Konfigurátor čeká na kluby</p>
         <p>
-          V nastavení této sekce vlevo vyber dva produkty:
-        </p>
-        <ol>
-          <li><strong>Náramek</strong> — s variantami UNI, S, M, L za 290 Kč</li>
-          <li><strong>Příplatek za znak</strong> — skrytý produkt za 12 Kč</li>
-        </ol>
-        <p>
-          Jakmile je vybereš, objeví se tu celý konfigurátor i s náhledem
-          náramku. Tenhle text vidíš jen do té doby.
+          Přidej v nastavení sekce vlevo bloky klubů. U každého vyber jeho
+          produkt — ten se pak vloží do košíku i s personalizací.
         </p>
       </div>
     {%- else -%}
@@ -140,6 +133,7 @@
                   class="os-klub"
                   {{ block.shopify_attributes }}
                   data-os-klub
+                  data-index="{{ forloop.index0 }}"
                   data-abbr="{{ block.settings.abbr | escape }}"
                   data-name="{{ block.settings.name | escape }}"
                   data-lace="{{ block.settings.lace }}"
@@ -285,13 +279,18 @@
 
       <script type="application/json" data-os-data>
         {
-          "varianty": [
-            {%- for v in produkt.variants -%}
+          "kluby": [
+            {%- for block in section.blocks -%}
+              {%- assign p = block.settings.product -%}
               {
-                "id": {{ v.id }},
-                "nazev": {{ v.title | json }},
-                "cena": {{ v.price }},
-                "skladem": {{ v.available }}
+                "zkratka": {{ block.settings.abbr | json }},
+                "nazev": {{ block.settings.name | json }},
+                "varianty": [
+                  {%- for v in p.variants -%}
+                    { "id": {{ v.id }}, "nazev": {{ v.title | json }}, "cena": {{ v.price }}, "skladem": {{ v.available }} }
+                    {%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ]
               }{%- unless forloop.last -%},{%- endunless -%}
             {%- endfor -%}
           ],
@@ -328,12 +327,6 @@
     {
       "type": "header",
       "content": "Produkty"
-    },
-    {
-      "type": "product",
-      "id": "product",
-      "label": "Náramek",
-      "info": "Produkt, který se vloží do košíku. Měl by mít varianty UNI, S, M, L."
     },
     {
       "type": "product",
@@ -380,6 +373,12 @@
       "type": "klub",
       "name": "Klub",
       "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produkt klubu",
+          "info": "Varianty by mely byt UNI, S, M, L."
+        },
         { "type": "text", "id": "abbr", "label": "Zkratka", "default": "SPA" },
         { "type": "text", "id": "name", "label": "Název", "default": "Sparta Praha" },
         { "type": "color", "id": "lace", "label": "Barva tkaničky", "default": "#b01e28" },
