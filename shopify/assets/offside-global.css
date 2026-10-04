@@ -165,3 +165,19 @@ hr,
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- Odsazení pod fixní hlavičkou ---------- */
+
+#MainContent {
+  padding-top: 64px;
+}
+
+/* Hero jde pod hlavičku schválně — odsazení si proto zruší. */
+#MainContent > .shopify-section:first-child .os-hero {
+  margin-top: -64px;
+}
+
+/* Dawn si pro svou hlavičku rezervuje místo, to už nepotřebujeme. */
+.shopify-section-group-header-group {
+  position: static;
+}

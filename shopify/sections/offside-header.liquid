@@ -1,0 +1,122 @@
+{%- comment -%}
+  OffsideStore — HLAVIČKA
+  Znacka vlevo, navigace uprostred, kosik vpravo. Na mobilu se navigace
+  skryje pod tlacitko. Odkazy jsou bloky, takze jdou menit i pretahovat.
+  Pozadi se po odscrollovani zacerni, aby text drzel citelnost nad fotkou.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+<header class="os os-hlavicka" data-os-hlavicka style="--os-accent: {{ section.settings.accent }};">
+  <div class="os-hlavicka__pas">
+    <a class="os-znacka" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+      <svg class="os-znacka__mark" viewBox="0 0 72 100" aria-hidden="true">
+        <rect x="29" y="0" width="12" height="100" fill="currentColor" />
+        <circle cx="12" cy="63" r="12.5" fill="currentColor" />
+        <circle cx="57" cy="37" r="12.5" fill="var(--os-accent)" />
+      </svg>
+      <span class="os-znacka__text">
+        {{ section.settings.brand_1 }}<span class="os__accent-text">{{ section.settings.brand_2 }}</span>
+      </span>
+    </a>
+
+    <nav class="os-hlavicka__nav" aria-label="Hlavní navigace">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>
+          {{ block.settings.label }}
+        </a>
+      {%- endfor -%}
+    </nav>
+
+    <div class="os-hlavicka__akce">
+      <a class="os-kosik" href="{{ routes.cart_url }}">
+        Košík
+        <span class="os-kosik__pocet{% if cart.item_count > 0 %} os-kosik__pocet--plny{% endif %}">
+          {{ cart.item_count }}
+        </span>
+      </a>
+
+      <button
+        type="button"
+        class="os-hlavicka__menu"
+        data-os-menu
+        aria-expanded="false"
+        aria-label="Menu"
+      >
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="os-hlavicka__rozbal" data-os-rozbal>
+    <nav aria-label="Navigace na mobilu">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link | default: '#' }}">{{ block.settings.label }}</a>
+      {%- endfor -%}
+    </nav>
+  </div>
+</header>
+
+<script>
+  (function () {
+    var hlavicka = document.querySelector('[data-os-hlavicka]');
+    if (!hlavicka) return;
+
+    var tlacitko = hlavicka.querySelector('[data-os-menu]');
+    var rozbal = hlavicka.querySelector('[data-os-rozbal]');
+
+    if (tlacitko && rozbal) {
+      tlacitko.addEventListener('click', function () {
+        var otevreno = tlacitko.getAttribute('aria-expanded') === 'true';
+        tlacitko.setAttribute('aria-expanded', otevreno ? 'false' : 'true');
+        rozbal.classList.toggle('je-otevreno', !otevreno);
+      });
+    }
+
+    function priScrollu() {
+      hlavicka.classList.toggle('je-odscrollovano', window.scrollY > 24);
+    }
+    window.addEventListener('scroll', priScrollu, { passive: true });
+    priScrollu();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Offside — Hlavička",
+  "tag": "header",
+  "class": "offside-hlavicka-wrap",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_1",
+      "label": "Název — první část",
+      "default": "Offside"
+    },
+    {
+      "type": "text",
+      "id": "brand_2",
+      "label": "Název — barevná část",
+      "default": "store"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Akcentní barva",
+      "default": "#ec0016"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "odkaz",
+      "name": "Odkaz",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Text", "default": "Kolekce" },
+        { "type": "url", "id": "link", "label": "Odkaz" }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

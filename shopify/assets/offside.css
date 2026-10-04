@@ -1072,3 +1072,359 @@
     display: none;
   }
 }
+
+/* ---------- Hlavička ---------- */
+
+.os-hlavicka {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 400ms ease, border-color 400ms ease;
+}
+
+.os-hlavicka.je-odscrollovano {
+  background: rgba(5, 5, 5, 0.88);
+  backdrop-filter: blur(20px);
+  border-bottom-color: var(--os-line);
+}
+
+.os-hlavicka__pas {
+  margin: 0 auto;
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 64px;
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .os-hlavicka__pas {
+    padding: 0 32px;
+  }
+}
+
+.os-znacka {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--os-paper);
+}
+
+.os-znacka__mark {
+  height: 24px;
+  width: 17px;
+  flex: none;
+}
+
+.os-znacka__text {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.os-hlavicka__nav {
+  display: none;
+  gap: 36px;
+}
+
+@media (min-width: 768px) {
+  .os-hlavicka__nav {
+    display: flex;
+  }
+}
+
+.os-hlavicka__nav a {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.os-hlavicka__nav a:hover {
+  color: var(--os-paper);
+}
+
+.os-hlavicka__akce {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.os-kosik {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--os-paper);
+  transition: box-shadow 200ms ease;
+}
+
+.os-kosik:hover {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.os-kosik__pocet {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0 4px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.os-kosik__pocet--plny {
+  background: var(--os-accent);
+  color: var(--os-on-accent);
+}
+
+.os-hlavicka__menu {
+  display: grid;
+  place-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .os-hlavicka__menu {
+    display: none;
+  }
+}
+
+.os-hlavicka__menu span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: var(--os-paper);
+  transition: transform 300ms ease;
+}
+
+.os-hlavicka__menu[aria-expanded="true"] span:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.os-hlavicka__menu[aria-expanded="true"] span:last-child {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+.os-hlavicka__rozbal {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  background: rgba(5, 5, 5, 0.97);
+  transition: grid-template-rows 400ms ease;
+}
+
+.os-hlavicka__rozbal.je-otevreno {
+  grid-template-rows: 1fr;
+  border-top: 1px solid var(--os-line);
+}
+
+.os-hlavicka__rozbal nav {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+}
+
+.os-hlavicka__rozbal a {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 0;
+  font-size: 1.125rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--os-paper);
+}
+
+.os-hlavicka__rozbal a:last-child {
+  border-bottom: 0;
+}
+
+/* ---------- Patička ---------- */
+
+.os-paticka {
+  border-top: 1px solid var(--os-line);
+  padding: 64px 0;
+}
+
+.os-paticka__vrch {
+  display: grid;
+  gap: 48px;
+}
+
+@media (min-width: 1024px) {
+  .os-paticka__vrch {
+    grid-template-columns: 1.4fr 2fr;
+  }
+}
+
+.os-paticka__heslo {
+  margin: 20px 0 0;
+  max-width: 24rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.os-paticka__text {
+  margin-top: 20px;
+  max-width: 24rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.os-paticka__form {
+  display: flex;
+  gap: 8px;
+  margin-top: 28px;
+  max-width: 24rem;
+}
+
+.os-paticka__input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px 16px;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--os-paper);
+}
+
+.os-paticka__input:focus {
+  outline: none;
+  border-color: var(--os-accent);
+}
+
+.os-paticka__odeslat {
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--os-paper);
+  padding: 0 20px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.os-paticka__dik {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: var(--os-accent);
+}
+
+.os-paticka__sloupce {
+  display: grid;
+  gap: 40px;
+}
+
+@media (min-width: 640px) {
+  .os-paticka__sloupce {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.os-paticka__nadpis {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-paticka__odkazy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.os-paticka__odkazy a {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+}
+
+.os-paticka__odkazy a:hover {
+  color: var(--os-paper);
+}
+
+.os-paticka__kolekce {
+  margin-top: 56px;
+  border-top: 1px solid var(--os-line);
+  padding-top: 32px;
+}
+
+.os-paticka__seznam {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.os-paticka__seznam a {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: none;
+}
+
+.os-paticka__seznam a:hover {
+  color: var(--os-paper);
+}
+
+.os-paticka__spodek {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 40px;
+  border-top: 1px solid var(--os-line);
+  padding-top: 28px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.os-paticka__spodek p {
+  margin: 0;
+}

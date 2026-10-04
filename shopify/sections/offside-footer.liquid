@@ -1,0 +1,148 @@
+{%- comment -%}
+  OffsideStore — PATIČKA
+  Znacka a heslo vlevo, sloupce odkazu vpravo, dole pravni radek.
+  Kazdy sloupec je blok; odkazy se v nem zadavaji po radcich ve tvaru
+  "Text | /cesta", aby slo mit libovolny pocet bez dalsiho vnorovani.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+<footer class="os os-paticka" style="--os-accent: {{ section.settings.accent }};">
+  <div class="os__wrap">
+    <div class="os-paticka__vrch">
+      <div class="os-paticka__znacka">
+        <a class="os-znacka" href="{{ routes.root_url }}">
+          <svg class="os-znacka__mark" viewBox="0 0 72 100" aria-hidden="true">
+            <rect x="29" y="0" width="12" height="100" fill="currentColor" />
+            <circle cx="12" cy="63" r="12.5" fill="currentColor" />
+            <circle cx="57" cy="37" r="12.5" fill="var(--os-accent)" />
+          </svg>
+          <span class="os-znacka__text">
+            {{ section.settings.brand_1 }}<span class="os__accent-text">{{ section.settings.brand_2 }}</span>
+          </span>
+        </a>
+
+        {%- if section.settings.claim_1 != blank -%}
+          <p class="os-paticka__heslo">
+            {{ section.settings.claim_1 }}<br>
+            <span class="os__accent-text">{{ section.settings.claim_2 }}</span>
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.text != blank -%}
+          <div class="os-paticka__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.show_newsletter -%}
+          {%- form 'customer', class: 'os-paticka__form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input
+              class="os-paticka__input"
+              type="email"
+              name="contact[email]"
+              placeholder="{{ section.settings.newsletter_placeholder }}"
+              aria-label="E-mail pro novinky"
+              required
+            >
+            <button class="os-paticka__odeslat" type="submit">
+              {{ section.settings.newsletter_button }}
+            </button>
+            {%- if form.posted_successfully? -%}
+              <p class="os-paticka__dik">Děkujeme, jsi na seznamu.</p>
+            {%- endif -%}
+          {%- endform -%}
+        {%- endif -%}
+      </div>
+
+      <div class="os-paticka__sloupce">
+        {%- for block in section.blocks -%}
+          <div {{ block.shopify_attributes }}>
+            <h3 class="os-paticka__nadpis">{{ block.settings.title }}</h3>
+            <ul class="os-paticka__odkazy">
+              {%- assign radky = block.settings.links | newline_to_br | split: '<br />' -%}
+              {%- for radek in radky -%}
+                {%- assign casti = radek | strip | split: '|' -%}
+                {%- if casti[0] != blank -%}
+                  <li>
+                    <a href="{{ casti[1] | strip | default: '#' }}">{{ casti[0] | strip }}</a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if section.settings.show_collections -%}
+      <div class="os-paticka__kolekce">
+        <h3 class="os-paticka__nadpis">{{ section.settings.collections_title }}</h3>
+        <ul class="os-paticka__seznam">
+          {%- for kolekce in collections -%}
+            {%- if kolekce.products_count > 0 -%}
+              <li><a href="{{ kolekce.url }}">{{ kolekce.title }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+
+    <div class="os-paticka__spodek">
+      <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }} — všechna práva vyhrazena.</p>
+      {%- if section.settings.disclaimer != blank -%}
+        <p>{{ section.settings.disclaimer }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Offside — Patička",
+  "tag": "footer",
+  "settings": [
+    { "type": "text", "id": "brand_1", "label": "Název — první část", "default": "Offside" },
+    { "type": "text", "id": "brand_2", "label": "Název — barevná část", "default": "store" },
+    { "type": "text", "id": "claim_1", "label": "Heslo — první řádek", "default": "Nos svůj klub." },
+    { "type": "text", "id": "claim_2", "label": "Heslo — druhý řádek", "default": "Kdekoliv." },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text pod heslem",
+      "default": "<p>Náramky z originálních hokejových tkaniček. Ruční výroba v České republice.</p>"
+    },
+    { "type": "header", "content": "Odběr novinek" },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Zobrazit formulář", "default": true },
+    { "type": "text", "id": "newsletter_placeholder", "label": "Text v poli", "default": "tvuj@email.cz" },
+    { "type": "text", "id": "newsletter_button", "label": "Text tlačítka", "default": "Chci vědět" },
+    { "type": "header", "content": "Kolekce" },
+    { "type": "checkbox", "id": "show_collections", "label": "Vypsat kolekce", "default": true },
+    { "type": "text", "id": "collections_title", "label": "Nadpis", "default": "Náramky podle klubu" },
+    { "type": "header", "content": "Ostatní" },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Právní poznámka",
+      "default": "Nejsme oficiálním partnerem uvedených klubů. Názvy a barvy slouží k popisu varianty produktu."
+    },
+    { "type": "color", "id": "accent", "label": "Akcentní barva", "default": "#ec0016" }
+  ],
+  "blocks": [
+    {
+      "type": "sloupec",
+      "name": "Sloupec odkazů",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Nadpis sloupce", "default": "Nákup" },
+        {
+          "type": "textarea",
+          "id": "links",
+          "label": "Odkazy",
+          "info": "Jeden na řádek ve tvaru: Text | /cesta",
+          "default": "Klubové kolekce | /collections/all\nKonfigurátor | /#os-konfigurator"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4
+}
+{% endschema %}

@@ -1,0 +1,45 @@
+{
+  "name": "Hlavička",
+  "type": "header",
+  "sections": {
+    "os_header": {
+      "type": "offside-header",
+      "blocks": {
+        "n1": {
+          "type": "odkaz",
+          "settings": {
+            "label": "Kolekce",
+            "link": "shopify://collections"
+          }
+        },
+        "n2": {
+          "type": "odkaz",
+          "settings": {
+            "label": "Konfigurátor",
+            "link": "/#os-konfigurator"
+          }
+        },
+        "n3": {
+          "type": "odkaz",
+          "settings": {
+            "label": "Příběh",
+            "link": "/pages/pribeh"
+          }
+        }
+      },
+      "block_order": [
+        "n1",
+        "n2",
+        "n3"
+      ],
+      "settings": {
+        "brand_1": "Offside",
+        "brand_2": "store",
+        "accent": "#ec0016"
+      }
+    }
+  },
+  "order": [
+    "os_header"
+  ]
+}

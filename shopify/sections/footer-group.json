@@ -1,0 +1,54 @@
+{
+  "name": "Patička",
+  "type": "footer",
+  "sections": {
+    "os_footer": {
+      "type": "offside-footer",
+      "blocks": {
+        "f1": {
+          "type": "sloupec",
+          "settings": {
+            "title": "Nákup",
+            "links": "Klubové kolekce | /collections/all\nKonfigurátor | /#os-konfigurator"
+          }
+        },
+        "f2": {
+          "type": "sloupec",
+          "settings": {
+            "title": "Zákazník",
+            "links": "Doprava a vrácení | /pages/doprava-a-vraceni\nTabulka velikostí | /pages/velikosti\nPéče o náramek | /pages/pece\nKontakt | /pages/kontakt"
+          }
+        },
+        "f3": {
+          "type": "sloupec",
+          "settings": {
+            "title": "Značka",
+            "links": "Náš příběh | /pages/pribeh\nSpolupráce a kluby | /pages/spoluprace\nObchodní podmínky | /pages/obchodni-podminky\nOchrana osobních údajů | /pages/ochrana-osobnich-udaju"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "brand_1": "Offside",
+        "brand_2": "store",
+        "claim_1": "Nos svůj klub.",
+        "claim_2": "Kdekoliv.",
+        "text": "<p>Náramky z originálních hokejových tkaniček. Ruční výroba v České republice.</p>",
+        "show_newsletter": true,
+        "newsletter_placeholder": "tvuj@email.cz",
+        "newsletter_button": "Chci vědět",
+        "show_collections": true,
+        "collections_title": "Náramky podle klubu",
+        "disclaimer": "Nejsme oficiálním partnerem uvedených klubů. Názvy a barvy slouží k popisu varianty produktu.",
+        "accent": "#ec0016"
+      }
+    }
+  },
+  "order": [
+    "os_footer"
+  ]
+}
