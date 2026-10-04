@@ -655,3 +655,420 @@
     transform: none;
   }
 }
+
+/* ---------- Konfigurátor ---------- */
+
+.os-konf {
+  display: grid;
+  gap: 40px;
+  margin-top: 48px;
+}
+
+@media (min-width: 1024px) {
+  .os-konf {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .os-konf__nahled {
+    position: sticky;
+    top: 96px;
+  }
+}
+
+.os-konf__ramecek {
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 1px var(--os-line);
+  padding: 24px;
+  background: radial-gradient(
+    120% 90% at 50% 0%,
+    color-mix(in srgb, var(--os-accent) 26%, #0b0b0d) 0%,
+    #0b0b0d 68%
+  );
+}
+
+@media (min-width: 640px) {
+  .os-konf__ramecek {
+    padding: 40px;
+  }
+}
+
+.os-konf__hlavicka {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.os-konf__stitek {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-konf__klub {
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.os-konf__naramek {
+  width: 100%;
+  display: block;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
+}
+
+.os-konf__souhrn {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 24px 0 0;
+  border-top: 1px solid var(--os-line);
+  padding-top: 20px;
+  text-align: center;
+}
+
+.os-konf__souhrn dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-konf__souhrn dd {
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+  font-weight: 900;
+}
+
+.os-konf__tecka {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+/* Záložky kroků */
+
+.os-konf__zalozky {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 32px;
+  padding: 0;
+  list-style: none;
+}
+
+.os-konf__zalozky li {
+  flex: 1;
+}
+
+.os-konf__zalozka {
+  width: 100%;
+  border: 0;
+  border-top: 2px solid rgba(255, 255, 255, 0.15);
+  background: none;
+  padding: 12px 0 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 300ms ease, border-color 300ms ease;
+}
+
+.os-konf__zalozka[aria-selected="true"] {
+  border-top-color: var(--os-accent);
+  color: var(--os-paper);
+}
+
+.os-konf__nadpis {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+
+.os-konf__podnadpis {
+  margin: 32px 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-konf__popis {
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.os-konf__panel .os-kluby__grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (min-width: 640px) {
+  .os-konf__panel .os-kluby__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.os-konf__paleta {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+
+@media (min-width: 640px) {
+  .os-konf__paleta {
+    grid-template-columns: repeat(10, 1fr);
+  }
+}
+
+.os-konf__barva {
+  aspect-ratio: 1;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 200ms ease, border-color 200ms ease;
+}
+
+.os-konf__barva:hover {
+  transform: scale(1.1);
+}
+
+.os-konf__barva[aria-pressed="true"] {
+  border-color: var(--os-paper);
+  transform: scale(1.1);
+}
+
+.os-konf__label {
+  display: block;
+  margin-top: 24px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-konf__input {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--os-paper);
+}
+
+.os-konf__input:focus {
+  outline: none;
+  border-color: var(--os-accent);
+}
+
+.os-konf__napoveda {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-konf__volby {
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+@media (min-width: 640px) {
+  .os-konf__volby {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .os-konf__volby--tri {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.os-konf__volba {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: none;
+  padding: 20px;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: border-color 300ms ease, background 300ms ease;
+}
+
+.os-konf__volba:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.os-konf__volba[aria-pressed="true"] {
+  border-color: var(--os-paper);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.os-konf__volba--stred {
+  text-align: center;
+}
+
+.os-konf__volba-nazev {
+  display: block;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.os-konf__volba-velikost {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.os-konf__volba-popis {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.os-konf__souhrn-box {
+  margin-top: 40px;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px var(--os-line);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+}
+
+.os-konf__cena {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.os-konf__cena > div {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.os-konf__cena dt,
+.os-konf__cena dd {
+  margin: 0;
+}
+
+.os-konf__cena-celkem {
+  margin-top: 8px;
+  border-top: 1px solid var(--os-line);
+  padding-top: 12px;
+  align-items: baseline;
+}
+
+.os-konf__cena-celkem dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-konf__cena-celkem dd {
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: var(--os-paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.os-konf__koupit {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.os-konf__koupit[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.os-konf__poznamka {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.os-konf__navigace {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.os-konf__odkaz {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.os-konf__odkaz:hover {
+  color: var(--os-paper);
+}
+
+/* Oválné plovoucí tlačítko na mobilu */
+
+.os-konf__plovouci {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  z-index: 60;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--os-accent);
+  color: var(--os-on-accent);
+  padding: 16px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 14px 44px -8px rgba(0, 0, 0, 0.85);
+}
+
+@media (min-width: 768px) {
+  .os-konf__plovouci {
+    display: none;
+  }
+}

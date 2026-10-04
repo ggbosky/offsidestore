@@ -1,0 +1,508 @@
+{
+  "sections": {
+    "os_hero": {
+      "type": "offside-hero",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "12",
+            "label": "klubů v nabídce"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "290 Kč",
+            "label": "základní cena"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "ručně",
+            "label": "splétaný kus po kuse"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "scrim": 80,
+        "height": 100,
+        "heading_1": "Nos svůj",
+        "heading_2": "klub.",
+        "heading_3": "Kdekoliv.",
+        "text": "<p>Náramky vytvořené z originálních hokejových tkaniček. Barva tvého klubu. Jeho zkratka. Tvůj tým.</p>",
+        "button_1_label": "Vybrat svůj klub",
+        "button_1_link": "#os-kluby",
+        "button_2_label": "Vytvořit vlastní",
+        "button_2_link": "#os-konfigurator",
+        "accent": "#ec0016",
+        "accent_text": "#ffffff"
+      }
+    },
+    "os_kluby": {
+      "type": "offside-kluby",
+      "blocks": {
+        "k1": {
+          "type": "klub",
+          "settings": {
+            "abbr": "JIH",
+            "name": "Dukla Jihlava",
+            "color_from": "#d6122b",
+            "color_to": "#3e0810",
+            "ink": "#ffffff",
+            "note": "Zkratka JIH · univerzální i na míru"
+          }
+        },
+        "k2": {
+          "type": "klub",
+          "settings": {
+            "abbr": "KOM",
+            "name": "Kometa Brno",
+            "color_from": "#0b4ea2",
+            "color_to": "#061e3c",
+            "ink": "#ffffff",
+            "note": "Zkratka KOM · univerzální i na míru"
+          }
+        },
+        "k3": {
+          "type": "klub",
+          "settings": {
+            "abbr": "SPA",
+            "name": "Sparta Praha",
+            "color_from": "#b01e28",
+            "color_to": "#340a0e",
+            "ink": "#ffffff",
+            "note": "Zkratka SPA · univerzální i na míru"
+          }
+        },
+        "k4": {
+          "type": "klub",
+          "settings": {
+            "abbr": "SBA",
+            "name": "Slovan Bratislava",
+            "color_from": "#3fa9e0",
+            "color_to": "#0a3452",
+            "ink": "#ffffff",
+            "note": "Zkratka SBA · univerzální i na míru"
+          }
+        },
+        "k5": {
+          "type": "klub",
+          "settings": {
+            "abbr": "VSE",
+            "name": "VHK Vsetín",
+            "color_from": "#0f9d4f",
+            "color_to": "#f5c518",
+            "ink": "#0a2a14",
+            "note": "Zkratka VSE · univerzální i na míru"
+          }
+        },
+        "k6": {
+          "type": "klub",
+          "settings": {
+            "abbr": "PCE",
+            "name": "Dynamo Pardubice",
+            "color_from": "#e01b24",
+            "color_to": "#3a0a0e",
+            "ink": "#ffffff",
+            "note": "Zkratka PCE · univerzální i na míru"
+          }
+        },
+        "k7": {
+          "type": "klub",
+          "settings": {
+            "abbr": "TRI",
+            "name": "Oceláři Třinec",
+            "color_from": "#d2232a",
+            "color_to": "#121212",
+            "ink": "#ffffff",
+            "note": "Zkratka TRI · univerzální i na míru"
+          }
+        },
+        "k8": {
+          "type": "klub",
+          "settings": {
+            "abbr": "KLA",
+            "name": "Poldi Kladno",
+            "color_from": "#0a46a5",
+            "color_to": "#061e3c",
+            "ink": "#ffffff",
+            "note": "Zkratka KLA · univerzální i na míru"
+          }
+        },
+        "k9": {
+          "type": "klub",
+          "settings": {
+            "abbr": "TRE",
+            "name": "Dukla Trenčín",
+            "color_from": "#d0202f",
+            "color_to": "#3a0a0e",
+            "ink": "#ffffff",
+            "note": "Zkratka TRE · univerzální i na míru"
+          }
+        },
+        "k10": {
+          "type": "klub",
+          "settings": {
+            "abbr": "LIT",
+            "name": "Verva Litvínov",
+            "color_from": "#f2c300",
+            "color_to": "#121212",
+            "ink": "#ffffff",
+            "note": "Zkratka LIT · univerzální i na míru"
+          }
+        },
+        "k11": {
+          "type": "klub",
+          "settings": {
+            "abbr": "SLA",
+            "name": "Slavia Praha",
+            "color_from": "#c8102e",
+            "color_to": "#340a0e",
+            "ink": "#ffffff",
+            "note": "Zkratka SLA · univerzální i na míru"
+          }
+        },
+        "k12": {
+          "type": "klub",
+          "settings": {
+            "abbr": "ZLN",
+            "name": "PSG Berani Zlín",
+            "color_from": "#f5c518",
+            "color_to": "#101010",
+            "ink": "#ffffff",
+            "note": "Zkratka ZLN · univerzální i na míru"
+          }
+        }
+      },
+      "block_order": [
+        "k1",
+        "k2",
+        "k3",
+        "k4",
+        "k5",
+        "k6",
+        "k7",
+        "k8",
+        "k9",
+        "k10",
+        "k11",
+        "k12"
+      ],
+      "settings": {
+        "heading": "Komu fandíš?",
+        "button_label": "Koupit",
+        "accent": "#d6122b"
+      }
+    },
+    "os_edice": {
+      "type": "offside-edice",
+      "settings": {
+        "heading": "Hotové edice",
+        "products_count": 8,
+        "columns": 4,
+        "show_price": true,
+        "link_label": "Všechny kluby →",
+        "show_banner": true,
+        "accent": "#ec0016"
+      }
+    },
+    "os_konfigurator": {
+      "type": "offside-konfigurator",
+      "blocks": {
+        "k1": {
+          "type": "klub",
+          "settings": {
+            "abbr": "JIH",
+            "name": "Dukla Jihlava",
+            "color_from": "#d6122b",
+            "color_to": "#3e0810",
+            "ink": "#ffffff",
+            "lace": "#d6122b"
+          }
+        },
+        "k2": {
+          "type": "klub",
+          "settings": {
+            "abbr": "KOM",
+            "name": "Kometa Brno",
+            "color_from": "#0b4ea2",
+            "color_to": "#061e3c",
+            "ink": "#ffffff",
+            "lace": "#0b4ea2"
+          }
+        },
+        "k3": {
+          "type": "klub",
+          "settings": {
+            "abbr": "SPA",
+            "name": "Sparta Praha",
+            "color_from": "#b01e28",
+            "color_to": "#340a0e",
+            "ink": "#ffffff",
+            "lace": "#b01e28"
+          }
+        },
+        "k4": {
+          "type": "klub",
+          "settings": {
+            "abbr": "SBA",
+            "name": "Slovan Bratislava",
+            "color_from": "#3fa9e0",
+            "color_to": "#0a3452",
+            "ink": "#ffffff",
+            "lace": "#3fa9e0"
+          }
+        },
+        "k5": {
+          "type": "klub",
+          "settings": {
+            "abbr": "VSE",
+            "name": "VHK Vsetín",
+            "color_from": "#0f9d4f",
+            "color_to": "#f5c518",
+            "ink": "#0a2a14",
+            "lace": "#0f9d4f"
+          }
+        },
+        "k6": {
+          "type": "klub",
+          "settings": {
+            "abbr": "PCE",
+            "name": "Dynamo Pardubice",
+            "color_from": "#e01b24",
+            "color_to": "#3a0a0e",
+            "ink": "#ffffff",
+            "lace": "#e01b24"
+          }
+        },
+        "k7": {
+          "type": "klub",
+          "settings": {
+            "abbr": "TRI",
+            "name": "Oceláři Třinec",
+            "color_from": "#d2232a",
+            "color_to": "#121212",
+            "ink": "#ffffff",
+            "lace": "#d2232a"
+          }
+        },
+        "k8": {
+          "type": "klub",
+          "settings": {
+            "abbr": "KLA",
+            "name": "Poldi Kladno",
+            "color_from": "#0a46a5",
+            "color_to": "#061e3c",
+            "ink": "#ffffff",
+            "lace": "#0a46a5"
+          }
+        },
+        "k9": {
+          "type": "klub",
+          "settings": {
+            "abbr": "TRE",
+            "name": "Dukla Trenčín",
+            "color_from": "#d0202f",
+            "color_to": "#3a0a0e",
+            "ink": "#ffffff",
+            "lace": "#d0202f"
+          }
+        },
+        "k10": {
+          "type": "klub",
+          "settings": {
+            "abbr": "LIT",
+            "name": "Verva Litvínov",
+            "color_from": "#f2c300",
+            "color_to": "#121212",
+            "ink": "#ffffff",
+            "lace": "#f2c300"
+          }
+        },
+        "k11": {
+          "type": "klub",
+          "settings": {
+            "abbr": "SLA",
+            "name": "Slavia Praha",
+            "color_from": "#c8102e",
+            "color_to": "#340a0e",
+            "ink": "#ffffff",
+            "lace": "#c8102e"
+          }
+        },
+        "k12": {
+          "type": "klub",
+          "settings": {
+            "abbr": "ZLN",
+            "name": "PSG Berani Zlín",
+            "color_from": "#f5c518",
+            "color_to": "#101010",
+            "ink": "#ffffff",
+            "lace": "#f5c518"
+          }
+        }
+      },
+      "block_order": [
+        "k1",
+        "k2",
+        "k3",
+        "k4",
+        "k5",
+        "k6",
+        "k7",
+        "k8",
+        "k9",
+        "k10",
+        "k11",
+        "k12"
+      ],
+      "settings": {
+        "heading": "Vytvoř si svůj náramek",
+        "text": "<p>Klub, barva, písmena, zakončení. Cena se přepočítává v reálném čase — vidíš ji rovnou v tlačítku.</p>",
+        "currency_suffix": "Kč",
+        "palette": "#111111,#FFFFFF,#B01E28,#0B4EA2,#3FA9E0,#0F9D4F,#F2C300,#FF6B00,#C0C0C0,#7A4A2B",
+        "accent": "#ec0016",
+        "accent_text": "#ffffff"
+      }
+    },
+    "os_vznik": {
+      "type": "offside-jak-vznika",
+      "blocks": {
+        "v1": {
+          "type": "krok",
+          "settings": {
+            "title": "Tkanička z brusle",
+            "text": "<p>Stejný materiál, jaký drží brusli na noze. Voskované vlákno, které snese pot, mráz i vodu — proto náramek nezplihne po týdnu nošení.</p>"
+          }
+        },
+        "v2": {
+          "type": "krok",
+          "settings": {
+            "title": "Barva podle dresu",
+            "text": "<p>Odstín ladíme podle aktuálního dresu, ne podle nejbližší barvy ze skladu. Když si vezmeš náramek na stadion, sedí s tím, co máš na sobě.</p>"
+          }
+        },
+        "v3": {
+          "type": "krok",
+          "settings": {
+            "title": "Zkratka v pletení",
+            "text": "<p>Znaky nejsou nalepené ani potištěné. Jsou navlečené na tkaničce a zapletené do splétání, takže se nemají jak setřít.</p>"
+          }
+        },
+        "v4": {
+          "type": "krok",
+          "settings": {
+            "title": "Splétáno rukou",
+            "text": "<p>Každý kus splétáme ručně kus po kuse. Drobné odchylky v napětí splétání nejsou vada — jsou důkaz, že to nedělal stroj.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "v1",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "settings": {
+        "heading": "Jak vzniká",
+        "accent": "#ec0016"
+      }
+    },
+    "os_faq": {
+      "type": "offside-faq",
+      "blocks": {
+        "q1": {
+          "type": "otazka",
+          "settings": {
+            "question": "Z čeho je náramek vyrobený?",
+            "answer": "<p>Z originálních hokejových tkaniček — stejného materiálu, jaký hráči používají v bruslích. Tkanička je zkrácená, zapletená do náramku a zakončená kovovou koncovkou.</p>"
+          }
+        },
+        "q2": {
+          "type": "otazka",
+          "settings": {
+            "question": "Kolik znaků si můžu nechat vyplést?",
+            "answer": "<p>V ceně 290 Kč jsou tři znaky. Každý další stojí 12 Kč, maximum je dvanáct znaků.</p>"
+          }
+        },
+        "q3": {
+          "type": "otazka",
+          "settings": {
+            "question": "Jaký je rozdíl mezi univerzálním zakončením a velikostí na míru?",
+            "answer": "<p>Univerzální má posuvný uzel — délku si doladíš na ruce sám a sedne prakticky komukoliv. Zakončení na míru je pevné a šije se na konkrétní velikost S, M nebo L.</p>"
+          }
+        },
+        "q4": {
+          "type": "otazka",
+          "settings": {
+            "question": "Jak si vyberu velikost?",
+            "answer": "<p>S odpovídá obvodu zápěstí 16–17 cm, M 17–19 cm a L 19–21 cm. Změř obvod provázkem a přidej zhruba centimetr na volnost.</p>"
+          }
+        },
+        "q5": {
+          "type": "otazka",
+          "settings": {
+            "question": "Kdy mi náramek dorazí?",
+            "answer": "<p>Každý kus splétáme ručně, takže termín odeslání závisí na velikosti objednávky. Konkrétní termín ti potvrdíme e-mailem hned po objednání.</p>"
+          }
+        },
+        "q6": {
+          "type": "otazka",
+          "settings": {
+            "question": "Vydrží náramek ve vodě?",
+            "answer": "<p>Ano. Tkanička i koncovka snesou déšť i sprchu. Doporučujeme jen vyhnout se dlouhému máčení ve slané vodě a chlóru.</p>"
+          }
+        },
+        "q7": {
+          "type": "otazka",
+          "settings": {
+            "question": "Můžu ho vrátit?",
+            "answer": "<p>Standardní edice do 30 dnů bez udání důvodu. U kusů s vlastní zkratkou na míru vracíme peníze při vadě výroby.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7"
+      ],
+      "settings": {
+        "heading": "Časté dotazy",
+        "accent": "#ec0016"
+      }
+    },
+    "os_cta": {
+      "type": "offside-cta",
+      "settings": {
+        "heading_1": "Nos svůj klub.",
+        "heading_2": "Kdekoliv.",
+        "button_1_label": "Vytvořit si náramek",
+        "button_1_link": "#os-konfigurator",
+        "button_2_label": "Prohlédnout kolekce",
+        "button_2_link": "shopify://collections/all",
+        "accent": "#ec0016",
+        "accent_text": "#ffffff"
+      }
+    }
+  },
+  "order": [
+    "os_hero",
+    "os_kluby",
+    "os_edice",
+    "os_konfigurator",
+    "os_vznik",
+    "os_faq",
+    "os_cta"
+  ]
+}

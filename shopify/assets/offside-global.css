@@ -1,0 +1,167 @@
+/* ==========================================================================
+   OffsideStore — globalni vrstva nad Dawnem.
+   Srovnava cely motiv do cerne palety a naseho pisma, aby nase sekce
+   neplavaly mezi bilymi. Nacita se z layout/theme.liquid.
+   ========================================================================== */
+
+:root {
+  --os-ink: #050505;
+  --os-ink-soft: #0b0b0d;
+  --os-paper: #ffffff;
+  --os-accent: #ec0016;
+  --os-on-accent: #ffffff;
+  --os-line: rgba(255, 255, 255, 0.1);
+  --os-muted: rgba(255, 255, 255, 0.55);
+
+  /* Dawn pocita vsechny barvy z techhle promennych. */
+  --color-background: 5, 5, 5;
+  --color-foreground: 255, 255, 255;
+  --color-base-text: 255, 255, 255;
+  --color-base-background-1: 5, 5, 5;
+  --color-base-background-2: 11, 11, 13;
+  --color-shadow: 0, 0, 0;
+  --page-width: 1400px;
+}
+
+html,
+body {
+  background: var(--os-ink);
+  color: var(--os-paper);
+  font-family: "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Dawn renderuje kazdou sekci do .color-scheme-N s vlastnim pozadim.
+   Srovname je vsechny na cernou, at nikde neprosvita bila. */
+.color-scheme-1,
+.color-scheme-2,
+.color-scheme-3,
+.color-scheme-4,
+.color-scheme-5,
+.gradient,
+.shopify-section {
+  background: var(--os-ink);
+  background-color: var(--os-ink);
+  color: var(--os-paper);
+}
+
+/* Nase sekce maji vlastni odsazeni, Dawn jim pridava svoje. */
+.offside-section + .offside-section {
+  margin-top: 0;
+}
+
+/* ---------- Typografie napric motivem ---------- */
+
+h1,
+h2,
+h3,
+.h0,
+.h1,
+.h2,
+.h3 {
+  font-family: inherit;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+/* ---------- Formularove prvky a tlacitka Dawnu ---------- */
+
+.button,
+.shopify-challenge__button,
+.customer button {
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.button--primary,
+.button:not([disabled]):not(.button--secondary):not(.button--tertiary) {
+  background: var(--os-accent);
+  color: var(--os-on-accent);
+  box-shadow: none;
+}
+
+.button--secondary {
+  background: transparent;
+  color: var(--os-paper);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.field__input,
+.select__select,
+.customer .field input,
+textarea {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--os-paper);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ---------- Karty produktu v Dawnu (kolekce, vyhledavani) ---------- */
+
+.card__inner,
+.card--standard .card__inner {
+  background: transparent;
+}
+
+.card__heading,
+.card__heading a {
+  color: var(--os-paper);
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.price,
+.price__regular,
+.price-item {
+  color: var(--os-paper);
+  font-weight: 800;
+}
+
+/* ---------- Kosik ---------- */
+
+.cart-drawer,
+.drawer__inner,
+.cart__footer,
+.cart-items,
+.drawer {
+  background: var(--os-ink-soft);
+  color: var(--os-paper);
+}
+
+.cart-item__name,
+.cart-item__details a {
+  color: var(--os-paper);
+}
+
+/* ---------- Odkazy ---------- */
+
+a {
+  color: inherit;
+}
+
+.link,
+.link--text {
+  color: var(--os-paper);
+}
+
+/* ---------- Oddelovace ---------- */
+
+hr,
+.section-header,
+.cart-item,
+.totals {
+  border-color: var(--os-line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
