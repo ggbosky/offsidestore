@@ -1,0 +1,370 @@
+{%- comment -%}
+  OffsideStore — PRODUKTOVÁ STRÁNKA
+
+  Galerie vlevo, nakupni box vpravo (na desktopu prichyceny). Personalizaci
+  resi stejny konfigurator jako na homepage — jen bez kroku s vyberem klubu,
+  protoze ten uz urcuje produkt. Sdili i stejny JavaScript.
+
+  Zkratka a barva tkanicky se berou z metafieldu produktu:
+    custom.club_abbr  (text, napr. SPA)
+    custom.club_lace  (text, hex barvy, napr. #b01e28)
+  Kdyz chybi, odvodi se z nazvu a pouzije se vychozi cervena.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+{%- assign zkratka = product.metafields.custom.club_abbr | default: '' -%}
+{%- if zkratka == blank -%}
+  {%- assign zkratka = product.title | split: ' ' | last | slice: 0, 3 -%}
+{%- endif -%}
+{%- assign tkanicka = product.metafields.custom.club_lace | default: section.settings.default_lace -%}
+{%- assign priplatek = section.settings.addon_product -%}
+{%- assign cena_znaku = priplatek.price | default: 1200 -%}
+
+<section class="os os-produkt-detail" style="--os-accent: {{ section.settings.accent }};">
+  <div class="os__wrap">
+    <nav class="os-drobecky" aria-label="Drobečková navigace">
+      <a href="{{ routes.root_url }}">Domů</a>
+      <span>/</span>
+      {%- if collection -%}
+        <a href="{{ collection.url }}">{{ collection.title }}</a>
+        <span>/</span>
+      {%- endif -%}
+      <span class="os-drobecky__tady">{{ product.title }}</span>
+    </nav>
+
+    <div class="os-detail">
+      {# ---------- Galerie ---------- #}
+      <div class="os-detail__galerie">
+        <div class="os-galerie__hlavni" data-os-galerie-hlavni>
+          {%- if product.featured_image -%}
+            {{
+              product.featured_image
+              | image_url: width: 1400
+              | image_tag:
+                loading: 'eager',
+                sizes: '(max-width: 1024px) 100vw, 55vw',
+                widths: '500, 800, 1100, 1400',
+                alt: product.featured_image.alt | default: product.title
+            }}
+          {%- else -%}
+            <span class="os-galerie__zkratka">{{ zkratka | upcase }}</span>
+          {%- endif -%}
+        </div>
+
+        {%- if product.images.size > 1 -%}
+          <div class="os-galerie__nahledy">
+            {%- for obrazek in product.images -%}
+              <button
+                type="button"
+                class="os-galerie__nahled"
+                data-os-nahled="{{ obrazek | image_url: width: 1400 }}"
+                aria-label="Fotka {{ forloop.index }}"
+                aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+              >
+                {{ obrazek | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {# ---------- Nákupní box ---------- #}
+      <div class="os-detail__box">
+        <p class="os-detail__stitek">
+          {%- if product.vendor != blank -%}{{ product.vendor }} · {% endif -%}
+          {{ zkratka | upcase }}
+        </p>
+
+        <h1 class="os__display os-detail__nazev">{{ product.title }}</h1>
+
+        <div class="os-detail__cena-radek">
+          <span class="os-detail__cena">
+            {%- if product.price_varies -%}
+              od {{ product.price_min | money }}
+            {%- else -%}
+              {{ product.price | money }}
+            {%- endif -%}
+          </span>
+          <span class="os-detail__cena-pozn">
+            tkanička a tři znaky · každý další znak {{ cena_znaku | money }}
+          </span>
+        </div>
+
+        <div class="os-detail__odznaky">
+          <span>{% if product.available %}Skladem{% else %}Vyprodáno{% endif %}</span>
+          <span>Ruční výroba</span>
+          <span>Vrácení do 30 dnů</span>
+        </div>
+
+        {%- if product.description != blank -%}
+          <div class="os-detail__popis">{{ product.description }}</div>
+        {%- endif -%}
+
+        {# Konfigurátor bez kroku s klubem — klub určuje produkt. #}
+        <div
+          class="os-detail__konfigurator"
+          data-os-konfigurator
+          data-vychozi-klub="{{ product.title | escape }}"
+          data-vychozi-zkratka="{{ zkratka | upcase | escape }}"
+          data-vychozi-barva="{{ tkanicka }}"
+        >
+          <div class="os-konf__nahled os-konf__nahled--uzky">
+            <div class="os-konf__ramecek">
+              <svg class="os-konf__naramek" viewBox="0 95 880 200" role="img" aria-label="Náhled náramku">
+                <defs>
+                  <linearGradient id="os-kov-p-{{ section.id }}" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#3a3a40" />
+                    <stop offset="45%" stop-color="#232327" />
+                    <stop offset="100%" stop-color="#16161a" />
+                  </linearGradient>
+                </defs>
+                <ellipse cx="440" cy="250" rx="318" ry="16" fill="#000" opacity="0.45" />
+                <g data-os-prameny></g>
+                <rect x="42" y="130" width="40" height="40" rx="12" fill="url(#os-kov-p-{{ section.id }})" stroke="#ffffff18" />
+                <rect x="798" y="130" width="40" height="40" rx="12" fill="url(#os-kov-p-{{ section.id }})" stroke="#ffffff18" />
+                <g data-os-pismena-svg></g>
+              </svg>
+            </div>
+          </div>
+
+          <ol class="os-konf__zalozky">
+            <li><button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="2" aria-selected="true">1. Barva</button></li>
+            <li><button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="3">2. Písmena</button></li>
+            <li><button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="4">3. Zakončení</button></li>
+          </ol>
+
+          <div class="os-konf__panel" data-os-krok="2">
+            <p class="os-konf__popis">Přednastavená je klubová barva — přepni ji, jak chceš.</p>
+            <div class="os-konf__paleta">
+              {%- assign barvy = section.settings.palette | split: ',' -%}
+              {%- for barva in barvy -%}
+                {%- assign hex = barva | strip -%}
+                <button type="button" class="os-konf__barva" data-os-barva="{{ hex }}"
+                        aria-pressed="false" aria-label="Barva {{ hex }}" style="background: {{ hex }};"></button>
+              {%- endfor -%}
+            </div>
+            <button type="button" class="os-konf__odkaz" data-os-barva-reset>Zpět na klubovou</button>
+          </div>
+
+          <div class="os-konf__panel" data-os-krok="3" hidden>
+            <label class="os-konf__label" for="os-pismena-p-{{ section.id }}">Zkratka / nápis</label>
+            <input id="os-pismena-p-{{ section.id }}" class="os-konf__input" type="text"
+                   maxlength="12" autocomplete="off" data-os-pismena>
+            <p class="os-konf__napoveda" data-os-napoveda></p>
+          </div>
+
+          <div class="os-konf__panel" data-os-krok="4" hidden>
+            <div class="os-konf__volby">
+              <button type="button" class="os-konf__volba" data-os-zakonceni="UNI" aria-pressed="true">
+                <span class="os-konf__volba-nazev">Univerzální</span>
+                <span class="os-konf__volba-popis">Posuvný uzel — doladíš si ho na ruce.</span>
+              </button>
+              <button type="button" class="os-konf__volba" data-os-zakonceni="FIX" aria-pressed="false">
+                <span class="os-konf__volba-nazev">Na míru</span>
+                <span class="os-konf__volba-popis">Pevné zakončení na konkrétní velikost.</span>
+              </button>
+            </div>
+            <div data-os-velikosti hidden>
+              <h4 class="os-konf__podnadpis">Velikost</h4>
+              <div class="os-konf__volby os-konf__volby--tri">
+                {%- assign velikosti = 'S|16–17 cm,M|17–19 cm,L|19–21 cm' | split: ',' -%}
+                {%- for v in velikosti -%}
+                  {%- assign casti = v | split: '|' -%}
+                  <button type="button" class="os-konf__volba os-konf__volba--stred"
+                          data-os-velikost="{{ casti[0] }}"
+                          aria-pressed="{% if casti[0] == 'M' %}true{% else %}false{% endif %}">
+                    <span class="os-konf__volba-velikost">{{ casti[0] }}</span>
+                    <span class="os-konf__volba-popis">{{ casti[1] }}</span>
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+
+          <div class="os-konf__souhrn-box">
+            <dl class="os-konf__cena">
+              <div>
+                <dt>Základ (tkanička + 3 znaky)</dt>
+                <dd data-os-cena-zaklad>{{ product.price | money }}</dd>
+              </div>
+              <div data-os-radek-znaku hidden>
+                <dt data-os-popis-znaku></dt>
+                <dd data-os-cena-navic></dd>
+              </div>
+              <div class="os-konf__cena-celkem">
+                <dt>Celkem</dt>
+                <dd data-os-cena-celkem>{{ product.price | money }}</dd>
+              </div>
+            </dl>
+
+            <button type="button" class="os__btn os__btn--accent os-konf__koupit" data-os-pridat
+                    {% unless product.available %}disabled{% endunless %}>
+              <span data-os-popisek-tlacitka>Přidat do košíku</span>
+            </button>
+
+            <p class="os-konf__poznamka" data-os-stav>
+              Ruční výroba v Česku · Termín odeslání potvrdíme e-mailem
+            </p>
+          </div>
+
+          <a class="os-konf__plovouci" data-os-plovouci href="#">
+            <span data-os-popisek-plovouci>Přidat do košíku</span>
+          </a>
+
+          <script type="application/json" data-os-data>
+            {
+              "varianty": [
+                {%- for v in product.variants -%}
+                  { "id": {{ v.id }}, "nazev": {{ v.title | json }}, "cena": {{ v.price }}, "skladem": {{ v.available }} }
+                  {%- unless forloop.last -%},{%- endunless -%}
+                {%- endfor -%}
+              ],
+              "priplatekId": {% if priplatek.first_available_variant %}{{ priplatek.first_available_variant.id }}{% else %}null{% endif %},
+              "cenaZnaku": {{ cena_znaku }},
+              "mena": {{ section.settings.currency_suffix | json }},
+              "znakyVCene": 3
+            }
+          </script>
+        </div>
+      </div>
+    </div>
+
+    {# ---------- Detaily ---------- #}
+    {%- if section.blocks.size > 0 -%}
+      <section class="os-detail__sekce">
+        <div class="os-detail__dvojice">
+          <div>
+            <h2 class="os__display os-detail__podnadpis">Detaily</h2>
+            <p class="os-detail__uvod">
+              Každý náramek je kompletovaný ručně. Drobné odchylky v zapletení
+              jsou znakem toho, že ho dělal člověk.
+            </p>
+          </div>
+          <dl class="os-detail__tabulka">
+            {%- for block in section.blocks -%}
+              <div {{ block.shopify_attributes }}>
+                <dt>{{ block.settings.term }}</dt>
+                <dd>{{ block.settings.value }}</dd>
+              </div>
+            {%- endfor -%}
+          </dl>
+        </div>
+      </section>
+    {%- endif -%}
+
+    {# ---------- Velikosti ---------- #}
+    <section class="os-detail__sekce">
+      <h2 class="os__display os-detail__podnadpis">Velikosti na míru</h2>
+      <div class="os-tabulka-obal">
+        <table class="os-tabulka">
+          <thead>
+            <tr><th>Velikost</th><th>Obvod zápěstí</th><th>Komu sedí</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>S</td><td>16–17 cm</td><td>Děti a útlejší zápěstí</td></tr>
+            <tr><td>M</td><td>17–19 cm</td><td>Nejčastější volba</td></tr>
+            <tr><td>L</td><td>19–21 cm</td><td>Silnější zápěstí</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    {# ---------- Další produkty ---------- #}
+    {%- assign dalsi = section.settings.related_collection -%}
+    {%- if dalsi != blank and dalsi.products_count > 1 -%}
+      <section class="os-detail__sekce">
+        <h2 class="os__display os-detail__podnadpis">Další kluby</h2>
+        <div class="os-produkty" style="--os-cols: 4">
+          {%- assign vypsano = 0 -%}
+          {%- for p in dalsi.products -%}
+            {%- if p.id != product.id and vypsano < 4 -%}
+              {%- assign vypsano = vypsano | plus: 1 -%}
+              <a class="os-produkt" href="{{ p.url }}">
+                <div class="os-produkt__media">
+                  {%- if p.featured_image -%}
+                    {{ p.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: p.title }}
+                  {%- else -%}
+                    <span class="os-produkt__placeholder">
+                      {{- p.metafields.custom.club_abbr | default: p.title | split: ' ' | last | slice: 0, 3 | upcase -}}
+                    </span>
+                  {%- endif -%}
+                </div>
+                <div class="os-produkt__body">
+                  <h3 class="os-produkt__title">{{ p.title }}</h3>
+                  <div class="os-produkt__foot">
+                    <span class="os-produkt__price">{{ p.price | money }}</span>
+                    <span class="os-produkt__more">Detail &rarr;</span>
+                  </div>
+                </div>
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </section>
+    {%- endif -%}
+  </div>
+</section>
+
+<script src="{{ 'offside-konfigurator.js' | asset_url }}" defer></script>
+<script>
+  (function () {
+    // Prepinani fotek v galerii.
+    var hlavni = document.querySelector('[data-os-galerie-hlavni] img');
+    document.querySelectorAll('[data-os-nahled]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (hlavni) hlavni.src = btn.getAttribute('data-os-nahled');
+        document.querySelectorAll('[data-os-nahled]').forEach(function (b) {
+          b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Offside — Produkt",
+  "tag": "section",
+  "class": "offside-section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "addon_product",
+      "label": "Příplatek za znak",
+      "info": "Skrytý produkt za 12 Kč. Za každý znak nad tři se přidá jeden kus."
+    },
+    {
+      "type": "collection",
+      "id": "related_collection",
+      "label": "Kolekce pro „Další kluby“"
+    },
+    {
+      "type": "color",
+      "id": "default_lace",
+      "label": "Výchozí barva tkaničky",
+      "info": "Použije se, když produkt nemá metafield custom.club_lace.",
+      "default": "#b01e28"
+    },
+    {
+      "type": "textarea",
+      "id": "palette",
+      "label": "Paleta barev",
+      "default": "#111111,#FFFFFF,#B01E28,#0B4EA2,#3FA9E0,#0F9D4F,#F2C300,#FF6B00,#C0C0C0,#7A4A2B"
+    },
+    { "type": "text", "id": "currency_suffix", "label": "Zkratka měny", "default": "Kč" },
+    { "type": "color", "id": "accent", "label": "Akcentní barva", "default": "#ec0016" }
+  ],
+  "blocks": [
+    {
+      "type": "detail",
+      "name": "Řádek detailu",
+      "settings": [
+        { "type": "text", "id": "term", "label": "Název", "default": "Materiál" },
+        { "type": "text", "id": "value", "label": "Hodnota", "default": "Originální hokejová tkanička" }
+      ]
+    }
+  ],
+  "max_blocks": 10
+}
+{% endschema %}

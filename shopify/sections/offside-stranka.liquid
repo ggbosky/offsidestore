@@ -1,0 +1,31 @@
+{%- comment -%}
+  OffsideStore — OBSAHOVÁ STRÁNKA
+  Vykresli obsah stranky zalozene v adminu (Content -> Pages) v nasi
+  typografii. Pouziva se pro dopravu, velikosti, pravni texty a podobne.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+<section class="os os-section" style="--os-accent: {{ section.settings.accent }};">
+  <div class="os__wrap os-stranka">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="os-stranka__stitek">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    <h1 class="os__display os__h2">{{ page.title }}</h1>
+
+    <div class="os-stranka__obsah">{{ page.content }}</div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Offside — Obsahová stránka",
+  "tag": "section",
+  "class": "offside-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Štítek nad nadpisem" },
+    { "type": "color", "id": "accent", "label": "Akcentní barva", "default": "#ec0016" }
+  ]
+}
+{% endschema %}

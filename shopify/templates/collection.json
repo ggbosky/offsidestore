@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "offside-kolekce",
+      "settings": {
+        "fallback_heading": "Vyber si klub",
+        "text": "<p>Předpřipravené varianty podle klubů. Barva, zkratka, hotovo.</p>",
+        "columns": 4,
+        "button_label": "Vytvořit vlastní",
+        "button_link": "/#os-konfigurator",
+        "accent": "#ec0016"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

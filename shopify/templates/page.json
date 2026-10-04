@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "offside-stranka",
+      "settings": {
+        "accent": "#ec0016"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

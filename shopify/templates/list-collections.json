@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "offside-kolekce",
+      "settings": {
+        "fallback_heading": "Kolekce",
+        "columns": 4,
+        "accent": "#ec0016"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

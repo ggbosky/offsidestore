@@ -1,0 +1,100 @@
+{%- comment -%}
+  OffsideStore — STRÁNKA KOLEKCE
+  Nadpis, popis a mrizka produktu v nasem designu. Pouziva stejne karty
+  jako sekce Hotove edice na uvodni strance.
+{%- endcomment -%}
+
+{{ 'offside.css' | asset_url | stylesheet_tag }}
+
+<section class="os os-section" style="--os-accent: {{ section.settings.accent }}; --os-cols: {{ section.settings.columns }};">
+  <div class="os__wrap">
+    <h1 class="os__display os__h2">{{ collection.title | default: section.settings.fallback_heading }}</h1>
+
+    {%- if collection.description != blank -%}
+      <div class="os__lead">{{ collection.description }}</div>
+    {%- elsif section.settings.text != blank -%}
+      <div class="os__lead">{{ section.settings.text }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="os__buttons">
+        <a class="os__btn os__btn--outline" href="{{ section.settings.button_link | default: '/' }}">
+          {{ section.settings.button_label }}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- if collection.products.size > 0 -%}
+      <div class="os-produkty">
+        {%- for product in collection.products -%}
+          <a class="os-produkt" href="{{ product.url }}">
+            <div class="os-produkt__media">
+              {%- if product.featured_image -%}
+                {{
+                  product.featured_image
+                  | image_url: width: 800
+                  | image_tag:
+                    loading: 'lazy',
+                    sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw',
+                    widths: '300, 500, 700, 800',
+                    alt: product.featured_image.alt | default: product.title
+                }}
+              {%- else -%}
+                {%- assign zkratka = product.metafields.custom.club_abbr -%}
+                {%- if zkratka == blank -%}
+                  {%- assign zkratka = product.title | split: ' ' | last | slice: 0, 3 -%}
+                {%- endif -%}
+                <span class="os-produkt__placeholder">{{ zkratka | upcase }}</span>
+              {%- endif -%}
+            </div>
+            <div class="os-produkt__body">
+              <div>
+                <h2 class="os-produkt__title">{{ product.title }}</h2>
+                {%- if product.type != blank -%}
+                  <p class="os-produkt__meta">{{ product.type }}</p>
+                {%- endif -%}
+              </div>
+              <div class="os-produkt__foot">
+                <span class="os-produkt__price">
+                  {%- if product.price_varies -%}od {{ product.price_min | money }}
+                  {%- else -%}{{ product.price | money }}{%- endif -%}
+                </span>
+                <span class="os-produkt__more">Detail &rarr;</span>
+              </div>
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="os-strankovani" aria-label="Stránkování">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}">&larr; Předchozí</a>
+          {%- endif -%}
+          <span>{{ paginate.current_page }} / {{ paginate.pages }}</span>
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}">Další &rarr;</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- else -%}
+      <div class="os-produkty__empty">V této kolekci zatím nic není.</div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Offside — Kolekce",
+  "tag": "section",
+  "class": "offside-section",
+  "settings": [
+    { "type": "text", "id": "fallback_heading", "label": "Nadpis, když kolekce nemá název", "default": "Vyber si klub" },
+    { "type": "richtext", "id": "text", "label": "Text, když kolekce nemá popis", "default": "<p>Předpřipravené varianty podle klubů. Barva, zkratka, hotovo.</p>" },
+    { "type": "range", "id": "columns", "min": 2, "max": 5, "step": 1, "label": "Sloupců na počítači", "default": 4 },
+    { "type": "text", "id": "button_label", "label": "Text tlačítka", "default": "Vytvořit vlastní" },
+    { "type": "url", "id": "button_link", "label": "Odkaz tlačítka" },
+    { "type": "color", "id": "accent", "label": "Akcentní barva", "default": "#ec0016" }
+  ]
+}
+{% endschema %}

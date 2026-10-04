@@ -1,0 +1,68 @@
+{
+  "sections": {
+    "main": {
+      "type": "offside-produkt",
+      "blocks": {
+        "d1": {
+          "type": "detail",
+          "settings": {
+            "term": "Materiál",
+            "value": "Originální hokejová tkanička, voskovaná polyesterová nit"
+          }
+        },
+        "d2": {
+          "type": "detail",
+          "settings": {
+            "term": "Rozměry",
+            "value": "Šíře 9 mm, délka podle zvoleného zakončení"
+          }
+        },
+        "d3": {
+          "type": "detail",
+          "settings": {
+            "term": "Zakončení",
+            "value": "Univerzální s posuvným uzlem, nebo pevné na míru"
+          }
+        },
+        "d4": {
+          "type": "detail",
+          "settings": {
+            "term": "Písmena",
+            "value": "Ražená kovová písmena, 3 znaky v ceně, každý další 12 Kč"
+          }
+        },
+        "d5": {
+          "type": "detail",
+          "settings": {
+            "term": "Péče",
+            "value": "Snese vodu i pot. Neutírat rozpouštědly, nesušit na radiátoru."
+          }
+        },
+        "d6": {
+          "type": "detail",
+          "settings": {
+            "term": "Původ",
+            "value": "Ruční výroba v České republice"
+          }
+        }
+      },
+      "block_order": [
+        "d1",
+        "d2",
+        "d3",
+        "d4",
+        "d5",
+        "d6"
+      ],
+      "settings": {
+        "default_lace": "#b01e28",
+        "palette": "#111111,#FFFFFF,#B01E28,#0B4EA2,#3FA9E0,#0F9D4F,#F2C300,#FF6B00,#C0C0C0,#7A4A2B",
+        "currency_suffix": "Kč",
+        "accent": "#ec0016"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

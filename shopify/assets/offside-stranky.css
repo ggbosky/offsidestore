@@ -1,0 +1,371 @@
+/* ==========================================================================
+   OffsideStore — produktová stránka, kolekce a obsahové stránky.
+   Oddeleno od offside.css, aby se v nem dalo vyznat.
+   ========================================================================== */
+
+/* ---------- Produktová stránka ---------- */
+
+.os-produkt-detail {
+  padding-top: 112px;
+  padding-bottom: 96px;
+}
+
+.os-drobecky {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.os-drobecky a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.os-drobecky a:hover {
+  color: var(--os-paper);
+}
+
+.os-drobecky__tady {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.os-detail {
+  display: grid;
+  gap: 40px;
+  margin-top: 32px;
+}
+
+@media (min-width: 1024px) {
+  .os-detail {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .os-detail__box {
+    position: sticky;
+    top: 96px;
+  }
+}
+
+.os-galerie__hlavni {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 24px;
+  background: radial-gradient(
+    120% 100% at 50% 0%,
+    color-mix(in srgb, var(--os-accent) 16%, #0b0b0d) 0%,
+    #0b0b0d 72%
+  );
+}
+
+.os-galerie__hlavni img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.os-galerie__zkratka {
+  font-size: clamp(3rem, 12vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.os-galerie__nahledy {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.os-galerie__nahled {
+  width: 80px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: #101013;
+  cursor: pointer;
+  padding: 0;
+}
+
+.os-galerie__nahled[aria-pressed="true"] {
+  border-color: var(--os-paper);
+}
+
+.os-galerie__nahled img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.os-detail__stitek {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-detail__nazev {
+  margin: 12px 0 0;
+  font-size: clamp(2.2rem, 11vw, 3.6rem);
+  line-height: 0.88;
+}
+
+.os-detail__cena-radek {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.os-detail__cena {
+  font-size: 1.875rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.os-detail__cena-pozn {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-detail__odznaky {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.os-detail__odznaky span {
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.os-detail__popis {
+  margin-top: 24px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.os-detail__konfigurator {
+  margin-top: 36px;
+  border-top: 1px solid var(--os-line);
+  padding-top: 36px;
+}
+
+.os-konf__nahled--uzky .os-konf__ramecek {
+  padding: 20px;
+}
+
+.os-detail__konfigurator .os-konf__zalozky {
+  margin-top: 24px;
+}
+
+.os-detail__sekce {
+  margin-top: 80px;
+}
+
+.os-detail__podnadpis {
+  margin: 0;
+  font-size: 1.875rem;
+}
+
+.os-detail__dvojice {
+  display: grid;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .os-detail__dvojice {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 48px;
+  }
+}
+
+.os-detail__uvod {
+  margin: 12px 0 0;
+  max-width: 24rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.os-detail__tabulka {
+  margin: 0;
+  border-top: 1px solid var(--os-line);
+}
+
+.os-detail__tabulka > div {
+  display: grid;
+  gap: 4px;
+  border-bottom: 1px solid var(--os-line);
+  padding: 16px 0;
+}
+
+@media (min-width: 640px) {
+  .os-detail__tabulka > div {
+    grid-template-columns: 180px 1fr;
+  }
+}
+
+.os-detail__tabulka dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-detail__tabulka dd {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.os-tabulka-obal {
+  margin-top: 24px;
+  overflow-x: auto;
+}
+
+.os-tabulka {
+  width: 100%;
+  min-width: 420px;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.os-tabulka th {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px 24px 12px 0;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-tabulka td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 24px 12px 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.os-tabulka td:first-child {
+  font-weight: 900;
+  color: var(--os-paper);
+}
+
+/* ---------- Stránkování ---------- */
+
+.os-strankovani {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 48px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.os-strankovani a {
+  color: var(--os-paper);
+  text-decoration: none;
+}
+
+/* ---------- Obsahová stránka ---------- */
+
+.os-stranka {
+  max-width: 860px;
+}
+
+.os-stranka__stitek {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-stranka__obsah {
+  margin-top: 40px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.os-stranka__obsah h2 {
+  margin: 40px 0 12px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--os-paper);
+}
+
+.os-stranka__obsah p {
+  margin: 0 0 16px;
+}
+
+.os-stranka__obsah ul {
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+
+.os-stranka__obsah li {
+  margin-bottom: 8px;
+}
+
+.os-stranka__obsah a {
+  color: var(--os-paper);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.os-stranka__obsah table {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.os-stranka__obsah th {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px 20px 12px 0;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.os-stranka__obsah td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 20px 12px 0;
+}
+
+/* Perex stránky je v HTML jako <em> hned na začátku. */
+.os-stranka__obsah > p:first-child em {
+  display: block;
+  font-size: 1.125rem;
+  font-style: normal;
+  color: rgba(255, 255, 255, 0.75);
+}

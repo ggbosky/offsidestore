@@ -434,10 +434,16 @@
       stav.zkratka = ocisti(prvni.dataset.abbr || "");
       stav.barva = prvni.dataset.lace || stav.barva;
       stav.klubovaBarva = stav.barva;
-      if (el.vstup) el.vstup.value = stav.zkratka;
+    } else {
+      // Produktova stranka nema dlazdice klubu — klub je dany produktem.
+      stav.klub = root.dataset.vychoziKlub || "";
+      stav.zkratka = ocisti(root.dataset.vychoziZkratka || "");
+      stav.barva = root.dataset.vychoziBarva || stav.barva;
+      stav.klubovaBarva = stav.barva;
     }
+    if (el.vstup) el.vstup.value = stav.zkratka;
     oznacBarvu();
-    nastavKrok(1);
+    nastavKrok(prvni ? 1 : 2);
     obnov();
   }
 

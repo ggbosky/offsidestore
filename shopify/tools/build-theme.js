@@ -74,7 +74,8 @@ if (!layout.includes("offside-global.css")) {
 
   const odkazy =
     "    {{ 'offside-global.css' | asset_url | stylesheet_tag }}\n" +
-    "    {{ 'offside.css' | asset_url | stylesheet_tag }}\n";
+    "    {{ 'offside.css' | asset_url | stylesheet_tag }}\n" +
+    "    {{ 'offside-stranky.css' | asset_url | stylesheet_tag }}\n";
 
   // V hlavicce kvuli prvnimu vykresleni, jinak problikne bila.
   layout = layout.replace(kotva, kotva + "\n" + odkazy);
