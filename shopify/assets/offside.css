@@ -1503,3 +1503,21 @@
   color: var(--os-accent);
   min-height: 1.2em;
 }
+
+/* Dlaždice klubu s fotkou produktu */
+
+.os-klub--foto {
+  padding: 0;
+}
+
+.os-klub__foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.os-klub--foto .os-klub__abbr,
+.os-klub--foto .os-klub__name {
+  display: none;
+}

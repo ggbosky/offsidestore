@@ -1,21 +1,24 @@
 {%- comment -%}
   OffsideStore — KOMU FANDÍŠ
 
-  Kazdy klub je blok a ma vlastni produkt. Kliknuti na dlazdici prepne panel
-  pod mrizkou, tlacitko pak vlozi produkt toho klubu rovnou do kosiku pres
-  Shopify Cart API. Vedle je odkaz na detail, kdyz si ho chce zakaznik
-  nejdriv upravit.
+  Dlazdice se berou z kolekce: kazdy produkt v ni je jeden klub. Na dlazdici
+  je fotka naramku, a dokud fotka neni, zkratka klubu na klubovem prechodu.
+  Kliknuti vybere klub, tlacitko vlozi produkt do kosiku pres Cart API.
 
-  Kdyz blok produkt nema, tlacitko se zmeni na odkaz — at nikdy nevede
-  do prazdna.
+  Barvy se ctou z metafieldu produktu (vsechny nepovinne):
+    custom.club_abbr  — zkratka, napr. SPA
+    custom.club_from  — zacatek prechodu, hex
+    custom.club_to    — konec prechodu, hex
+    custom.club_ink   — barva zkratky, hex
 {%- endcomment -%}
 
 {{ 'offside.css' | asset_url | stylesheet_tag }}
 
+{%- assign kolekce = section.settings.collection -%}
+
 <section
   class="os os-section"
   id="os-kluby"
-  data-os-kluby
   style="--os-accent: {{ section.settings.accent }};"
 >
   <div class="os__wrap">
@@ -23,56 +26,72 @@
       <h2 class="os__display os__h2">{{ section.settings.heading }}</h2>
     {%- endif -%}
 
-    {%- if section.blocks.size > 0 -%}
+    {%- if kolekce != blank and kolekce.products_count > 0 -%}
       <div class="os-kluby__grid">
-        {%- for block in section.blocks -%}
-          {%- assign p = block.settings.product -%}
-          {%- assign varianta = p.selected_or_first_available_variant -%}
+        {%- for produkt in kolekce.products limit: section.settings.max_products -%}
+          {%- assign varianta = produkt.selected_or_first_available_variant -%}
+
+          {%- assign zkratka = produkt.metafields.custom.club_abbr -%}
+          {%- if zkratka == blank -%}
+            {%- assign zkratka = produkt.title | split: ' ' | last | slice: 0, 3 -%}
+          {%- endif -%}
+
+          {%- assign od = produkt.metafields.custom.club_from | default: section.settings.default_from -%}
+          {%- assign do = produkt.metafields.custom.club_to | default: section.settings.default_to -%}
+          {%- assign inkoust = produkt.metafields.custom.club_ink | default: '#ffffff' -%}
+
           <button
             type="button"
-            class="os-klub"
-            {{ block.shopify_attributes }}
-            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            class="os-klub{% if produkt.featured_image %} os-klub--foto{% endif %}"
             data-os-klub
-            data-accent="{{ block.settings.color_from }}"
-            data-name="{{ block.settings.name | escape }}"
-            data-abbr="{{ block.settings.abbr | escape }}"
-            data-note="{{ block.settings.note | escape }}"
-            data-url="{{ p.url | default: block.settings.link }}"
+            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            data-accent="{{ od }}"
+            data-name="{{ produkt.title | escape }}"
+            data-abbr="{{ zkratka | upcase | escape }}"
+            data-url="{{ produkt.url }}"
             data-variant="{% if varianta %}{{ varianta.id }}{% endif %}"
             data-cena="{% if varianta %}{{ varianta.price | money }}{% endif %}"
             data-skladem="{% if varianta and varianta.available %}1{% else %}0{% endif %}"
-            style="background: linear-gradient(135deg, {{ block.settings.color_from }} 0%, {{ block.settings.color_to }} 100%); color: {{ block.settings.ink }};"
+            style="background: linear-gradient(135deg, {{ od }} 0%, {{ do }} 100%); color: {{ inkoust }};"
           >
-            <span class="os-klub__abbr">{{ block.settings.abbr }}</span>
-            <span class="os-klub__name">{{ block.settings.name }}</span>
+            {%- if produkt.featured_image -%}
+              {{
+                produkt.featured_image
+                | image_url: width: 600
+                | image_tag:
+                  loading: 'lazy',
+                  class: 'os-klub__foto',
+                  sizes: '(max-width: 640px) 33vw, 220px',
+                  widths: '220, 400, 600',
+                  alt: produkt.title
+              }}
+            {%- else -%}
+              <span class="os-klub__abbr">{{ zkratka | upcase }}</span>
+            {%- endif -%}
           </button>
         {%- endfor -%}
       </div>
 
-      {%- assign prvni = section.blocks.first -%}
-      {%- assign prvni_produkt = prvni.settings.product -%}
+      {%- assign prvni = kolekce.products.first -%}
+      {%- assign prvni_varianta = prvni.selected_or_first_available_variant -%}
       <div class="os-kluby__panel">
         <div>
-          <p class="os-kluby__panel-name" data-os-panel-name>{{ prvni.settings.name }}</p>
-          <p class="os-kluby__panel-note" data-os-panel-note>{{ prvni.settings.note }}</p>
+          <p class="os-kluby__panel-name" data-os-panel-name>{{ prvni.title }}</p>
+          <p class="os-kluby__panel-note" data-os-panel-note>
+            {{ section.settings.note }}
+          </p>
         </div>
 
         <div class="os-kluby__akce">
           <span class="os-kluby__cena" data-os-panel-cena>
-            {%- if prvni_produkt.selected_or_first_available_variant -%}
-              {{ prvni_produkt.selected_or_first_available_variant.price | money }}
-            {%- endif -%}
+            {%- if prvni_varianta -%}{{ prvni_varianta.price | money }}{%- endif -%}
           </span>
 
           <button type="button" class="os__btn os__btn--accent" data-os-panel-koupit>
-            <span data-os-panel-popisek>
-              {{ section.settings.button_label }} {{ prvni.settings.abbr }}
-            </span>
+            <span data-os-panel-popisek>{{ section.settings.button_label }}</span>
           </button>
 
-          <a class="os-kluby__detail" data-os-panel-detail
-             href="{{ prvni_produkt.url | default: prvni.settings.link | default: '#' }}">
+          <a class="os-kluby__detail" data-os-panel-detail href="{{ prvni.url }}">
             Detail &rarr;
           </a>
         </div>
@@ -81,7 +100,8 @@
       <p class="os-kluby__stav" data-os-panel-stav role="status"></p>
     {%- else -%}
       <div class="os-produkty__empty">
-        Přidej kluby přes „Přidat blok" v nastavení sekce vlevo.
+        Vyber v nastavení sekce kolekci s náramky. Každý produkt v ní se tu
+        zobrazí jako jeden klub.
       </div>
     {%- endif -%}
   </div>
@@ -93,29 +113,25 @@
     if (!root) return;
 
     var tiles = root.querySelectorAll('[data-os-klub]');
+    if (!tiles.length) return;
+
     var name = root.querySelector('[data-os-panel-name]');
-    var note = root.querySelector('[data-os-panel-note]');
     var cena = root.querySelector('[data-os-panel-cena]');
     var detail = root.querySelector('[data-os-panel-detail]');
     var koupit = root.querySelector('[data-os-panel-koupit]');
     var popisek = root.querySelector('[data-os-panel-popisek]');
     var stav = root.querySelector('[data-os-panel-stav]');
     var popisekZaklad = {{ section.settings.button_label | default: 'Koupit' | json }};
-
     var vybrany = tiles[0];
 
-    /**
-     * Vrati #000 nebo #fff podle toho, co je na dane barve citelnejsi.
-     * Zlute kluby jinak dostaly bily text a tlacitko nebylo videt.
-     */
+    /* Bila na zlute neni videt — barvu textu urcime podle jasu podkladu. */
     function textNaBarve(hex) {
       var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '');
       if (!m) return '#ffffff';
       var jas =
         (0.2126 * parseInt(m[1], 16) +
           0.7152 * parseInt(m[2], 16) +
-          0.0722 * parseInt(m[3], 16)) /
-        255;
+          0.0722 * parseInt(m[3], 16)) / 255;
       return jas > 0.6 ? '#0a0a0a' : '#ffffff';
     }
 
@@ -130,23 +146,15 @@
       root.style.setProperty('--os-on-accent', textNaBarve(akcent));
 
       if (name) name.textContent = tile.dataset.name || '';
-      if (note) note.textContent = tile.dataset.note || '';
       if (cena) cena.textContent = tile.dataset.cena || '';
       if (detail) detail.setAttribute('href', tile.dataset.url || '#');
       if (popisek) popisek.textContent = popisekZaklad + ' ' + (tile.dataset.abbr || '');
       if (stav) stav.textContent = '';
-
-      if (koupit) {
-        var lze = tile.dataset.variant && tile.dataset.skladem === '1';
-        koupit.disabled = !lze;
-        koupit.title = lze ? '' : 'Tento klub zatím nemá produkt nebo není skladem.';
-      }
+      if (koupit) koupit.disabled = !(tile.dataset.variant && tile.dataset.skladem === '1');
     }
 
     tiles.forEach(function (tile) {
-      tile.addEventListener('click', function () {
-        vyber(tile);
-      });
+      tile.addEventListener('click', function () { vyber(tile); });
     });
 
     if (koupit) {
@@ -162,15 +170,10 @@
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({ items: [{ id: Number(id), quantity: 1 }] }),
         })
-          .then(function (r) {
-            if (!r.ok) throw new Error('cart');
-            return r.json();
-          })
+          .then(function (r) { if (!r.ok) throw new Error('cart'); return r.json(); })
           .then(function () {
             if (stav) stav.textContent = 'Přidáno do košíku, otevírám ho…';
-            setTimeout(function () {
-              window.location.href = '/cart';
-            }, 600);
+            setTimeout(function () { window.location.href = '/cart'; }, 600);
           })
           .catch(function () {
             if (stav) stav.textContent = 'Nepodařilo se přidat do košíku. Zkus to prosím znovu.';
@@ -179,7 +182,7 @@
       });
     }
 
-    if (tiles.length) vyber(tiles[0]);
+    vyber(tiles[0]);
   })();
 </script>
 
@@ -189,58 +192,34 @@
   "tag": "section",
   "class": "offside-section",
   "settings": [
+    { "type": "text", "id": "heading", "label": "Nadpis", "default": "Komu fandíš?" },
     {
-      "type": "text",
-      "id": "heading",
-      "label": "Nadpis",
-      "default": "Komu fandíš?"
+      "type": "collection",
+      "id": "collection",
+      "label": "Kolekce s náramky",
+      "info": "Každý produkt v kolekci se zobrazí jako jeden klub."
     },
     {
-      "type": "text",
-      "id": "button_label",
-      "label": "Text tlačítka",
-      "info": "Za text se automaticky doplní zkratka vybraného klubu.",
-      "default": "Koupit"
+      "type": "range",
+      "id": "max_products",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "label": "Kolik klubů zobrazit",
+      "default": 12
     },
+    { "type": "text", "id": "button_label", "label": "Text tlačítka", "default": "Koupit" },
     {
-      "type": "color",
-      "id": "accent",
-      "label": "Výchozí akcentní barva",
-      "default": "#ec0016"
-    }
+      "type": "text",
+      "id": "note",
+      "label": "Popisek pod názvem",
+      "default": "Ruční výroba · univerzální i na míru"
+    },
+    { "type": "header", "content": "Barvy, když produkt nemá metafieldy" },
+    { "type": "color", "id": "default_from", "label": "Přechod — začátek", "default": "#b01e28" },
+    { "type": "color", "id": "default_to", "label": "Přechod — konec", "default": "#340a0e" },
+    { "type": "color", "id": "accent", "label": "Akcentní barva", "default": "#ec0016" }
   ],
-  "blocks": [
-    {
-      "type": "klub",
-      "name": "Klub",
-      "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Produkt klubu",
-          "info": "Tenhle produkt se vloží do košíku po kliknutí na tlačítko."
-        },
-        { "type": "text", "id": "abbr", "label": "Zkratka", "default": "SPA" },
-        { "type": "text", "id": "name", "label": "Název klubu", "default": "Sparta Praha" },
-        {
-          "type": "text",
-          "id": "note",
-          "label": "Popisek pod názvem",
-          "default": "Zkratka SPA · univerzální i na míru"
-        },
-        { "type": "color", "id": "color_from", "label": "Přechod — začátek", "default": "#b01e28" },
-        { "type": "color", "id": "color_to", "label": "Přechod — konec", "default": "#340a0e" },
-        { "type": "color", "id": "ink", "label": "Barva zkratky", "default": "#ffffff" },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "Odkaz (záloha)",
-          "info": "Použije se, jen když není vybraný produkt."
-        }
-      ]
-    }
-  ],
-  "max_blocks": 24,
   "presets": [{ "name": "Offside — Komu fandíš" }]
 }
 {% endschema %}

@@ -3,6 +3,10 @@
 
    Kresli nahled, pocita cenu a vklada do kosiku pres Shopify Cart API.
    Zadne zavislosti, jeden soubor, bezi na kazde sekci zvlast.
+
+   Velikosti se negeneruji natvrdo: berou se z variant vybraneho produktu,
+   takze nabidka vzdy odpovida tomu, co je v obchode. Kdyz ma produkt jen
+   jednu variantu, krok s velikosti se vubec neukaze.
    ========================================================================== */
 
 (function () {
@@ -34,13 +38,11 @@
   function ztmav(hex, podil) {
     var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "#b01e28");
     if (!m) return hex;
-    var kanaly = [1, 2, 3].map(function (i) {
-      return Math.max(0, Math.round(parseInt(m[i], 16) * (1 - podil)));
-    });
     return (
       "#" +
-      kanaly
-        .map(function (c) {
+      [1, 2, 3]
+        .map(function (i) {
+          var c = Math.max(0, Math.round(parseInt(m[i], 16) * (1 - podil)));
           return ("0" + c.toString(16)).slice(-2);
         })
         .join("")
@@ -49,16 +51,15 @@
 
   /**
    * Vrati #000 nebo #fff podle toho, co je na dane barve citelnejsi.
-   * Zlute a svetle klubove barvy jinak dostaly bily text a nebyly videt.
+   * Zlute kluby jinak dostaly bily text a nebyly videt.
    */
   function textNaBarve(hex) {
     var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "");
     if (!m) return "#ffffff";
-    var r = parseInt(m[1], 16),
-      g = parseInt(m[2], 16),
-      b = parseInt(m[3], 16);
-    // Relativni jas podle WCAG, zjednodusene.
-    var jas = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    var jas =
+      (0.2126 * parseInt(m[1], 16) +
+        0.7152 * parseInt(m[2], 16) +
+        0.0722 * parseInt(m[3], 16)) / 255;
     return jas > 0.6 ? "#0a0a0a" : "#ffffff";
   }
 
@@ -92,15 +93,13 @@
     // Konfigurator na homepage ma varianty po klubech, produktova stranka
     // jeden seznam. Srovname to na jeden tvar, at zbytek kodu nemusi vedet,
     // odkud data prisla.
-    var klubyData = data.kluby || [{ zkratka: "", nazev: "", varianty: data.varianty || [] }];
+    var kluby = data.kluby || [{ nazev: "", varianty: data.varianty || [] }];
     var indexKlubu = 0;
 
-    function variantyKlubu() {
-      var k = klubyData[indexKlubu] || klubyData[0] || { varianty: [] };
+    function varianty() {
+      var k = kluby[indexKlubu] || kluby[0] || { varianty: [] };
       return k.varianty || [];
     }
-
-    var zakladniCena = variantyKlubu().length ? variantyKlubu()[0].cena : 0;
 
     function penize(halere) {
       return Math.round(halere / 100).toLocaleString("cs-CZ") + " " + mena;
@@ -111,8 +110,7 @@
       zkratka: "",
       barva: "#b01e28",
       klubovaBarva: "#b01e28",
-      zakonceni: "UNI",
-      velikost: "UNI",
+      variantaId: null,
       krok: 1,
     };
 
@@ -127,6 +125,7 @@
       napoveda: root.querySelector("[data-os-napoveda]"),
       radekZnaku: root.querySelector("[data-os-radek-znaku]"),
       popisZnaku: root.querySelector("[data-os-popis-znaku]"),
+      cenaZaklad: root.querySelector("[data-os-cena-zaklad]"),
       cenaNavic: root.querySelector("[data-os-cena-navic]"),
       cenaCelkem: root.querySelector("[data-os-cena-celkem]"),
       popisekTlacitka: root.querySelector("[data-os-popisek-tlacitka]"),
@@ -135,9 +134,12 @@
       pridat: root.querySelector("[data-os-pridat]"),
       stavText: root.querySelector("[data-os-stav]"),
       velikosti: root.querySelector("[data-os-velikosti]"),
+      zalozkaVelikost: root.querySelector("[data-os-zalozka-velikost]"),
     };
 
-    /* ---------- Vykresleni naramku ---------- */
+    var maKluby = root.querySelectorAll("[data-os-klub]").length > 0;
+
+    /* ---------- Nahled ---------- */
 
     function prekresli() {
       if (el.prameny) {
@@ -157,81 +159,123 @@
         });
       }
 
-      if (el.pismenaSvg) {
-        el.pismenaSvg.innerHTML = "";
-        var znaky = stav.zkratka.split("").slice(0, 12);
-        var n = znaky.length || 1;
-        var rozestup = Math.min(50, (X1 - X0 - 120) / n);
-        var prvni = (X0 + X1) / 2 - (rozestup * (n - 1)) / 2;
+      if (!el.pismenaSvg) return;
+      el.pismenaSvg.innerHTML = "";
 
-        znaky.forEach(function (znak, i) {
-          if (znak === " ") return;
-          var x = prvni + rozestup * i;
-          var t = (x - X0) / (X1 - X0);
-          var y = CY + SAG * Math.sin(Math.PI * t);
+      var znaky = stav.zkratka.split("").slice(0, 12);
+      var n = znaky.length || 1;
+      var rozestup = Math.min(50, (X1 - X0 - 120) / n);
+      var prvniX = (X0 + X1) / 2 - (rozestup * (n - 1)) / 2;
 
-          var g = document.createElementNS(SVG_NS, "g");
-          g.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ")");
+      znaky.forEach(function (znak, i) {
+        if (znak === " ") return;
+        var x = prvniX + rozestup * i;
+        var t = (x - X0) / (X1 - X0);
+        var y = CY + SAG * Math.sin(Math.PI * t);
 
-          var rect = document.createElementNS(SVG_NS, "rect");
-          rect.setAttribute("x", "-21");
-          rect.setAttribute("y", "-25");
-          rect.setAttribute("width", "42");
-          rect.setAttribute("height", "50");
-          rect.setAttribute("rx", "10");
-          rect.setAttribute("fill", "#f2f2f5");
-          rect.setAttribute("stroke", "#00000022");
+        var g = document.createElementNS(SVG_NS, "g");
+        g.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ")");
 
-          var text = document.createElementNS(SVG_NS, "text");
-          text.setAttribute("x", "0");
-          text.setAttribute("y", "9");
-          text.setAttribute("text-anchor", "middle");
-          text.setAttribute("font-size", "27");
-          text.setAttribute("font-weight", "900");
-          text.setAttribute("fill", "#0a0a0a");
-          text.textContent = znak;
+        var rect = document.createElementNS(SVG_NS, "rect");
+        rect.setAttribute("x", "-21");
+        rect.setAttribute("y", "-25");
+        rect.setAttribute("width", "42");
+        rect.setAttribute("height", "50");
+        rect.setAttribute("rx", "10");
+        rect.setAttribute("fill", "#f2f2f5");
+        rect.setAttribute("stroke", "#00000022");
 
-          g.appendChild(rect);
-          g.appendChild(text);
-          el.pismenaSvg.appendChild(g);
-        });
+        var text = document.createElementNS(SVG_NS, "text");
+        text.setAttribute("x", "0");
+        text.setAttribute("y", "9");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("font-size", "27");
+        text.setAttribute("font-weight", "900");
+        text.setAttribute("fill", "#0a0a0a");
+        text.textContent = znak;
+
+        g.appendChild(rect);
+        g.appendChild(text);
+        el.pismenaSvg.appendChild(g);
+      });
+    }
+
+    /* ---------- Velikosti z variant ---------- */
+
+    function postavVelikosti() {
+      if (!el.velikosti) return;
+      var seznam = varianty();
+
+      // Jedna varianta = produkt velikosti neresi, krok nema smysl.
+      var ukazat = seznam.length > 1;
+      if (el.zalozkaVelikost) el.zalozkaVelikost.hidden = !ukazat;
+
+      el.velikosti.innerHTML = "";
+      if (!ukazat) {
+        stav.variantaId = seznam.length ? seznam[0].id : null;
+        return;
       }
+
+      var jeVybrana = seznam.some(function (v) {
+        return v.id === stav.variantaId;
+      });
+      if (!jeVybrana) stav.variantaId = seznam[0].id;
+
+      seznam.forEach(function (v) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "os-konf__volba os-konf__volba--stred";
+        btn.setAttribute("aria-pressed", v.id === stav.variantaId ? "true" : "false");
+        btn.disabled = !v.skladem;
+
+        var nazev = document.createElement("span");
+        nazev.className = "os-konf__volba-velikost";
+        nazev.textContent = v.nazev;
+
+        var popis = document.createElement("span");
+        popis.className = "os-konf__volba-popis";
+        popis.textContent = v.skladem ? penize(v.cena) : "není skladem";
+
+        btn.appendChild(nazev);
+        btn.appendChild(popis);
+        btn.addEventListener("click", function () {
+          stav.variantaId = v.id;
+          postavVelikosti();
+          obnov();
+        });
+
+        el.velikosti.appendChild(btn);
+      });
+    }
+
+    function vybranaVarianta() {
+      var seznam = varianty();
+      var nalezena = null;
+      seznam.forEach(function (v) {
+        if (v.id === stav.variantaId) nalezena = v;
+      });
+      return nalezena || seznam[0] || null;
     }
 
     /* ---------- Cena ---------- */
 
     function spocitej() {
-      var pocet = pocetZnaku(stav.zkratka);
-      var navic = Math.max(0, pocet - data.znakyVCene);
-      var varianta = najdiVariantu();
-      var zaklad = varianta ? varianta.cena : zakladniCena;
-      return {
-        navic: navic,
-        zaklad: zaklad,
-        celkem: zaklad + navic * data.cenaZnaku,
-      };
-    }
-
-    function najdiVariantu() {
-      var seznam = variantyKlubu();
-      var hledany = stav.zakonceni === "UNI" ? "UNI" : stav.velikost;
-      var nalezena = null;
-      seznam.forEach(function (v) {
-        if (!nalezena && v.nazev.toUpperCase().indexOf(hledany) !== -1) nalezena = v;
-      });
-      return nalezena || seznam[0] || null;
+      var navic = Math.max(0, pocetZnaku(stav.zkratka) - data.znakyVCene);
+      var varianta = vybranaVarianta();
+      var zaklad = varianta ? varianta.cena : 0;
+      return { navic: navic, zaklad: zaklad, celkem: zaklad + navic * data.cenaZnaku };
     }
 
     /* ---------- Prekresleni rozhrani ---------- */
 
     function obnov() {
       prekresli();
-
       var cena = spocitej();
+      var varianta = vybranaVarianta();
 
       if (el.souhrnZkratka) el.souhrnZkratka.textContent = stav.zkratka || "—";
       if (el.souhrnVelikost) {
-        el.souhrnVelikost.textContent = stav.zakonceni === "UNI" ? "UNI" : stav.velikost;
+        el.souhrnVelikost.textContent = varianta ? varianta.nazev : "—";
       }
       if (el.souhrnBarva) el.souhrnBarva.style.background = stav.barva;
       if (el.nazevKlubu) el.nazevKlubu.textContent = stav.klub;
@@ -250,28 +294,40 @@
           el.popisZnaku.textContent =
             "Znaky navíc (" + cena.navic + "× " + penize(data.cenaZnaku) + ")";
         }
-        if (el.cenaNavic) {
-          el.cenaNavic.textContent = "+" + penize(cena.navic * data.cenaZnaku);
-        }
+        if (el.cenaNavic) el.cenaNavic.textContent = "+" + penize(cena.navic * data.cenaZnaku);
       }
 
-      var zakladEl = root.querySelector("[data-os-cena-zaklad]");
-      if (zakladEl) zakladEl.textContent = penize(cena.zaklad);
+      if (el.cenaZaklad) el.cenaZaklad.textContent = penize(cena.zaklad);
       if (el.cenaCelkem) el.cenaCelkem.textContent = penize(cena.celkem);
 
       var popisek = "Přidat do košíku — " + penize(cena.celkem);
       if (el.popisekTlacitka) el.popisekTlacitka.textContent = popisek;
       if (el.popisekPlovouci) el.popisekPlovouci.textContent = popisek;
 
-      root.style.setProperty("--os-accent", stav.akcent || root.style.getPropertyValue("--os-accent"));
+      if (el.pridat) el.pridat.disabled = !varianta || !varianta.skladem;
     }
 
     /* ---------- Kroky ---------- */
 
     function nastavKrok(cislo) {
-      stav.krok = Math.max(1, Math.min(4, cislo));
-      root.querySelectorAll("[data-os-krok]").forEach(function (panel) {
-        panel.hidden = Number(panel.getAttribute("data-os-krok")) !== stav.krok;
+      var panely = root.querySelectorAll("[data-os-krok]");
+      var dostupne = [];
+      panely.forEach(function (p) {
+        var c = Number(p.getAttribute("data-os-krok"));
+        // Krok s velikosti preskocime, kdyz produkt velikosti nema.
+        if (c === 4 && el.zalozkaVelikost && el.zalozkaVelikost.hidden) return;
+        if (c === 1 && !maKluby) return;
+        dostupne.push(c);
+      });
+      if (!dostupne.length) return;
+
+      var nejmensi = Math.min.apply(null, dostupne);
+      var nejvetsi = Math.max.apply(null, dostupne);
+      stav.krok = Math.max(nejmensi, Math.min(nejvetsi, cislo));
+      while (dostupne.indexOf(stav.krok) === -1 && stav.krok < nejvetsi) stav.krok++;
+
+      panely.forEach(function (p) {
+        p.hidden = Number(p.getAttribute("data-os-krok")) !== stav.krok;
       });
       root.querySelectorAll("[data-os-krok-tlacitko]").forEach(function (btn) {
         var je = Number(btn.getAttribute("data-os-krok-tlacitko")) === stav.krok;
@@ -280,6 +336,17 @@
     }
 
     /* ---------- Udalosti ---------- */
+
+    function oznacBarvu() {
+      root.querySelectorAll("[data-os-barva]").forEach(function (b) {
+        b.setAttribute(
+          "aria-pressed",
+          b.getAttribute("data-os-barva").toLowerCase() === stav.barva.toLowerCase()
+            ? "true"
+            : "false",
+        );
+      });
+    }
 
     root.querySelectorAll("[data-os-klub]").forEach(function (tile) {
       tile.addEventListener("click", function () {
@@ -293,27 +360,19 @@
         stav.zkratka = ocisti(tile.dataset.abbr || "");
         stav.barva = tile.dataset.lace || stav.barva;
         stav.klubovaBarva = stav.barva;
-        stav.akcent = tile.dataset.accent;
-        root.style.setProperty("--os-accent", stav.akcent);
-        root.style.setProperty("--os-on-accent", textNaBarve(stav.akcent));
+        stav.variantaId = null;
+
+        var akcent = tile.dataset.accent || "#ec0016";
+        root.style.setProperty("--os-accent", akcent);
+        root.style.setProperty("--os-on-accent", textNaBarve(akcent));
 
         if (el.vstup) el.vstup.value = stav.zkratka;
+        postavVelikosti();
         oznacBarvu();
         obnov();
         nastavKrok(2);
       });
     });
-
-    function oznacBarvu() {
-      root.querySelectorAll("[data-os-barva]").forEach(function (b) {
-        b.setAttribute(
-          "aria-pressed",
-          b.getAttribute("data-os-barva").toLowerCase() === stav.barva.toLowerCase()
-            ? "true"
-            : "false",
-        );
-      });
-    }
 
     root.querySelectorAll("[data-os-barva]").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -341,28 +400,6 @@
       });
     }
 
-    root.querySelectorAll("[data-os-zakonceni]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        stav.zakonceni = btn.getAttribute("data-os-zakonceni");
-        root.querySelectorAll("[data-os-zakonceni]").forEach(function (b) {
-          b.setAttribute("aria-pressed", b === btn ? "true" : "false");
-        });
-        if (el.velikosti) el.velikosti.hidden = stav.zakonceni === "UNI";
-        stav.velikost = stav.zakonceni === "UNI" ? "UNI" : stav.velikost || "M";
-        obnov();
-      });
-    });
-
-    root.querySelectorAll("[data-os-velikost]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        stav.velikost = btn.getAttribute("data-os-velikost");
-        root.querySelectorAll("[data-os-velikost]").forEach(function (b) {
-          b.setAttribute("aria-pressed", b === btn ? "true" : "false");
-        });
-        obnov();
-      });
-    });
-
     root.querySelectorAll("[data-os-krok-tlacitko]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         nastavKrok(Number(btn.getAttribute("data-os-krok-tlacitko")));
@@ -377,11 +414,10 @@
     /* ---------- Vlozeni do kosiku ---------- */
 
     function vlozDoKosiku() {
-      var varianta = najdiVariantu();
+      var varianta = vybranaVarianta();
       if (!varianta) {
         if (el.stavText) {
-          el.stavText.textContent =
-            "Tenhle klub zatím nemá v obchodě produkt. Vyber jiný.";
+          el.stavText.textContent = "Tenhle klub zatím nemá v obchodě produkt. Vyber jiný.";
         }
         return;
       }
@@ -392,11 +428,8 @@
           id: varianta.id,
           quantity: 1,
           properties: {
-            Klub: stav.klub,
             Zkratka: stav.zkratka,
             "Barva tkaničky": stav.barva,
-            Zakončení: stav.zakonceni === "UNI" ? "Univerzální" : "Na míru",
-            Velikost: stav.zakonceni === "UNI" ? "Univerzální" : stav.velikost,
           },
         },
       ];
@@ -422,15 +455,10 @@
           return r.json();
         })
         .then(function () {
-          if (el.stavText) el.stavText.textContent = "Přidáno do košíku ✓";
-          document.dispatchEvent(new CustomEvent("offside:added"));
-          // Dawn si kosik osvezi sam, kdyz mu posleme jeho vlastni udalost.
-          if (typeof window.publish === "function" && window.PUB_SUB_EVENTS) {
-            window.publish(window.PUB_SUB_EVENTS.cartUpdate, { source: "offside" });
-          }
+          if (el.stavText) el.stavText.textContent = "Přidáno do košíku, otevírám ho…";
           setTimeout(function () {
             window.location.href = "/cart";
-          }, 700);
+          }, 600);
         })
         .catch(function () {
           if (el.stavText) {
@@ -450,23 +478,24 @@
 
     /* ---------- Start ---------- */
 
-    var prvni = root.querySelector("[data-os-klub]");
-    if (prvni) {
-      indexKlubu = Number(prvni.dataset.index || 0);
-      stav.klub = prvni.dataset.name || "";
-      stav.zkratka = ocisti(prvni.dataset.abbr || "");
-      stav.barva = prvni.dataset.lace || stav.barva;
-      stav.klubovaBarva = stav.barva;
+    var prvniDlazdice = root.querySelector("[data-os-klub]");
+    if (prvniDlazdice) {
+      indexKlubu = Number(prvniDlazdice.dataset.index || 0);
+      stav.klub = prvniDlazdice.dataset.name || "";
+      stav.zkratka = ocisti(prvniDlazdice.dataset.abbr || "");
+      stav.barva = prvniDlazdice.dataset.lace || stav.barva;
     } else {
-      // Produktova stranka nema dlazdice klubu — klub je dany produktem.
+      // Produktova stranka: klub je dany produktem.
       stav.klub = root.dataset.vychoziKlub || "";
       stav.zkratka = ocisti(root.dataset.vychoziZkratka || "");
       stav.barva = root.dataset.vychoziBarva || stav.barva;
-      stav.klubovaBarva = stav.barva;
     }
+    stav.klubovaBarva = stav.barva;
     if (el.vstup) el.vstup.value = stav.zkratka;
+
+    postavVelikosti();
     oznacBarvu();
-    nastavKrok(prvni ? 1 : 2);
+    nastavKrok(maKluby ? 1 : 2);
     obnov();
   }
 

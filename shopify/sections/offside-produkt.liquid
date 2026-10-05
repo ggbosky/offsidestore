@@ -34,7 +34,7 @@
     </nav>
 
     <div class="os-detail">
-      {# ---------- Galerie ---------- #}
+      {%- comment -%} Galerie {%- endcomment -%}
       <div class="os-detail__galerie">
         <div class="os-galerie__hlavni" data-os-galerie-hlavni>
           {%- if product.featured_image -%}
@@ -69,7 +69,7 @@
         {%- endif -%}
       </div>
 
-      {# ---------- Nákupní box ---------- #}
+      {%- comment -%} Nakupni box {%- endcomment -%}
       <div class="os-detail__box">
         <p class="os-detail__stitek">
           {%- if product.vendor != blank -%}{{ product.vendor }} · {% endif -%}
@@ -101,7 +101,7 @@
           <div class="os-detail__popis">{{ product.description }}</div>
         {%- endif -%}
 
-        {# Konfigurátor bez kroku s klubem — klub určuje produkt. #}
+        {%- comment -%} Konfigurator bez kroku s klubem — klub urcuje produkt. {%- endcomment -%}
         <div
           class="os-detail__konfigurator"
           data-os-konfigurator
@@ -131,7 +131,7 @@
           <ol class="os-konf__zalozky">
             <li><button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="2" aria-selected="true">1. Barva</button></li>
             <li><button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="3">2. Písmena</button></li>
-            <li><button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="4">3. Zakončení</button></li>
+            <li data-os-zalozka-velikost hidden><button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="4">3. Velikost</button></li>
           </ol>
 
           <div class="os-konf__panel" data-os-krok="2">
@@ -155,31 +155,11 @@
           </div>
 
           <div class="os-konf__panel" data-os-krok="4" hidden>
-            <div class="os-konf__volby">
-              <button type="button" class="os-konf__volba" data-os-zakonceni="UNI" aria-pressed="true">
-                <span class="os-konf__volba-nazev">Univerzální</span>
-                <span class="os-konf__volba-popis">Posuvný uzel — doladíš si ho na ruce.</span>
-              </button>
-              <button type="button" class="os-konf__volba" data-os-zakonceni="FIX" aria-pressed="false">
-                <span class="os-konf__volba-nazev">Na míru</span>
-                <span class="os-konf__volba-popis">Pevné zakončení na konkrétní velikost.</span>
-              </button>
-            </div>
-            <div data-os-velikosti hidden>
-              <h4 class="os-konf__podnadpis">Velikost</h4>
-              <div class="os-konf__volby os-konf__volby--tri">
-                {%- assign velikosti = 'S|16–17 cm,M|17–19 cm,L|19–21 cm' | split: ',' -%}
-                {%- for v in velikosti -%}
-                  {%- assign casti = v | split: '|' -%}
-                  <button type="button" class="os-konf__volba os-konf__volba--stred"
-                          data-os-velikost="{{ casti[0] }}"
-                          aria-pressed="{% if casti[0] == 'M' %}true{% else %}false{% endif %}">
-                    <span class="os-konf__volba-velikost">{{ casti[0] }}</span>
-                    <span class="os-konf__volba-popis">{{ casti[1] }}</span>
-                  </button>
-                {%- endfor -%}
-              </div>
-            </div>
+            <h4 class="os-konf__podnadpis">Velikost</h4>
+            <div class="os-konf__volby os-konf__volby--tri" data-os-velikosti></div>
+            <p class="os-konf__napoveda">
+              Změř obvod zápěstí provázkem a přidej zhruba centimetr na volnost.
+            </p>
           </div>
 
           <div class="os-konf__souhrn-box">
@@ -230,7 +210,7 @@
       </div>
     </div>
 
-    {# ---------- Detaily ---------- #}
+    {%- comment -%} Detaily {%- endcomment -%}
     {%- if section.blocks.size > 0 -%}
       <section class="os-detail__sekce">
         <div class="os-detail__dvojice">
@@ -253,7 +233,7 @@
       </section>
     {%- endif -%}
 
-    {# ---------- Velikosti ---------- #}
+    {%- comment -%} Velikosti {%- endcomment -%}
     <section class="os-detail__sekce">
       <h2 class="os__display os-detail__podnadpis">Velikosti na míru</h2>
       <div class="os-tabulka-obal">
@@ -270,7 +250,7 @@
       </div>
     </section>
 
-    {# ---------- Další produkty ---------- #}
+    {%- comment -%} Dalsi produkty {%- endcomment -%}
     {%- assign dalsi = section.settings.related_collection -%}
     {%- if dalsi != blank and dalsi.products_count > 1 -%}
       <section class="os-detail__sekce">
