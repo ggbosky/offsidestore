@@ -111,7 +111,15 @@ const PRIPLATEK = {
 // all_products["handle"] v Liquidu. Obycejny objekt, ne Proxy — liquidjs
 // si klice cte pres bezny pristup a Proxy by mu nemusel sednout.
 const VSECHNY_PRODUKTY = {};
-VSECHNY_PRODUKTY[PRIPLATEK.handle] = PRIPLATEK;
+// Handle priplatkoveho produktu jde podstrcit promennou, at jde overit
+// i zalozni hledani a stav, kdy produkt vubec neexistuje.
+// PRIPLATEK_HANDLE=zadny  -> produkt se nenajde
+// PRIPLATEK_HANDLE=znak-navic -> najde se az pres zalozni seznam
+const HANDLE_PRIPLATKU = process.env.PRIPLATEK_HANDLE || PRIPLATEK.handle;
+if (HANDLE_PRIPLATKU !== "zadny") {
+  PRIPLATEK.handle = HANDLE_PRIPLATKU;
+  VSECHNY_PRODUKTY[HANDLE_PRIPLATKU] = PRIPLATEK;
+}
 PRODUKTY.forEach(function (p) {
   VSECHNY_PRODUKTY[p.handle] = p;
 });

@@ -20,14 +20,27 @@
 {%- assign max_znaku = section.settings.max_chars -%}
 
 {%- comment -%}
-  Produkt na priplatek za znak: bud vybrany v nastaveni sekce, nebo se
-  najde sam podle handle. Obsluha obchodu tak staci zalozit produkt a nic
-  nikde neprepinat.
+  Produkt na priplatek za znak. Nejdriv vyber z nastaveni sekce, pak
+  handle z nastaveni, a nakonec par beznych variant nazvu — at to
+  funguje i kdyz produkt dostal trochu jiny nazev, nez cekame.
 {%- endcomment -%}
 {%- assign priplatek = section.settings.addon_product -%}
-{%- if priplatek == blank -%}
+
+{%- if priplatek == blank and section.settings.addon_handle != blank -%}
   {%- assign priplatek = all_products[section.settings.addon_handle] -%}
 {%- endif -%}
+
+{%- if priplatek == blank -%}
+  {%- assign kandidati = 'priplatek-za-znak,priplatek-za-pismeno,priplatek-za-znaky,znak-navic,pismeno-navic,priplatek' | split: ',' -%}
+  {%- for h in kandidati -%}
+    {%- assign nalezeny = all_products[h] -%}
+    {%- if nalezeny != blank and nalezeny.first_available_variant -%}
+      {%- assign priplatek = nalezeny -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
 {%- assign varianta_priplatku = priplatek.first_available_variant -%}
 {%- assign cena_znaku = priplatek.price | default: section.settings.char_price -%}
 
@@ -271,6 +284,8 @@
             {%- endfor -%}
           ],
           "priplatekId": {% if varianta_priplatku %}{{ varianta_priplatku.id }}{% else %}null{% endif %},
+          "priplatekHandle": {{ section.settings.addon_handle | default: 'priplatek-za-znak' | json }},
+          "editorMotivu": {% if request.design_mode %}true{% else %}false{% endif %},
           "maxZnaku": {{ max_znaku }},
           "cenaZnaku": {{ cena_znaku }},
           "mena": {{ section.settings.currency_suffix | json }},

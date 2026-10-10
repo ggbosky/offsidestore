@@ -57,19 +57,29 @@ z varianty. Příplatek proto musí být samostatný produkt, který se do koš�
 přidá v množství podle počtu znaků navíc. Součet v košíku pak sedí s tím, co
 ukázal konfigurátor.
 
+### Nejrychleji: naimportuj přiložené CSV
+
+Admin → **Produkty → Importovat** → vyber `priplatek-za-znak.csv` →
+**Nahrát a pokračovat**. Hotovo — produkt má správný handle, cenu 12 Kč,
+nesleduje sklad a nevyžaduje dopravu.
+
+Cenu za znak pak změníš přímo u produktu, konfigurátor si ji přečte.
+
+### Nebo ručně
+
 1. **Produkty → Přidat produkt**
 2. Název: *Příplatek za znak*
 3. Cena: **12 Kč** (nebo kolik si účtuješ za znak)
 4. Odškrtni **Sledovat množství**, ať se nikdy nevyprodá
 5. Doprava: odškrtni **Jedná se o fyzický produkt**
-6. Dostupnost prodeje: nech zapnutý jen internetový obchod
-7. Ulož
+6. Dostupnost prodeje: **musí být zapnutý internetový obchod**, jinak ho
+   košík odmítne
+7. Ulož a zkontroluj, že má **handle** `priplatek-za-znak`
 
-8. Zkontroluj, že má **handle** `priplatek-za-znak` (výchozí URL podle názvu)
-
-Víc dělat nemusíš — konfigurátor si produkt najde podle handle sám. Když ho
-chceš pojmenovat jinak, vyber ho v editoru motivu: **Offside — Konfigurátor**
-→ *Příplatek za znak*, nebo přepiš *Handle příplatkového produktu*.
+Víc dělat nemusíš — konfigurátor si produkt najde sám. Zkouší postupně handle
+z nastavení sekce a pak běžné varianty názvu (`priplatek-za-znak`,
+`znak-navic`, `pismeno-navic` a další). Když má produkt úplne jiný název,
+vyber ho přímo: **Offside — Konfigurátor** → *Příplatek za znak*.
 
 ### Jak to počítá
 
@@ -86,10 +96,10 @@ konfigurátor:
 Počet znaků v ceně (výchozí 3) i maximum (výchozí 12) se dají přenastavit
 v editoru sekce.
 
-> Dokud příplatkový produkt neexistuje, konfigurátor cenu spočítá správně, ale
-> do košíku ji vložit neumí — místo tiššího než správného součtu radši nevloží nic
-> a řekne proč. V editoru motivu na to navíc upozorní hláškou, kterou
-> zákazníci nevidí.
+> Delší nápis jde napsat vždycky a cena se spočítá správně. Dokud ale
+> příplatkový produkt neexistuje, nejde ji vložit do košíku — místo nižšího
+> než správného součtu radši nevloží nic. V editoru motivu ti hláška rovnou
+> řekne, jaký handle založit; zákazník vidí jen výzvu, ať napiše.
 
 ## 5. Propoj sekce s kolekcí
 

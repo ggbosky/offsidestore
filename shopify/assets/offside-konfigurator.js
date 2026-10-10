@@ -375,12 +375,16 @@
       var cena = spocitej();
 
       // Pojistka: radeji nevlozit nic, nez vlozit levnejsi naramek, nez
-      // jaky si zakaznik nakonfiguroval.
+      // jaky si zakaznik nakonfiguroval. Obsluze obchodu rovnou rekneme,
+      // co chybi — ta hlaska je totiz jinak slepa ulicka.
       if (cena.navic > 0 && !data.priplatekId) {
         if (el.stavText) {
-          el.stavText.textContent =
-            "Znaky nad rámec základu teď nejdou objednat. Zkrať nápis na " +
-            data.znakyVCene + " znaky, nebo nám napiš.";
+          el.stavText.textContent = data.editorMotivu
+            ? "Chybí produkt na příplatek za znak — založ ho v Produktech " +
+              "s handle „" + (data.priplatekHandle || "priplatek-za-znak") + "“ " +
+              "a cenou za jeden znak navíc. Do té doby delší nápis nejde najít do košíku."
+            : "Delší nápis teď nejde objednat přes košík. Napiš nám a domluvíme se, " +
+              "nebo zkrať nápis na " + data.znakyVCene + " znaky.";
         }
         return;
       }

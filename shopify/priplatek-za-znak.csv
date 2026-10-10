@@ -1,0 +1,2 @@
+Handle,Title,Body (HTML),Vendor,Type,Tags,Published,Option1 Name,Option1 Value,Variant SKU,Variant Grams,Variant Inventory Tracker,Variant Inventory Policy,Variant Fulfillment Service,Variant Price,Variant Requires Shipping,Variant Taxable,Gift Card,Status
+priplatek-za-znak,Příplatek za znak,"<p>Jeden znak navíc nad rámec základní ceny náramku. Do košíku ho přidává konfigurátor podle délky nápisu — neobjednávej ho samostatně.</p>",OffsideStore,Příplatek,"skryty-produkt",TRUE,Title,Default Title,PRIPLATEK-ZNAK,0,,deny,manual,12.00,FALSE,TRUE,FALSE,active
