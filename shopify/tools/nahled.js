@@ -100,12 +100,17 @@ const KOLEKCE = {
   all_products_count: PRODUKTY.length,
 };
 
+// PRIPLATEK_STAV=vyprodano -> produkt existuje, ale nema dostupnou variantu
+const VYPRODANO = process.env.PRIPLATEK_STAV === "vyprodano";
+const VARIANTA_PRIPLATKU = { id: 9001, price: 1200, available: !VYPRODANO };
+
 const PRIPLATEK = {
   id: 900,
   title: "Příplatek za znak",
   handle: "priplatek-za-znak",
   price: 1200,
-  first_available_variant: { id: 9001, price: 1200, available: true },
+  variants: [VARIANTA_PRIPLATKU],
+  first_available_variant: VYPRODANO ? null : VARIANTA_PRIPLATKU,
 };
 
 // all_products["handle"] v Liquidu. Obycejny objekt, ne Proxy — liquidjs

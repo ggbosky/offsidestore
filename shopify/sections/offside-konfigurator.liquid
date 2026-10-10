@@ -34,14 +34,26 @@
   {%- assign kandidati = 'priplatek-za-znak,priplatek-za-pismeno,priplatek-za-znaky,znak-navic,pismeno-navic,priplatek' | split: ',' -%}
   {%- for h in kandidati -%}
     {%- assign nalezeny = all_products[h] -%}
-    {%- if nalezeny != blank and nalezeny.first_available_variant -%}
+    {%- if nalezeny != blank and nalezeny.variants.size > 0 -%}
       {%- assign priplatek = nalezeny -%}
       {%- break -%}
     {%- endif -%}
   {%- endfor -%}
 {%- endif -%}
 
+{%- comment -%}
+  Produkt muze existovat a pritom nemit dostupnou variantu — typicky kdyz
+  ma zapnute sledovani skladu a nulovy pocet kusu. Variantu proto bereme
+  i tak, ale zvlast si poznacime, ze skladem neni: je to uplne jina
+  zavada nez chybejici produkt a chce jinou radu.
+{%- endcomment -%}
 {%- assign varianta_priplatku = priplatek.first_available_variant -%}
+{%- assign priplatek_skladem = true -%}
+{%- if varianta_priplatku == blank and priplatek.variants.size > 0 -%}
+  {%- assign varianta_priplatku = priplatek.variants.first -%}
+  {%- assign priplatek_skladem = false -%}
+{%- endif -%}
+
 {%- assign cena_znaku = priplatek.price | default: section.settings.char_price -%}
 
 {%- assign prvni = kolekce.products.first -%}
@@ -213,14 +225,26 @@
               {{ cena_znaku | money }} — cena se přepočítává rovnou, jak píšeš.
             </p>
 
-            {%- if request.design_mode and varianta_priplatku == blank -%}
-              <p class="os-konf__upozorneni">
-                Nenašel jsem produkt <strong>Příplatek za znak</strong>. Založ produkt
-                s handle <code>{{ section.settings.addon_handle }}</code> a cenou za
-                jeden znak navíc, nebo ho vyber v nastavení sekce. Bez něj se znaky
-                nad rámec základu nedají účtovat a košík by neseděl s konfigurátorem.
-                Tohle upozornění vidíš jen ty v editoru motivu.
-              </p>
+            {%- if request.design_mode -%}
+              {%- if varianta_priplatku == blank -%}
+                <p class="os-konf__upozorneni">
+                  Nenašel jsem produkt <strong>Příplatek za znak</strong>. Založ ho
+                  s handle <code>{{ section.settings.addon_handle }}</code> a cenou za
+                  jeden znak navíc, nebo ho vyber v nastavení sekce.
+                  <br><br>
+                  Když už ho založený máš, zkontroluj dvě věci: handle produktu
+                  (Produkty &rarr; produkt &rarr; Upravit SEO &rarr; <em>Popisovac URL</em>)
+                  a jestli má zapnutý prodejní kanál <strong>Internetový obchod</strong>.
+                  Nepublikovaný produkt motiv nevidí.
+                </p>
+              {%- elsif priplatek_skladem == false -%}
+                <p class="os-konf__upozorneni">
+                  Produkt <strong>{{ priplatek.title }}</strong> jsem našel, ale nemá
+                  žádný kus skladem, takže ho košík odmítne. Otevři ho v Produktech
+                  a <strong>vypni Sledovat množství</strong> — příplatek není fyzické
+                  zboží, nemá se co vyprodávat.
+                </p>
+              {%- endif -%}
             {%- endif -%}
             <label class="os-konf__label" for="os-pismena-{{ section.id }}">
               Zkratka / nápis
@@ -285,6 +309,7 @@
           ],
           "priplatekId": {% if varianta_priplatku %}{{ varianta_priplatku.id }}{% else %}null{% endif %},
           "priplatekHandle": {{ section.settings.addon_handle | default: 'priplatek-za-znak' | json }},
+          "priplatekSkladem": {% if priplatek_skladem %}true{% else %}false{% endif %},
           "editorMotivu": {% if request.design_mode %}true{% else %}false{% endif %},
           "maxZnaku": {{ max_znaku }},
           "cenaZnaku": {{ cena_znaku }},

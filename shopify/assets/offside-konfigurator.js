@@ -420,8 +420,22 @@
         body: JSON.stringify({ items: polozky }),
       })
         .then(function (r) {
-          if (!r.ok) throw new Error("cart");
-          return r.json();
+          // Shopify posila duvod odmitnuti v tele odpovedi. Obecne
+          // "nepodarilo se" z nej dela hadanku, tak ho propustime dal.
+          return r.json().then(
+            function (telo) {
+              if (!r.ok) {
+                var e = new Error(telo.description || telo.message || "cart");
+                e.shopify = telo;
+                throw e;
+              }
+              return telo;
+            },
+            function () {
+              if (!r.ok) throw new Error("cart");
+              return {};
+            },
+          );
         })
         .then(function () {
           if (el.stavText) el.stavText.textContent = "Přidáno do košíku, otevírám ho…";
@@ -429,9 +443,22 @@
             window.location.href = "/cart";
           }, 600);
         })
-        .catch(function () {
+        .catch(function (e) {
           if (el.stavText) {
-            el.stavText.textContent = "Nepodařilo se přidat do košíku. Zkus to prosím znovu.";
+            var duvod = e && e.message && e.message !== "cart" ? e.message : "";
+
+            // Nejcastejsi zadrhel: priplatkovy produkt ma zapnute sledovani
+            // skladu a nula kusu, takze ho kosik odmitne.
+            if (!data.priplatekSkladem && cena.navic > 0) {
+              el.stavText.textContent = data.editorMotivu
+                ? "Košík odmítl příplatek za znak — produkt nemá kusy skladem. " +
+                  "Vypni u něj Sledovat množství." + (duvod ? " (" + duvod + ")" : "")
+                : "Delší nápis teď nejde objednat. Napiš nám, domluvíme se.";
+            } else if (duvod) {
+              el.stavText.textContent = duvod;
+            } else {
+              el.stavText.textContent = "Nepodařilo se přidat do košíku. Zkus to prosím znovu.";
+            }
           }
           if (el.pridat) el.pridat.disabled = false;
         });

@@ -174,6 +174,34 @@ Dva řádky nadpisu, text a dvě tlačítka.
 
 ---
 
+## Když delší nápis nejde do košíku
+
+Všechno nerovná se chyba v motivu — projdi to shora.
+
+**„Nenašel jsem produkt Příplatek za znak"**
+
+1. Existuje produkt v **Produkty**? Pokud ne, naimportuj `priplatek-za-znak.csv`.
+2. Má správný **handle**? Produkty → produkt → dole **Upravit SEO** →
+   *Popisovac URL* musí být `priplatek-za-znak`. Shopify ho generuje z názvu,
+   takže přejmenování produktu handle **nezmění**.
+3. Má zapnutý prodejní kanál **Internetový obchod**? Nepublikovaný produkt
+   motiv nevidí, i když v adminu existuje.
+4. Pořád nic? Vyber ho napevno: editor motivu → **Offside — Konfigurátor**
+   → *Příplatek za znak*.
+
+**„Produkt jsem našel, ale nemá žádný kus skladem"**
+
+Produkt → sekce *Inventura* → **vypni Sledovat množství**. Admin to zapíná
+automaticky s nulou kusů, takže produkt existuje, ale košík ho odmítne.
+Příplatek není fyzické zboží, nemá se co vyprodávat.
+
+**Jiná hláška pod tlačítkem**
+
+To už je text přímo od Shopify — konfigurátor ho propouští beze změny,
+ať je vidět skutečný důvod. Řekni mi ho a dohledám zbytek.
+
+---
+
 ## Poznámky
 
 **Velikosti.** Náramky jsou univerzální s posuvným uzlem, nikde se velikost
