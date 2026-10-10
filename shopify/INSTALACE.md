@@ -18,7 +18,20 @@ vyber `offsidestore-motiv.zip`.
 
 Zatím ho **nepublikuj**. Klikni **Přizpůsobit** a projdi si kroky níž.
 
-## 2. Založ kolekci s náramky
+## 2. Přepni obchod do češtiny
+
+Motiv už má češtinu jako výchozí jazyk, ale **jazyk obchodu je samostatné
+nastavení** a řídí se podle něj pokladna, systémové e-maily i názvy
+automatických kolekcí (např. `/collections/all`, která se jinak jmenuje
+*Products*).
+
+Admin → **Nastavení → Jazyky** → u češtiny **Změnit výchozí**. Pokud tam
+čeština není, nejdřív **Přidat jazyk**.
+
+> Dokud to neuděláš, bude část textu anglicky — a motiv s tím nic nenadělá,
+> protože ty texty nepatří jemu, ale obchodu.
+
+## 3. Založ kolekci s náramky
 
 Admin → **Produkty → Kolekce → Vytvořit kolekci**, pojmenuj třeba
 *Náramky* a přidej do ní klubové náramky.
@@ -35,7 +48,7 @@ Nepovinné metafieldy produktu, kterými se dá dlaždice doladit:
 | `custom.club_to` | konec přechodu, hex |
 | `custom.club_ink` | barva zkratky, hex |
 
-## 3. Založ produkt „Příplatek za znak"
+## 4. Založ produkt „Příplatek za znak"
 
 **Tohle je povinné, pokud chceš účtovat delší nápisy.**
 
@@ -62,15 +75,15 @@ vyber tenhle produkt.
 V editoru najdeš i **Znaků v základní ceně** (výchozí 3) a **Maximálně znaků**
 (výchozí 12).
 
-## 4. Propoj sekce s kolekcí
+## 5. Propoj sekce s kolekcí
 
 Admin → **Motivy → Přizpůsobit** → domovská stránka. U sekcí
 **Offside — Komu fandíš** a **Offside — Konfigurátor** vyber v nastavení
-kolekci z kroku 2.
+kolekci z kroku 3.
 
 Totéž u šablony produktu: **Offside — Produkt** → *Kolekce pro „Další kluby"*.
 
-## 5. Obsahové stránky
+## 6. Obsahové stránky
 
 V souboru `obsah-stranek.html` je připravený text osmi stránek včetně
 obchodních podmínek a ochrany osobních údajů. U každé je napsaný handle
@@ -79,7 +92,7 @@ obchodních podmínek a ochrany osobních údajů. U každé je napsaný handle
 Admin → **Internetový obchod → Stránky → Přidat stránku**, přepni editor do
 režimu HTML (ikona `<>`) a vlož obsah. V **Šabloně** vyber `page`.
 
-## 6. Publikuj
+## 7. Publikuj
 
 Až všechno sedí: **Motivy → Akce → Publikovat**.
 
@@ -143,6 +156,12 @@ stránka berou první dostupnou variantu.
 **Fotky.** Dlaždice a karty počítají s fotkami na výšku v poměru 3:4 (běžná
 fotka z telefonu). Taková fotka vyplní dlaždici přesně a nic se neořízne.
 Fotka s jiným poměrem se po krajích trochu ořízne, aby dlaždici vyplnila.
+
+**Jazyk.** Motiv má výchozí češtinu (`locales/cs.default.json`), takže texty
+jako „Váš košík" nebo „Pokračovat v nákupu" jsou česky rovnou. Pokladna,
+systémové e-maily a názvy automatických kolekcí se řídí jazykem obchodu — viz
+krok 2. Nadpis na stránce kolekce jde přepsat v nastavení sekce
+**Offside — Kolekce** (*Vlastní nadpis*).
 
 **Barvy.** Každá sekce má vlastní akcentní barvu — je to záměr, aby šlo
 nechat jednu sekci v klubové barvě.

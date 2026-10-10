@@ -121,7 +121,34 @@ preset.card_color_scheme = preset.card_color_scheme || "scheme-1";
 fs.writeFileSync(sdPath, JSON.stringify(sd, null, 2) + "\n");
 console.log("paleta: " + Object.keys(preset.color_schemes).length + " schemat na tmavou");
 
-/* ---------- 6. Zabaleni ---------- */
+/* ---------- 6. Cestina jako vychozi jazyk motivu ---------- */
+
+/*
+ * Dawn ma kompletni cesky preklad, jen jako vychozi jazyk veze anglictinu
+ * (soubor s priponou .default). Bez teto zameny by zakaznik videl
+ * "YOUR CART", "Continue shopping" a dalsi anglicke texty Dawnu.
+ * Prehozeni pripony je zpusob, jakym se vychozi jazyk motivu urcuje.
+ */
+
+const locDir = path.join(DAWN, "locales");
+const prejmenuj = [
+  ["en.default.json", "en.json"],
+  ["en.default.schema.json", "en.schema.json"],
+  ["cs.json", "cs.default.json"],
+  ["cs.schema.json", "cs.default.schema.json"],
+];
+
+const chybi = prejmenuj
+  .map(([z]) => z)
+  .filter((f) => !fs.existsSync(path.join(locDir, f)));
+if (chybi.length) throw new Error("v locales chybi: " + chybi.join(", "));
+
+for (const [zdroj, cil] of prejmenuj) {
+  fs.renameSync(path.join(locDir, zdroj), path.join(locDir, cil));
+}
+console.log("jazyk: vychozi je cestina (cs.default.json)");
+
+/* ---------- 7. Zabaleni ---------- */
 
 execFileSync(
   process.execPath,
