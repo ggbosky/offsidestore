@@ -1,88 +1,133 @@
-# OffsideStore — sekce pro Shopify
+# OffsideStore — motiv pro Shopify
 
-Šest sekcí do tvého Shopify motivu. Nejsou to obrázky — všechno se dá měnit
-v editoru motivu: texty, barvy, fotky, odkazy. Bloky (kluby, čísla, kroky,
-otázky) jdou přidávat, mazat a přetahovat myší.
+`offsidestore-motiv.zip` je kompletní motiv postavený na Dawn. Nahraješ ho
+jako celek, nic se nekopíruje po souborech.
 
-**Sekce „Hotové edice" bere produkty přímo z tvé kolekce.** Co přidáš do
-kolekce v adminu, objeví se na webu samo — nic se nepřepisuje ručně.
+Všechno se dá měnit v editoru motivu: texty, barvy, fotky, odkazy. Bloky
+(čísla v heru, kroky výroby, otázky) jdou přidávat, mazat a přetahovat myší.
+
+Kluby v sekci **Komu fandíš** i v konfigurátoru se berou **z kolekce**. Co
+přidáš do kolekce v adminu, objeví se na webu samo.
 
 ---
 
-## 1. Nahraj soubory do motivu
+## 1. Nahraj motiv
 
-Shopify admin → **Online Store → Themes** → u svého motivu **⋯ → Edit code**.
+Admin → **Internetový obchod → Motivy → Přidat motiv → Nahrát zip soubor** →
+vyber `offsidestore-motiv.zip`.
 
-Pak nahraj (tlačítko **Add a new asset** / **Add a new section**):
+Zatím ho **nepublikuj**. Klikni **Přizpůsobit** a projdi si kroky níž.
 
-| Kam | Soubor |
+## 2. Založ kolekci s náramky
+
+Admin → **Produkty → Kolekce → Vytvořit kolekci**, pojmenuj třeba
+*Náramky* a přidej do ní klubové náramky.
+
+Každý produkt = jeden klub. Fotku nahraj k produktu — objeví se v dlaždici
+i na produktové stránce. Dokud fotku nemá, použije se výchozí fotka ze sekce.
+
+Nepovinné metafieldy produktu, kterými se dá dlaždice doladit:
+
+| Metafield | K čemu je |
 | --- | --- |
-| `assets/` | `offside.css` |
-| `sections/` | `offside-hero.liquid` |
-| `sections/` | `offside-kluby.liquid` |
-| `sections/` | `offside-edice.liquid` |
-| `sections/` | `offside-jak-vznika.liquid` |
-| `sections/` | `offside-faq.liquid` |
-| `sections/` | `offside-cta.liquid` |
+| `custom.club_abbr` | zkratka, např. `SPA` (jinak poslední slovo z názvu) |
+| `custom.club_from` | začátek barevného přechodu, hex |
+| `custom.club_to` | konec přechodu, hex |
+| `custom.club_ink` | barva zkratky, hex |
 
-Soubory `.liquid` musí jít do složky **sections**, `offside.css` do **assets**.
-Jinak je Shopify nenajde.
+## 3. Založ produkt „Příplatek za znak"
 
-## 2. Nahraj fotky
+**Tohle je povinné, pokud chceš účtovat delší nápisy.**
 
-Shopify admin → **Content → Files** → **Upload files** a nahraj obsah složky
-`fotky/`. Potom se budou dát vybrat v editoru motivu.
+Shopify neumí ze storefrontu změnit cenu položky v košíku — cena vždy přijde
+z varianty. Příplatek proto musí být samostatný produkt, který se do košíku
+přidá v množství podle počtu znaků navíc. Součet v košíku pak sedí s tím, co
+ukázal konfigurátor.
 
-## 3. Založ kolekci s produkty
+1. **Produkty → Přidat produkt**
+2. Název: *Příplatek za znak*
+3. Cena: **12 Kč** (nebo kolik si účtuješ za znak)
+4. Odškrtni **Sledovat množství**, ať se nikdy nevyprodá
+5. Doprava: odškrtni **Jedná se o fyzický produkt**
+6. Dostupnost prodeje: nech zapnutý jen internetový obchod
+7. Ulož
 
-Admin → **Products → Collections → Create collection**, pojmenuj třeba
-*Hotové edice* a přidej do ní náramky. Sekce si z ní produkty vytáhne sama.
+Pak v editoru motivu: **Offside — Konfigurátor** → *Příplatek za znak* →
+vyber tenhle produkt.
 
-## 4. Poskládej stránku
+> Dokud ho nevybereš, konfigurátor znaky nad rámec základu vůbec nenabídne —
+> vstup se zastropuje na počet znaků v ceně. Je to schválně: radši kratší
+> nápis než košík levnější, než co zákazník viděl.
 
-Admin → **Online Store → Themes → Customize** → vyber domovskou stránku →
-**Add section** → sekce najdeš pod názvy začínajícími **Offside —**.
+V editoru najdeš i **Znaků v základní ceně** (výchozí 3) a **Maximálně znaků**
+(výchozí 12).
 
-Doporučené pořadí:
+## 4. Propoj sekce s kolekcí
 
-1. Offside — Hero
-2. Offside — Komu fandíš
-3. Offside — Hotové edice
-4. Offside — Jak vzniká
-5. Offside — Časté dotazy
-6. Offside — Závěrečné CTA
+Admin → **Motivy → Přizpůsobit** → domovská stránka. U sekcí
+**Offside — Komu fandíš** a **Offside — Konfigurátor** vyber v nastavení
+kolekci z kroku 2.
 
-Pořadí se dá kdykoli přetáhnout myší v levém panelu.
+Totéž u šablony produktu: **Offside — Produkt** → *Kolekce pro „Další kluby"*.
+
+## 5. Obsahové stránky
+
+V souboru `obsah-stranek.html` je připravený text osmi stránek včetně
+obchodních podmínek a ochrany osobních údajů. U každé je napsaný handle
+(URL), pod kterým ji má smysl založit.
+
+Admin → **Internetový obchod → Stránky → Přidat stránku**, přepni editor do
+režimu HTML (ikona `<>`) a vlož obsah. V **Šabloně** vyber `page`.
+
+## 6. Publikuj
+
+Až všechno sedí: **Motivy → Akce → Publikovat**.
 
 ---
 
-## Co se dá u každé sekce nastavit
+## Struktura stránek
+
+| Šablona | Sekce |
+| --- | --- |
+| Domovská stránka | Hero → Komu fandíš → Konfigurátor → Jak vzniká → Časté dotazy → Závěrečné CTA |
+| Produkt | Offside — Produkt |
+| Kolekce | Offside — Kolekce |
+| Stránka | Offside — Stránka |
+
+Pořadí sekcí na domovské stránce se dá kdykoli přetáhnout myší.
+
+---
+
+## Co se dá nastavit
 
 ### Offside — Hero
-Fotka na pozadí, síla ztmavení (aby byl text čitelný), výška sekce,
-tři řádky nadpisu zvlášť (prostřední je barevný), text, dvě tlačítka,
-akcentní barva. Čísla dole jsou bloky — přidej, smaž nebo přetáhni.
+Fotka na pozadí, síla ztmavení, výška sekce, tři řádky nadpisu zvlášť
+(prostřední je barevný), text, dvě tlačítka, akcentní barva. Čísla dole jsou
+bloky. Na telefonu stojí ve třech sloupcích pod akcentní linkou.
 
 ### Offside — Komu fandíš
-Každý klub je blok: zkratka, název, popisek, dvě barvy přechodu, barva
-zkratky a odkaz na produkt. Kliknutí na dlaždici přepne panel pod mřížkou
-i akcentní barvu sekce. Přednastaveno je šest klubů, přidej si zbytek.
+Kolekce, počet klubů, text tlačítka, popisek pod názvem a záložní barvy pro
+produkty bez metafieldů. Kliknutí na dlaždici přepne panel i akcentní barvu
+sekce. Tlačítko vloží produkt rovnou do košíku.
 
-### Offside — Hotové edice
-**Výběr kolekce**, počet produktů, počet sloupců, zobrazení ceny, text a cíl
-odkazu vpravo nahoře a nepovinný pás s fotkou nad mřížkou.
+### Offside — Konfigurátor
+Kolekce, příplatek za znak, počet znaků v ceně a maximum, paleta barev
+tkaniček, akcentní barva. Tři kroky: klub, barva, písmena. Cena se počítá
+průběžně a je vidět přímo v tlačítku.
 
-Produkt bez fotky se nezobrazí prázdný — ukáže zkratku. Bere ji z metafieldu
-`custom.club_abbr`, a když chybí, použije poslední slovo z názvu produktu.
+### Offside — Produkt
+Výchozí fotka (než produkt dostane vlastní), poznámka pod tlačítkem, kolekce
+pro „Další kluby" a řádky tabulky detailů jako bloky.
+
+Klubový náramek je hotový kus, takže se na něm nic nenastavuje — personalizace
+žije jen v konfigurátoru.
 
 ### Offside — Jak vzniká
-Fotka vlevo, kroky vpravo. Každý krok je blok, čísla se přečíslují sama
-podle pořadí.
+Fotka vlevo, kroky vpravo. Každý krok je blok, čísla se přečíslují sama.
 
 ### Offside — Časté dotazy
-Každá otázka je blok. Rozbaluje se nativně, funguje i bez JavaScriptu.
-Sekce zároveň vkládá strukturovaná data, takže se otázky můžou objevit
-přímo ve výsledcích Googlu.
+Každá otázka je blok. Rozbaluje se nativně, funguje i bez JavaScriptu. Sekce
+vkládá strukturovaná data, takže se otázky můžou objevit ve výsledcích Googlu.
 
 ### Offside — Závěrečné CTA
 Dva řádky nadpisu, text a dvě tlačítka.
@@ -91,17 +136,21 @@ Dva řádky nadpisu, text a dvě tlačítka.
 
 ## Poznámky
 
-**Barvy.** Každá sekce má vlastní akcentní barvu. Když chceš jinou než
-červenou, přenastav ji u všech sekcí zvlášť — je to záměr, aby šlo třeba
+**Velikosti.** Náramky jsou univerzální s posuvným uzlem, nikde se velikost
+nevybírá. Nedávej proto produktům varianty S/M/L — konfigurátor i produktová
+stránka berou první dostupnou variantu.
+
+**Fotky.** Dlaždice a karty počítají s fotkami na výšku v poměru 3:4 (běžná
+fotka z telefonu). Taková fotka vyplní dlaždici přesně a nic se neořízne.
+Fotka s jiným poměrem se po krajích trochu ořízne, aby dlaždici vyplnila.
+
+**Barvy.** Každá sekce má vlastní akcentní barvu — je to záměr, aby šlo
 nechat jednu sekci v klubové barvě.
 
-**Styly.** Všechno je prefixované `.os-` a drží se uvnitř sekcí, takže se to
-nepere s původním motivem. Pokud chceš něco doladit, uprav `assets/offside.css`.
+**Styly.** Všechno je prefixované `.os-`. Doladit se dá v `assets/offside.css`,
+`assets/offside-stranky.css` a `assets/offside-global.css`.
 
-**Tmavé pozadí.** Sekce mají černý podklad napevno. Pokud má tvůj motiv světlé
-pozadí, mezi sekcemi bude vidět přechod — buď dej celé stránce tmavé pozadí
-v nastavení motivu, nebo mi řekni a udělám světlou variantu.
-
-**Netestováno na živém obchodu.** Syntaxi Liquidu a platnost všech schémat
-jsem ověřil, ale nemám přístup k tvému Shopify, takže jsem to nemohl spustit
-naostro. Kdyby něco neslo, pošli mi chybovou hlášku z editoru kódu.
+**Netestováno na živém obchodu.** Syntaxi Liquidu, platnost všech schémat,
+JavaScript i strukturu zipu jsem ověřil a vzhled proklikal ve statickém
+náhledu, ale na tvůj Shopify nevidím, takže jsem motiv nespustil naostro.
+Kdyby něco neslo, pošli mi chybovou hlášku z editoru.

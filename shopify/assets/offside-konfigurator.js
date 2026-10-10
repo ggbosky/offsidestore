@@ -6,6 +6,12 @@
 
    Naramky jsou univerzalni, takze se zadna velikost nevybira — do kosiku
    jde prvni dostupna varianta vybraneho produktu.
+
+   Znaky nad ramec zakladu se uctuji samostatnou polozkou "priplatek za
+   znak" v mnozstvi podle poctu znaku navic. Storefront cenu varianty
+   prepsat neumi, takze bez tohoto produktu cenu nad zaklad nelze vybrat
+   — pak se znaky navic vubec nenabizeji, aby se soucet v konfiguratoru
+   nerozesel s kosikem.
    ========================================================================== */
 
 (function () {
@@ -331,9 +337,14 @@
       });
     }
 
+    // Strop drzime i v JS, ne jen pres maxlength — vlozeni ze schranky
+    // nebo autofill maxlength obchazi.
+    var maxZnaku = Number(data.maxZnaku) || data.znakyVCene;
+    if (!data.priplatekId) maxZnaku = Math.min(maxZnaku, data.znakyVCene);
+
     if (el.vstup) {
       el.vstup.addEventListener("input", function () {
-        var ocistene = ocisti(el.vstup.value);
+        var ocistene = ocisti(el.vstup.value).slice(0, maxZnaku);
         if (el.vstup.value !== ocistene) el.vstup.value = ocistene;
         stav.zkratka = ocistene;
         obnov();
@@ -363,22 +374,37 @@
       }
 
       var cena = spocitej();
-      var polozky = [
-        {
-          id: varianta.id,
-          quantity: 1,
-          properties: {
-            Zkratka: stav.zkratka,
-            "Barva tkaničky": stav.barva,
-          },
-        },
-      ];
+
+      // Pojistka: radeji nevlozit nic, nez vlozit levnejsi naramek, nez
+      // jaky si zakaznik nakonfiguroval.
+      if (cena.navic > 0 && !data.priplatekId) {
+        if (el.stavText) {
+          el.stavText.textContent =
+            "Znaky nad rámec základu teď nejdou objednat. Zkrať nápis na " +
+            data.znakyVCene + " znaky, nebo nám napiš.";
+        }
+        return;
+      }
+
+      var vlastnosti = {
+        Zkratka: stav.zkratka,
+        "Barva tkaničky": stav.barva,
+      };
+      if (cena.navic > 0) {
+        vlastnosti["Znaky navíc"] =
+          cena.navic + "× " + penize(data.cenaZnaku) + " (účtováno samostatnou položkou)";
+      }
+
+      var polozky = [{ id: varianta.id, quantity: 1, properties: vlastnosti }];
 
       if (cena.navic > 0 && data.priplatekId) {
+        var patriK = stav.klub
+          ? stav.klub + " — " + stav.zkratka
+          : stav.zkratka;
         polozky.push({
           id: data.priplatekId,
           quantity: cena.navic,
-          properties: { "Patří k": stav.klub + " — " + stav.zkratka },
+          properties: { "Patří k": patriK },
         });
       }
 

@@ -1120,6 +1120,23 @@
   color: var(--os-paper);
 }
 
+/* Hlaska pro obsluhu obchodu, vykresluje se jen v editoru motivu. */
+
+.os-konf__upozorneni {
+  margin: 16px 0 0;
+  border-radius: 12px;
+  border-left: 3px solid var(--os-accent);
+  background: rgba(236, 0, 22, 0.08);
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.os-konf__upozorneni strong {
+  color: var(--os-paper);
+}
+
 /* ---------- Hlavička ---------- */
 
 .os-hlavicka {

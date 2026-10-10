@@ -68,7 +68,9 @@
         "default_from": "#b01e28",
         "default_to": "#340a0e",
         "accent": "#ec0016",
-        "accent_text": "#ffffff"
+        "accent_text": "#ffffff",
+        "free_chars": 3,
+        "max_chars": 12
       }
     },
     "os_vznik": {

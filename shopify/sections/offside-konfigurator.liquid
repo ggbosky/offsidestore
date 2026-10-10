@@ -18,6 +18,18 @@
 {%- assign kolekce = section.settings.collection -%}
 {%- assign priplatek = section.settings.addon_product -%}
 {%- assign cena_znaku = priplatek.price | default: 1200 -%}
+{%- assign znaky_v_cene = section.settings.free_chars -%}
+{%- assign varianta_priplatku = priplatek.first_available_variant -%}
+{%- comment -%}
+  Bez produktu na priplatek bychom v kosiku ucetli jen zaklad, i kdyz
+  konfigurator ukaze vic. V tom pripade proto znaky navic vubec
+  nenabidneme a vstup zastropujeme na pocet znaku v cene.
+{%- endcomment -%}
+{%- if varianta_priplatku -%}
+  {%- assign max_znaku = section.settings.max_chars -%}
+{%- else -%}
+  {%- assign max_znaku = znaky_v_cene -%}
+{%- endif -%}
 {%- assign prvni = kolekce.products.first -%}
 {%- assign zakladni_cena = prvni.price | default: 29000 -%}
 
@@ -183,8 +195,21 @@
           <div class="os-konf__panel" data-os-krok="3" hidden>
             <h3 class="os-konf__nadpis">Písmena</h3>
             <p class="os-konf__popis">
-              Tři znaky jsou v ceně. Každý další {{ cena_znaku | money }}.
+              {%- if varianta_priplatku -%}
+                {{ znaky_v_cene }} znaky jsou v ceně. Každý další {{ cena_znaku | money }}.
+              {%- else -%}
+                Zkratka může mít až {{ znaky_v_cene }} znaky.
+              {%- endif -%}
             </p>
+
+            {%- if request.design_mode and varianta_priplatku == blank -%}
+              <p class="os-konf__upozorneni">
+                Nastavení sekce &rarr; <strong>Příplatek za znak</strong> je prázdné.
+                Dokud produkt nevybereš, nejde účtovat znaky nad rámec základu,
+                takže je konfigurátor ani nenabízí. Tohle upozornění vidíš jen ty
+                v editoru motivu.
+              </p>
+            {%- endif -%}
             <label class="os-konf__label" for="os-pismena-{{ section.id }}">
               Zkratka / nápis
             </label>
@@ -192,7 +217,7 @@
               id="os-pismena-{{ section.id }}"
               class="os-konf__input"
               type="text"
-              maxlength="12"
+              maxlength="{{ max_znaku }}"
               autocomplete="off"
               data-os-pismena
             >
@@ -202,7 +227,7 @@
           <div class="os-konf__souhrn-box">
             <dl class="os-konf__cena">
               <div>
-                <dt>Základ (tkanička + 3 znaky)</dt>
+                <dt>Základ (tkanička + {{ znaky_v_cene }} znaky)</dt>
                 <dd data-os-cena-zaklad>{{ zakladni_cena | money }}</dd>
               </div>
               <div data-os-radek-znaku hidden>
@@ -246,10 +271,11 @@
               }{%- unless forloop.last -%},{%- endunless -%}
             {%- endfor -%}
           ],
-          "priplatekId": {% if priplatek.first_available_variant %}{{ priplatek.first_available_variant.id }}{% else %}null{% endif %},
+          "priplatekId": {% if varianta_priplatku %}{{ varianta_priplatku.id }}{% else %}null{% endif %},
+          "maxZnaku": {{ max_znaku }},
           "cenaZnaku": {{ cena_znaku }},
           "mena": {{ section.settings.currency_suffix | json }},
-          "znakyVCene": 3
+          "znakyVCene": {{ znaky_v_cene }}
         }
       </script>
     {%- endif -%}
@@ -296,7 +322,25 @@
       "type": "product",
       "id": "addon_product",
       "label": "Příplatek za znak",
-      "info": "Skrytý produkt za 12 Kč. Za každý znak nad tři se přidá jeden kus."
+      "info": "Samostatný produkt s cenou jednoho znaku navíc (např. 12 Kč). Za každý znak nad rámec základu se do košíku přidá jeden kus, aby sečtená cena seděla s konfigurátorem. Dokud ho nevybereš, konfigurátor znaky navíc vůbec nenabídne."
+    },
+    {
+      "type": "range",
+      "id": "free_chars",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "label": "Znaků v základní ceně",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "max_chars",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "label": "Maximálně znaků",
+      "default": 12
     },
     { "type": "text", "id": "currency_suffix", "label": "Zkratka měny", "default": "Kč" },
     { "type": "header", "content": "Barvy tkaniček" },
