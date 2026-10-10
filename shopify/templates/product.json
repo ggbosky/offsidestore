@@ -13,22 +13,22 @@
         "d2": {
           "type": "detail",
           "settings": {
-            "term": "Rozměry",
-            "value": "Šíře 9 mm, délka podle zvoleného zakončení"
+            "term": "Velikost",
+            "value": "Univerzální — posuvný uzel si doladíš přímo na ruce"
           }
         },
         "d3": {
           "type": "detail",
           "settings": {
-            "term": "Zakončení",
-            "value": "Univerzální s posuvným uzlem, nebo pevné na míru"
+            "term": "Rozměry",
+            "value": "Šíře 9 mm, obvod zápěstí 16–21 cm"
           }
         },
         "d4": {
           "type": "detail",
           "settings": {
             "term": "Písmena",
-            "value": "Ražená kovová písmena, 3 znaky v ceně, každý další 12 Kč"
+            "value": "Ražená kovová písmena se zkratkou klubu"
           }
         },
         "d5": {
@@ -46,23 +46,12 @@
           }
         }
       },
-      "block_order": [
-        "d1",
-        "d2",
-        "d3",
-        "d4",
-        "d5",
-        "d6"
-      ],
+      "block_order": ["d1", "d2", "d3", "d4", "d5", "d6"],
       "settings": {
-        "default_lace": "#b01e28",
-        "palette": "#111111,#FFFFFF,#B01E28,#0B4EA2,#3FA9E0,#0F9D4F,#F2C300,#FF6B00,#C0C0C0,#7A4A2B",
-        "currency_suffix": "Kč",
+        "note": "Univerzální velikost s posuvným uzlem · ruční výroba v Česku",
         "accent": "#ec0016"
       }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }

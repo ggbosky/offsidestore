@@ -15,7 +15,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.35);
 }
 
@@ -68,7 +68,9 @@
 .os-galerie__hlavni img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 20px;
+  box-sizing: border-box;
+  object-fit: contain;
   display: block;
 }
 
@@ -109,7 +111,7 @@
 
 .os-detail__stitek {
   margin: 0;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -137,7 +139,7 @@
 }
 
 .os-detail__cena-pozn {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -152,20 +154,71 @@
   border-radius: 999px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
   padding: 4px 12px;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.6);
 }
 
 .os-detail__popis {
   margin-top: 24px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.62);
 }
 
-.os-detail__konfigurator {
+.os-detail__popis > :first-child {
+  margin-top: 0;
+}
+
+.os-detail__popis p,
+.os-detail__popis ul,
+.os-detail__popis ol {
+  margin: 0 0 14px;
+}
+
+.os-detail__popis ul,
+.os-detail__popis ol {
+  padding-left: 20px;
+}
+
+.os-detail__popis li {
+  margin-bottom: 6px;
+}
+
+.os-detail__popis strong {
+  color: var(--os-paper);
+}
+
+.os-detail__popis h2,
+.os-detail__popis h3,
+.os-detail__popis h4 {
+  margin: 28px 0 10px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--os-paper);
+}
+
+/* Blok s velikosti a tlacitkem do kosiku */
+
+.os-detail__koupit {
   margin-top: 36px;
   border-top: 1px solid var(--os-line);
   padding-top: 36px;
+}
+
+.os-detail__velikosti {
+  margin-bottom: 28px;
+}
+
+.os-detail__do-kosiku {
+  width: 100%;
+  justify-content: center;
+}
+
+.os-detail__do-kosiku[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .os-konf__nahled--uzky .os-konf__ramecek {
@@ -200,7 +253,7 @@
 .os-detail__uvod {
   margin: 12px 0 0;
   max-width: 24rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.45);
 }
 
@@ -223,7 +276,7 @@
 }
 
 .os-detail__tabulka dt {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -232,7 +285,7 @@
 
 .os-detail__tabulka dd {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -245,14 +298,14 @@
   width: 100%;
   min-width: 420px;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .os-tabulka th {
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   padding: 12px 24px 12px 0;
   text-align: left;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -278,7 +331,7 @@
   justify-content: center;
   gap: 24px;
   margin-top: 48px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -298,7 +351,7 @@
 
 .os-stranka__stitek {
   margin: 0 0 12px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -307,13 +360,14 @@
 
 .os-stranka__obsah {
   margin-top: 40px;
-  line-height: 1.7;
+  font-size: 1.0625rem;
+  line-height: 1.75;
   color: rgba(255, 255, 255, 0.6);
 }
 
 .os-stranka__obsah h2 {
-  margin: 40px 0 12px;
-  font-size: 1.25rem;
+  margin: 48px 0 14px;
+  font-size: 1.625rem;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.02em;
@@ -343,14 +397,14 @@
   width: 100%;
   margin: 24px 0;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .os-stranka__obsah th {
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   padding: 12px 20px 12px 0;
   text-align: left;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;

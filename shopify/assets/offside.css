@@ -62,15 +62,15 @@
 
 .os__lead {
   margin: 28px 0 0;
-  max-width: 34rem;
-  font-size: 1rem;
-  line-height: 1.6;
+  max-width: 36rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
   color: var(--os-muted);
 }
 
 @media (min-width: 768px) {
   .os__lead {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
   }
 }
 
@@ -96,7 +96,7 @@
   border-radius: 999px;
   padding: 16px 32px;
   font: inherit;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -229,7 +229,7 @@
 
 .os-hero__stat-label {
   margin: 8px 0 0;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -258,7 +258,7 @@
 }
 
 .os-section__link {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -327,7 +327,7 @@
 
 .os-klub__name {
   margin-top: 6px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -355,7 +355,7 @@
 
 .os-kluby__panel-note {
   margin: 4px 0 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.45);
 }
 
@@ -405,13 +405,15 @@
 .os-produkt__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 10px;
+  box-sizing: border-box;
+  object-fit: contain;
   display: block;
   transition: transform 700ms ease;
 }
 
 .os-produkt:hover .os-produkt__media img {
-  transform: scale(1.04);
+  transform: scale(1.02);
 }
 
 .os-produkt__placeholder {
@@ -437,7 +439,7 @@
 
 .os-produkt__title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 900;
   line-height: 1.2;
   text-transform: uppercase;
@@ -446,7 +448,7 @@
 
 .os-produkt__meta {
   margin: 4px 0 0;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -457,13 +459,13 @@
 }
 
 .os-produkt__price {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
 }
 
 .os-produkt__more {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -554,7 +556,7 @@
 }
 
 .os-vznik__num {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
   color: rgba(255, 255, 255, 0.25);
@@ -562,7 +564,7 @@
 
 .os-vznik__title {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.02em;
@@ -570,7 +572,8 @@
 
 .os-vznik__text {
   margin: 8px 0 0 40px;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.65;
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -592,7 +595,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
   list-style: none;
 }
@@ -707,7 +710,7 @@
 }
 
 .os-konf__stitek {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -718,7 +721,7 @@
   border-radius: 999px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
   padding: 4px 12px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -741,7 +744,7 @@
 }
 
 .os-konf__souhrn dt {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -750,7 +753,7 @@
 
 .os-konf__souhrn dd {
   margin: 4px 0 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 900;
 }
 
@@ -785,7 +788,7 @@
   text-align: left;
   cursor: pointer;
   font: inherit;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -808,7 +811,7 @@
 
 .os-konf__podnadpis {
   margin: 32px 0 12px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -817,7 +820,7 @@
 
 .os-konf__popis {
   margin: 8px 0 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -865,7 +868,7 @@
 .os-konf__label {
   display: block;
   margin-top: 24px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -894,7 +897,7 @@
 
 .os-konf__napoveda {
   margin: 8px 0 0;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -938,6 +941,15 @@
   text-align: center;
 }
 
+.os-konf__volba[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.os-konf__volba[disabled]:hover {
+  border-color: var(--os-line);
+}
+
 .os-konf__volba-nazev {
   display: block;
   font-size: 1rem;
@@ -955,7 +967,7 @@
 .os-konf__volba-popis {
   display: block;
   margin-top: 6px;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -973,7 +985,7 @@
   flex-direction: column;
   gap: 8px;
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 1.0625rem;
 }
 
 .os-konf__cena > div {
@@ -995,7 +1007,7 @@
 }
 
 .os-konf__cena-celkem dt {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1022,7 +1034,7 @@
 .os-konf__poznamka {
   margin: 12px 0 0;
   text-align: center;
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.35);
 }
 
@@ -1039,7 +1051,7 @@
   cursor: pointer;
   padding: 0;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1048,35 +1060,6 @@
 
 .os-konf__odkaz:hover {
   color: var(--os-paper);
-}
-
-/* Oválné plovoucí tlačítko na mobilu */
-
-.os-konf__plovouci {
-  position: fixed;
-  left: 50%;
-  bottom: 20px;
-  z-index: 60;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  border-radius: 999px;
-  background: var(--os-accent);
-  color: var(--os-on-accent);
-  padding: 16px 28px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  box-shadow: 0 14px 44px -8px rgba(0, 0, 0, 0.85);
-}
-
-@media (min-width: 768px) {
-  .os-konf__plovouci {
-    display: none;
-  }
 }
 
 /* ---------- Hlavička ---------- */
@@ -1146,7 +1129,7 @@
 }
 
 .os-hlavicka__nav a {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1173,7 +1156,7 @@
   border-radius: 999px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   padding: 0 16px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1194,7 +1177,7 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.15);
   padding: 0 4px;
-  font-size: 11px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1305,7 +1288,7 @@
 .os-paticka__text {
   margin-top: 20px;
   max-width: 24rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.45);
 }
 
@@ -1324,7 +1307,7 @@
   background: rgba(255, 255, 255, 0.05);
   padding: 12px 16px;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--os-paper);
 }
 
@@ -1341,7 +1324,7 @@
   padding: 0 20px;
   cursor: pointer;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1350,7 +1333,7 @@
 
 .os-paticka__dik {
   margin: 8px 0 0;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--os-accent);
 }
 
@@ -1367,7 +1350,7 @@
 
 .os-paticka__nadpis {
   margin: 0;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -1384,7 +1367,7 @@
 }
 
 .os-paticka__odkazy a {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.55);
   text-decoration: none;
 }
@@ -1409,7 +1392,7 @@
 }
 
 .os-paticka__seznam a {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.35);
   text-decoration: none;
 }
@@ -1427,7 +1410,7 @@
   margin-top: 40px;
   border-top: 1px solid var(--os-line);
   padding-top: 28px;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.3);
 }
 
@@ -1480,7 +1463,7 @@
 }
 
 .os-kluby__detail {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1499,7 +1482,7 @@
 
 .os-kluby__stav {
   margin: 16px 0 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--os-accent);
   min-height: 1.2em;
 }
@@ -1513,7 +1496,9 @@
 .os-klub__foto {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 8px;
+  box-sizing: border-box;
+  object-fit: contain;
   display: block;
 }
 

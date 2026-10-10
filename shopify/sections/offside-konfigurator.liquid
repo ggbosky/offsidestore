@@ -1,8 +1,8 @@
 {%- comment -%}
   OffsideStore — KONFIGURÁTOR
 
-  Tri kroky: klub, barva tkanicky, pismena. Kdyz ma vybrany produkt vic
-  variant, pribude ctvrty krok s velikosti — nabidka se bere primo z variant
+  Tri kroky: klub, barva tkanicky, pismena. Velikost se neresi — naramek
+  je univerzalni s posuvnym uzlem. Varianta se bere primo z variant
   produktu, takze odpovida tomu, co je v obchode.
 
   Kluby se berou z kolekce, stejne jako v sekci Komu fandis. Zadne rucni
@@ -79,7 +79,7 @@
               </div>
               <div>
                 <dt>Velikost</dt>
-                <dd data-os-souhrn-velikost>&mdash;</dd>
+                <dd>Univerzální</dd>
               </div>
               <div>
                 <dt>Barva</dt>
@@ -104,11 +104,6 @@
             <li>
               <button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="3" aria-selected="false">
                 3. Písmena
-              </button>
-            </li>
-            <li data-os-zalozka-velikost hidden>
-              <button type="button" class="os-konf__zalozka" data-os-krok-tlacitko="4" aria-selected="false">
-                4. Velikost
               </button>
             </li>
           </ol>
@@ -204,14 +199,6 @@
             <p class="os-konf__napoveda" data-os-napoveda></p>
           </div>
 
-          <div class="os-konf__panel" data-os-krok="4" hidden>
-            <h3 class="os-konf__nadpis">Velikost</h3>
-            <p class="os-konf__popis">
-              Změř obvod zápěstí provázkem a přidej zhruba centimetr na volnost.
-            </p>
-            <div class="os-konf__volby os-konf__volby--tri" data-os-velikosti></div>
-          </div>
-
           <div class="os-konf__souhrn-box">
             <dl class="os-konf__cena">
               <div>
@@ -243,10 +230,6 @@
           </div>
         </div>
       </div>
-
-      <a class="os-konf__plovouci" data-os-plovouci href="#os-konfigurator">
-        <span data-os-popisek-plovouci>Přidat do košíku</span>
-      </a>
 
       <script type="application/json" data-os-data>
         {

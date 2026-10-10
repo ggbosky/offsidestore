@@ -4,9 +4,8 @@
    Kresli nahled, pocita cenu a vklada do kosiku pres Shopify Cart API.
    Zadne zavislosti, jeden soubor, bezi na kazde sekci zvlast.
 
-   Velikosti se negeneruji natvrdo: berou se z variant vybraneho produktu,
-   takze nabidka vzdy odpovida tomu, co je v obchode. Kdyz ma produkt jen
-   jednu variantu, krok s velikosti se vubec neukaze.
+   Naramky jsou univerzalni, takze se zadna velikost nevybira — do kosiku
+   jde prvni dostupna varianta vybraneho produktu.
    ========================================================================== */
 
 (function () {
@@ -110,7 +109,6 @@
       zkratka: "",
       barva: "#b01e28",
       klubovaBarva: "#b01e28",
-      variantaId: null,
       krok: 1,
     };
 
@@ -120,7 +118,6 @@
       vstup: root.querySelector("input[data-os-pismena]"),
       nazevKlubu: root.querySelector("[data-os-nazev-klubu]"),
       souhrnZkratka: root.querySelector("[data-os-souhrn-zkratka]"),
-      souhrnVelikost: root.querySelector("[data-os-souhrn-velikost]"),
       souhrnBarva: root.querySelector("[data-os-souhrn-barva]"),
       napoveda: root.querySelector("[data-os-napoveda]"),
       radekZnaku: root.querySelector("[data-os-radek-znaku]"),
@@ -129,12 +126,8 @@
       cenaNavic: root.querySelector("[data-os-cena-navic]"),
       cenaCelkem: root.querySelector("[data-os-cena-celkem]"),
       popisekTlacitka: root.querySelector("[data-os-popisek-tlacitka]"),
-      popisekPlovouci: root.querySelector("[data-os-popisek-plovouci]"),
-      plovouci: root.querySelector("[data-os-plovouci]"),
       pridat: root.querySelector("[data-os-pridat]"),
       stavText: root.querySelector("[data-os-stav]"),
-      velikosti: root.querySelector("[data-os-velikosti]"),
-      zalozkaVelikost: root.querySelector("[data-os-zalozka-velikost]"),
     };
 
     var maKluby = root.querySelectorAll("[data-os-klub]").length > 0;
@@ -200,61 +193,16 @@
       });
     }
 
-    /* ---------- Velikosti z variant ---------- */
+    /* ---------- Varianta ---------- */
 
-    function postavVelikosti() {
-      if (!el.velikosti) return;
-      var seznam = varianty();
-
-      // Jedna varianta = produkt velikosti neresi, krok nema smysl.
-      var ukazat = seznam.length > 1;
-      if (el.zalozkaVelikost) el.zalozkaVelikost.hidden = !ukazat;
-
-      el.velikosti.innerHTML = "";
-      if (!ukazat) {
-        stav.variantaId = seznam.length ? seznam[0].id : null;
-        return;
-      }
-
-      var jeVybrana = seznam.some(function (v) {
-        return v.id === stav.variantaId;
-      });
-      if (!jeVybrana) stav.variantaId = seznam[0].id;
-
-      seznam.forEach(function (v) {
-        var btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "os-konf__volba os-konf__volba--stred";
-        btn.setAttribute("aria-pressed", v.id === stav.variantaId ? "true" : "false");
-        btn.disabled = !v.skladem;
-
-        var nazev = document.createElement("span");
-        nazev.className = "os-konf__volba-velikost";
-        nazev.textContent = v.nazev;
-
-        var popis = document.createElement("span");
-        popis.className = "os-konf__volba-popis";
-        popis.textContent = v.skladem ? penize(v.cena) : "není skladem";
-
-        btn.appendChild(nazev);
-        btn.appendChild(popis);
-        btn.addEventListener("click", function () {
-          stav.variantaId = v.id;
-          postavVelikosti();
-          obnov();
-        });
-
-        el.velikosti.appendChild(btn);
-      });
-    }
-
+    // Univerzalni velikost: bereme prvni variantu, ktera je skladem.
     function vybranaVarianta() {
       var seznam = varianty();
-      var nalezena = null;
+      var skladem = null;
       seznam.forEach(function (v) {
-        if (v.id === stav.variantaId) nalezena = v;
+        if (!skladem && v.skladem) skladem = v;
       });
-      return nalezena || seznam[0] || null;
+      return skladem || seznam[0] || null;
     }
 
     /* ---------- Cena ---------- */
@@ -274,9 +222,6 @@
       var varianta = vybranaVarianta();
 
       if (el.souhrnZkratka) el.souhrnZkratka.textContent = stav.zkratka || "—";
-      if (el.souhrnVelikost) {
-        el.souhrnVelikost.textContent = varianta ? varianta.nazev : "—";
-      }
       if (el.souhrnBarva) el.souhrnBarva.style.background = stav.barva;
       if (el.nazevKlubu) el.nazevKlubu.textContent = stav.klub;
 
@@ -302,7 +247,6 @@
 
       var popisek = "Přidat do košíku — " + penize(cena.celkem);
       if (el.popisekTlacitka) el.popisekTlacitka.textContent = popisek;
-      if (el.popisekPlovouci) el.popisekPlovouci.textContent = popisek;
 
       if (el.pridat) el.pridat.disabled = !varianta || !varianta.skladem;
     }
@@ -314,8 +258,6 @@
       var dostupne = [];
       panely.forEach(function (p) {
         var c = Number(p.getAttribute("data-os-krok"));
-        // Krok s velikosti preskocime, kdyz produkt velikosti nema.
-        if (c === 4 && el.zalozkaVelikost && el.zalozkaVelikost.hidden) return;
         if (c === 1 && !maKluby) return;
         dostupne.push(c);
       });
@@ -360,14 +302,12 @@
         stav.zkratka = ocisti(tile.dataset.abbr || "");
         stav.barva = tile.dataset.lace || stav.barva;
         stav.klubovaBarva = stav.barva;
-        stav.variantaId = null;
 
         var akcent = tile.dataset.accent || "#ec0016";
         root.style.setProperty("--os-accent", akcent);
         root.style.setProperty("--os-on-accent", textNaBarve(akcent));
 
         if (el.vstup) el.vstup.value = stav.zkratka;
-        postavVelikosti();
         oznacBarvu();
         obnov();
         nastavKrok(2);
@@ -469,12 +409,6 @@
     }
 
     if (el.pridat) el.pridat.addEventListener("click", vlozDoKosiku);
-    if (el.plovouci) {
-      el.plovouci.addEventListener("click", function (e) {
-        e.preventDefault();
-        vlozDoKosiku();
-      });
-    }
 
     /* ---------- Start ---------- */
 
@@ -493,7 +427,6 @@
     stav.klubovaBarva = stav.barva;
     if (el.vstup) el.vstup.value = stav.zkratka;
 
-    postavVelikosti();
     oznacBarvu();
     nastavKrok(maKluby ? 1 : 2);
     obnov();

@@ -131,18 +131,11 @@
             "answer": "<p>V ceně 290 Kč jsou tři znaky. Každý další stojí 12 Kč, maximum je dvanáct znaků.</p>"
           }
         },
-        "q3": {
-          "type": "otazka",
-          "settings": {
-            "question": "Jaký je rozdíl mezi univerzálním zakončením a velikostí na míru?",
-            "answer": "<p>Univerzální má posuvný uzel — délku si doladíš na ruce sám a sedne prakticky komukoliv. Zakončení na míru je pevné a šije se na konkrétní velikost S, M nebo L.</p>"
-          }
-        },
         "q4": {
           "type": "otazka",
           "settings": {
             "question": "Jak si vyberu velikost?",
-            "answer": "<p>S odpovídá obvodu zápěstí 16–17 cm, M 17–19 cm a L 19–21 cm. Změř obvod provázkem a přidej zhruba centimetr na volnost.</p>"
+            "answer": "<p>Nevybíráš. Náramek má univerzální velikost s posuvným uzlem, takže si ho dotáhneš přímo na ruce. Sedne na obvod zápěstí přibližně 16–21 cm.</p>"
           }
         },
         "q5": {
@@ -170,7 +163,6 @@
       "block_order": [
         "q1",
         "q2",
-        "q3",
         "q4",
         "q5",
         "q6",

@@ -97,32 +97,27 @@ export const CONTENT_PAGES: ContentPage[] = [
   {
     slug: "velikosti",
     eyebrow: "Zákazník",
-    title: "Tabulka velikostí",
+    title: "Velikost",
     lead:
-      "Univerzální zakončení sedne komukoliv. Tabulka platí pro pevné zakončení na míru.",
+      "Náramky jsou univerzální — posuvný uzel si dotáhneš přímo na ruce.",
     blocks: [
       {
-        type: "table",
-        head: ["Velikost", "Obvod zápěstí", "Délka náramku", "Komu sedí"],
-        rows: [
-          ["S", "16–17 cm", "17,5 cm", "Děti a útlejší zápěstí"],
-          ["M", "17–19 cm", "19,5 cm", "Nejčastější volba"],
-          ["L", "19–21 cm", "21,5 cm", "Silnější zápěstí"],
-        ],
+        type: "p",
+        text: "Jedna velikost pro všechny. Splet má posuvný uzel, kterým náramek dotáhneš nebo povolíš — sedne na obvod zápěstí přibližně 16 až 21 cm. Nic se neměří předem a nic se nevrací kvůli špatné velikosti.",
       },
-      { type: "h", text: "Jak se změřit" },
+      { type: "h", text: "Jak ho dotáhnout" },
       {
         type: "list",
         items: [
-          "Vezmi provázek nebo krejčovský metr a obtoč ho kolem zápěstí za kostičkou.",
-          "Změř délku provázku pravítkem.",
-          "K naměřené hodnotě přičti zhruba 1 cm na volnost.",
-          "Jsi mezi dvěma velikostmi? Ber větší — posuvný uzel dotažení dovolí.",
+          "Nasaď náramek na zápěstí a uzel posuň směrem k němu.",
+          "Dotáhni ho tak, aby se dal otočit, ale nespadl přes ruku.",
+          "Volné konce nech viset, nebo je zastrkňi pod splet.",
+          "Když povolí, stačí uzel přitlakovat zpátky.",
         ],
       },
       {
         type: "p",
-        text: "Univerzální zakončení má posuvný uzel, takže si délku doladíš i po doručení — rozsah je zhruba 1,5 cm. Pevné zakončení na míru se posouvat nedá, proto u něj velikost změř pořádně.",
+        text: "Uzel drží třením, takže se během nošení nerozjíždí. Kdyby se přece jen povolil, jen ho přitlakuj zpátky — nic se tím neopotřebuje.",
       },
       { type: "cta", label: "Do konfigurátoru", href: "/konfigurator" },
     ],

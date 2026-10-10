@@ -39,12 +39,18 @@
                     widths: '300, 500, 700, 800',
                     alt: product.featured_image.alt | default: product.title
                 }}
+              {%- elsif section.settings.fallback_image != blank -%}
+                {{
+                  section.settings.fallback_image
+                  | image_url: width: 800
+                  | image_tag:
+                    loading: 'lazy',
+                    sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw',
+                    widths: '300, 500, 700, 800',
+                    alt: product.title
+                }}
               {%- else -%}
-                {%- assign zkratka = product.metafields.custom.club_abbr -%}
-                {%- if zkratka == blank -%}
-                  {%- assign zkratka = product.title | split: ' ' | last | slice: 0, 3 -%}
-                {%- endif -%}
-                <span class="os-produkt__placeholder">{{ zkratka | upcase }}</span>
+                <img src="{{ 'os-hero.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
               {%- endif -%}
             </div>
             <div class="os-produkt__body">
@@ -89,6 +95,12 @@
   "tag": "section",
   "class": "offside-section",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Výchozí fotka",
+      "info": "Ukáže se u produktů bez vlastní fotky. Prázdné = fotka náramků na zdí."
+    },
     { "type": "text", "id": "fallback_heading", "label": "Nadpis, když kolekce nemá název", "default": "Vyber si klub" },
     { "type": "richtext", "id": "text", "label": "Text, když kolekce nemá popis", "default": "<p>Předpřipravené varianty podle klubů. Barva, zkratka, hotovo.</p>" },
     { "type": "range", "id": "columns", "min": 2, "max": 5, "step": 1, "label": "Sloupců na počítači", "default": 4 },
