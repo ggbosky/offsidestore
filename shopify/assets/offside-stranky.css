@@ -52,15 +52,16 @@
 }
 
 /*
-  Zadny pevny pomer stran: box se prizpusobi fotce, takze je naramek
-  videt cely a zaroven tak velky, jak to sloupec dovoli.
+  Box ma pomer fotek z telefonu (3:4), takze fotka sedi presne do nej —
+  vyplni ho az do rohu a zaroven se z naramku nic neurizne. Na velkych
+  obrazovkach box omezime, aby stojata fotka nepohltila celou stranku.
 */
 
 .os-galerie__hlavni {
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 300px;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 24px;
   background: radial-gradient(
@@ -70,11 +71,16 @@
   );
 }
 
+@media (min-width: 1024px) {
+  .os-galerie__hlavni {
+    max-width: 560px;
+  }
+}
+
 .os-galerie__hlavni img {
   width: 100%;
-  height: auto;
-  max-height: 80svh;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 

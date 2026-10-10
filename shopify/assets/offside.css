@@ -457,7 +457,7 @@
 
 .os-produkt__media {
   position: relative;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: #101013;
 }
@@ -465,15 +465,13 @@
 .os-produkt__media img {
   width: 100%;
   height: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
   transition: transform 700ms ease;
 }
 
 .os-produkt:hover .os-produkt__media img {
-  transform: scale(1.02);
+  transform: scale(1.04);
 }
 
 .os-produkt__placeholder {
@@ -1550,21 +1548,20 @@
 /* Dlaždice klubu s fotkou produktu */
 
 /*
-  Fotky naramku jsou na vysku. V siroke dlazdici 16/10 by se po vepsani
-  scvrkly na znamku, tak dlazdice s fotkou prepneme na stojaty format.
+  Fotky naramku jsou na vysku v pomeru 3:4. Dlazdice s fotkou ma proto
+  stejny pomer: fotka vyplni celou plochu az do rohu a nic se neorizne,
+  protoze box i fotka maji stejny tvar.
 */
 
 .os-klub--foto {
   padding: 0;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
 }
 
 .os-klub__foto {
   width: 100%;
   height: 100%;
-  padding: 4px;
-  box-sizing: border-box;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 
