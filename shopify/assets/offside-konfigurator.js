@@ -340,7 +340,6 @@
     // Strop drzime i v JS, ne jen pres maxlength — vlozeni ze schranky
     // nebo autofill maxlength obchazi.
     var maxZnaku = Number(data.maxZnaku) || data.znakyVCene;
-    if (!data.priplatekId) maxZnaku = Math.min(maxZnaku, data.znakyVCene);
 
     if (el.vstup) {
       el.vstup.addEventListener("input", function () {

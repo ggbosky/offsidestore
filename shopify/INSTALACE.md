@@ -65,15 +65,31 @@ ukázal konfigurátor.
 6. Dostupnost prodeje: nech zapnutý jen internetový obchod
 7. Ulož
 
-Pak v editoru motivu: **Offside — Konfigurátor** → *Příplatek za znak* →
-vyber tenhle produkt.
+8. Zkontroluj, že má **handle** `priplatek-za-znak` (výchozí URL podle názvu)
 
-> Dokud ho nevybereš, konfigurátor znaky nad rámec základu vůbec nenabídne —
-> vstup se zastropuje na počet znaků v ceně. Je to schválně: radši kratší
-> nápis než košík levnější, než co zákazník viděl.
+Víc dělat nemusíš — konfigurátor si produkt najde podle handle sám. Když ho
+chceš pojmenovat jinak, vyber ho v editoru motivu: **Offside — Konfigurátor**
+→ *Příplatek za znak*, nebo přepiš *Handle příplatkového produktu*.
 
-V editoru najdeš i **Znaků v základní ceně** (výchozí 3) a **Maximálně znaků**
-(výchozí 12).
+### Jak to počítá
+
+Základní cena náramku kryje první tři znaky. Každý další přidá jeden kus
+příplatkového produktu, takže sečtená cena v košíku sedí s tím, co ukazuje
+konfigurátor:
+
+| Zkratka | Znaků | V košíku | Celkem |
+| --- | --- | --- | --- |
+| SPA | 3 | náramek 290 Kč | 290 Kč |
+| SPAR | 4 | náramek 290 Kč + 1× 12 Kč | 302 Kč |
+| SPARTA | 6 | náramek 290 Kč + 3× 12 Kč | 326 Kč |
+
+Počet znaků v ceně (výchozí 3) i maximum (výchozí 12) se dají přenastavit
+v editoru sekce.
+
+> Dokud příplatkový produkt neexistuje, konfigurátor cenu spočítá správně, ale
+> do košíku ji vložit neumí — místo tiššího než správného součtu radši nevloží nic
+> a řekne proč. V editoru motivu na to navíc upozorní hláškou, kterou
+> zákazníci nevidí.
 
 ## 5. Propoj sekce s kolekcí
 
@@ -124,9 +140,10 @@ produkty bez metafieldů. Kliknutí na dlaždici přepne panel i akcentní barvu
 sekce. Tlačítko vloží produkt rovnou do košíku.
 
 ### Offside — Konfigurátor
-Kolekce, příplatek za znak, počet znaků v ceně a maximum, paleta barev
-tkaniček, akcentní barva. Tři kroky: klub, barva, písmena. Cena se počítá
-průběžně a je vidět přímo v tlačítku.
+Kolekce, příplatkový produkt (nebo jeho handle), počet znaků v základní ceně
+a maximum, paleta barev tkaniček, akcentní barva. Tři kroky: klub, barva,
+písmena. Cena se přepočítává při každém stisku klávesy a je vidět přímo
+v tlačítku.
 
 ### Offside — Produkt
 Výchozí fotka (než produkt dostane vlastní), poznámka pod tlačítkem, kolekce

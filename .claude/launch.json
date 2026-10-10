@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "offsidestore",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["next", "dev", "-p", "4310"],
-      "port": 4310
+      "name": "nahled-motivu",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["shopify/tools/nahled.js", "4320"],
+      "port": 4320
     }
   ]
 }

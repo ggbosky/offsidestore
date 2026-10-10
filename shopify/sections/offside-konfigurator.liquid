@@ -16,20 +16,21 @@
 {{ 'offside.css' | asset_url | stylesheet_tag }}
 
 {%- assign kolekce = section.settings.collection -%}
-{%- assign priplatek = section.settings.addon_product -%}
-{%- assign cena_znaku = priplatek.price | default: 1200 -%}
 {%- assign znaky_v_cene = section.settings.free_chars -%}
-{%- assign varianta_priplatku = priplatek.first_available_variant -%}
+{%- assign max_znaku = section.settings.max_chars -%}
+
 {%- comment -%}
-  Bez produktu na priplatek bychom v kosiku ucetli jen zaklad, i kdyz
-  konfigurator ukaze vic. V tom pripade proto znaky navic vubec
-  nenabidneme a vstup zastropujeme na pocet znaku v cene.
+  Produkt na priplatek za znak: bud vybrany v nastaveni sekce, nebo se
+  najde sam podle handle. Obsluha obchodu tak staci zalozit produkt a nic
+  nikde neprepinat.
 {%- endcomment -%}
-{%- if varianta_priplatku -%}
-  {%- assign max_znaku = section.settings.max_chars -%}
-{%- else -%}
-  {%- assign max_znaku = znaky_v_cene -%}
+{%- assign priplatek = section.settings.addon_product -%}
+{%- if priplatek == blank -%}
+  {%- assign priplatek = all_products[section.settings.addon_handle] -%}
 {%- endif -%}
+{%- assign varianta_priplatku = priplatek.first_available_variant -%}
+{%- assign cena_znaku = priplatek.price | default: section.settings.char_price -%}
+
 {%- assign prvni = kolekce.products.first -%}
 {%- assign zakladni_cena = prvni.price | default: 29000 -%}
 
@@ -195,19 +196,17 @@
           <div class="os-konf__panel" data-os-krok="3" hidden>
             <h3 class="os-konf__nadpis">Písmena</h3>
             <p class="os-konf__popis">
-              {%- if varianta_priplatku -%}
-                {{ znaky_v_cene }} znaky jsou v ceně. Každý další {{ cena_znaku | money }}.
-              {%- else -%}
-                Zkratka může mít až {{ znaky_v_cene }} znaky.
-              {%- endif -%}
+              {{ znaky_v_cene }} znaky jsou v základní ceně. Každý další
+              {{ cena_znaku | money }} — cena se přepočítává rovnou, jak píšeš.
             </p>
 
             {%- if request.design_mode and varianta_priplatku == blank -%}
               <p class="os-konf__upozorneni">
-                Nastavení sekce &rarr; <strong>Příplatek za znak</strong> je prázdné.
-                Dokud produkt nevybereš, nejde účtovat znaky nad rámec základu,
-                takže je konfigurátor ani nenabízí. Tohle upozornění vidíš jen ty
-                v editoru motivu.
+                Nenašel jsem produkt <strong>Příplatek za znak</strong>. Založ produkt
+                s handle <code>{{ section.settings.addon_handle }}</code> a cenou za
+                jeden znak navíc, nebo ho vyber v nastavení sekce. Bez něj se znaky
+                nad rámec základu nedají účtovat a košík by neseděl s konfigurátorem.
+                Tohle upozornění vidíš jen ty v editoru motivu.
               </p>
             {%- endif -%}
             <label class="os-konf__label" for="os-pismena-{{ section.id }}">
@@ -322,7 +321,21 @@
       "type": "product",
       "id": "addon_product",
       "label": "Příplatek za znak",
-      "info": "Samostatný produkt s cenou jednoho znaku navíc (např. 12 Kč). Za každý znak nad rámec základu se do košíku přidá jeden kus, aby sečtená cena seděla s konfigurátorem. Dokud ho nevybereš, konfigurátor znaky navíc vůbec nenabídne."
+      "info": "Samostatný produkt s cenou jednoho znaku navíc. Za každý znak nad rámec základu se do košíku přidá jeden kus, aby sečtená cena seděla s konfigurátorem. Necháš-li prázdné, hledá se produkt podle handle níž."
+    },
+    {
+      "type": "text",
+      "id": "addon_handle",
+      "label": "Handle příplatkového produktu",
+      "default": "priplatek-za-znak",
+      "info": "Použije se, když produkt není vybraný výše."
+    },
+    {
+      "type": "number",
+      "id": "char_price",
+      "label": "Záložní cena znaku v haléřích",
+      "default": 1200,
+      "info": "Jen pro náhled, dokud příplatkový produkt neexistuje. 1200 = 12 Kč."
     },
     {
       "type": "range",
