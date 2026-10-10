@@ -195,6 +195,12 @@
   background: linear-gradient(to top, var(--os-ink), transparent);
 }
 
+@media (max-width: 767px) {
+  .os-hero__foot {
+    height: 300px;
+  }
+}
+
 .os-hero__inner {
   position: relative;
   width: 100%;
@@ -225,6 +231,7 @@
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.03em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
 }
 
 .os-hero__stat-label {
@@ -233,7 +240,60 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.62);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.9);
+}
+
+/*
+  Na telefonu stoji cisla vedle sebe pod akcentni linkou a deli je vlasove
+  svislice. Zadny panel — cisla maji sedet na fotce, ne v okenku.
+*/
+
+@media (max-width: 767px) {
+  .os-hero__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 40px;
+    border-top: 2px solid var(--os-accent);
+  }
+
+  .os-hero__stat {
+    padding: 18px 10px 0 0;
+  }
+
+  .os-hero__stat + .os-hero__stat {
+    border-left: 1px solid rgba(255, 255, 255, 0.16);
+    padding-left: 14px;
+  }
+
+  /* "290 Kc" se nesmi zalomit, jinak si popisky prestanou sedet v rade. */
+  .os-hero__stat-value {
+    font-size: clamp(1.25rem, 6.4vw, 1.75rem);
+    white-space: nowrap;
+  }
+
+  .os-hero__stat-label {
+    margin-top: 10px;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    color: rgba(255, 255, 255, 0.58);
+  }
+}
+
+/* Tlacitka hera at maji na telefonu stejnou sirku, ne kazde jinou. */
+
+@media (max-width: 639px) {
+  .os-hero .os__buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .os-hero .os__buttons .os__btn {
+    width: 100%;
+  }
 }
 
 /* ---------- Spolecne sekce ---------- */
@@ -397,7 +457,7 @@
 
 .os-produkt__media {
   position: relative;
-  aspect-ratio: 16 / 11;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: #101013;
 }
@@ -405,7 +465,7 @@
 .os-produkt__media img {
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 6px;
   box-sizing: border-box;
   object-fit: contain;
   display: block;
@@ -1489,14 +1549,20 @@
 
 /* Dlaždice klubu s fotkou produktu */
 
+/*
+  Fotky naramku jsou na vysku. V siroke dlazdici 16/10 by se po vepsani
+  scvrkly na znamku, tak dlazdice s fotkou prepneme na stojaty format.
+*/
+
 .os-klub--foto {
   padding: 0;
+  aspect-ratio: 4 / 5;
 }
 
 .os-klub__foto {
   width: 100%;
   height: 100%;
-  padding: 8px;
+  padding: 4px;
   box-sizing: border-box;
   object-fit: contain;
   display: block;

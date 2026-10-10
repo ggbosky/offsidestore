@@ -90,7 +90,7 @@
       {%- if section.blocks.size > 0 -%}
         <dl class="os-hero__stats">
           {%- for block in section.blocks -%}
-            <div {{ block.shopify_attributes }}>
+            <div class="os-hero__stat" {{ block.shopify_attributes }}>
               <dt class="os-hero__stat-value">{{ block.settings.value }}</dt>
               <dd class="os-hero__stat-label">{{ block.settings.label }}</dd>
             </div>
