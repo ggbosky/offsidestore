@@ -323,3 +323,22 @@ hr,
   font-weight: 700 !important;
   color: var(--os-paper, #fff) !important;
 }
+
+.shopify-policy__zpet {
+  margin-top: 48px;
+  border-top: 1px solid var(--os-line, rgba(255, 255, 255, 0.12));
+  padding-top: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.shopify-policy__zpet a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+}
+
+.shopify-policy__zpet a:hover {
+  color: var(--os-paper, #fff);
+}

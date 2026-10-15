@@ -1,0 +1,67 @@
+{%- comment -%}
+  OffsideStore — NADPIS STRÁNKY ZÁSAD
+
+  Obsah zasady zustava cely na Shopify: nize se vypisuje {{ policy.body }}
+  tak, jak je napsany v Nastaveni > Zasady. Nic se neprepisuje.
+
+  Resi se tu jedina vec — nadpis. Shopify ho pojmenovava podle jazyka
+  obchodu, takze dokud neni obchod cesky, hlasa "Refund policy". Nazev
+  proto bereme z mapy v nastaveni sekce.
+
+  Znacka schvalne pouziva tridy .shopify-policy__*, stejne jako kdyz
+  stranku vykresluje Shopify samo. Styly pak plati pro oba pripady a
+  nemusi se udrzovat dvakrat.
+{%- endcomment -%}
+
+{%- capture nazev -%}
+  {%- render 'os-nazev-zasady', zasada: policy, mapa: section.settings.policy_names -%}
+{%- endcapture -%}
+
+<div class="shopify-policy__container">
+  {%- unless section.settings.hide_title -%}
+    <div class="shopify-policy__title">
+      <h1>{{ nazev | strip }}</h1>
+    </div>
+  {%- endunless -%}
+
+  <div class="shopify-policy__body">
+    <div class="rte">{{ policy.body }}</div>
+  </div>
+
+  {%- if section.settings.back_label != blank -%}
+    <p class="shopify-policy__zpet">
+      <a href="{{ section.settings.back_link | default: routes.root_url }}">
+        &larr; {{ section.settings.back_label }}
+      </a>
+    </p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Offside — Nadpis zásad",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Text zásady se bere přímo z Nastavení → Zásady a nijak se nemění. Tady se nastavuje jen nadpis nad ním."
+    },
+    {
+      "type": "textarea",
+      "id": "policy_names",
+      "label": "České názvy zásad",
+      "info": "Jeden řádek ve tvaru: handle | Název. Handle poznáš z adresy, např. /policies/refund-policy. Chybějící řádek = ponechá se název od Shopify.",
+      "default": "terms-of-service | Obchodní podmínky\nrefund-policy | Vrácení a reklamace\nshipping-policy | Doprava a doručení\nprivacy-policy | Ochrana osobních údajů\ncontact-information | Kontaktní údaje\nlegal-notice | Právní upozornění"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_title",
+      "label": "Nadpis vůbec nezobrazovat",
+      "default": false,
+      "info": "Hodí se, když má dokument vlastní nadpis hned v prvním řádku."
+    },
+    { "type": "header", "content": "Odkaz zpět" },
+    { "type": "text", "id": "back_label", "label": "Text odkazu", "default": "Zpět na úvod" },
+    { "type": "url", "id": "back_link", "label": "Cíl odkazu" }
+  ]
+}
+{% endschema %}
