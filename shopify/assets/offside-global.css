@@ -181,3 +181,145 @@ hr,
 .shopify-section-group-header-group {
   position: static;
 }
+
+/* ---------- Stránky právních zásad ---------- */
+
+/*
+  Zasady vykresluje Shopify samo pod /policies/... vlastni znackou
+  (.shopify-policy__*). Zamerne pro ne nemame sablonu: zakaznik ma
+  skoncit na skutecne shopifacke strance s textem, ktery je napsany
+  v Nastaveni > Zasady, ne na necem, co jsme postavili vedle.
+
+  Zbyva ji oblect. Text se do Shopify vklada z Wordu nebo Dokumentu
+  a nese si s sebou barvy pisma pocitane s bilym papirem — na cernem
+  pozadi pak byla seda na sedem. Inline styl prebije bezne pravidlo,
+  proto !important: jinak se vlozeny text zkrotit neda.
+*/
+
+.shopify-policy__container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 64px 20px 96px;
+}
+
+@media (min-width: 768px) {
+  .shopify-policy__container {
+    padding: 96px 24px 128px;
+  }
+}
+
+.shopify-policy__title {
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.shopify-policy__title h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 7vw, 3.4rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--os-paper, #fff);
+}
+
+.shopify-policy__body {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.shopify-policy__body,
+.shopify-policy__body * {
+  color: inherit !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.shopify-policy__body {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.shopify-policy__body p,
+.shopify-policy__body li,
+.shopify-policy__body td,
+.shopify-policy__body span,
+.shopify-policy__body div {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+.shopify-policy__body h1,
+.shopify-policy__body h2,
+.shopify-policy__body h3,
+.shopify-policy__body h4,
+.shopify-policy__body h5,
+.shopify-policy__body h6 {
+  margin: 40px 0 12px;
+  font-family: inherit !important;
+  font-weight: 900 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--os-paper, #fff) !important;
+}
+
+.shopify-policy__body h1 { font-size: 1.75rem !important; }
+.shopify-policy__body h2 { font-size: 1.5rem !important; }
+.shopify-policy__body h3,
+.shopify-policy__body h4,
+.shopify-policy__body h5,
+.shopify-policy__body h6 { font-size: 1.25rem !important; }
+
+.shopify-policy__body > :first-child {
+  margin-top: 0;
+}
+
+.shopify-policy__body p {
+  margin: 0 0 16px;
+}
+
+.shopify-policy__body ul,
+.shopify-policy__body ol {
+  margin: 0 0 16px;
+  padding-left: 22px;
+}
+
+.shopify-policy__body li {
+  margin-bottom: 8px;
+}
+
+.shopify-policy__body strong,
+.shopify-policy__body b {
+  font-weight: 700 !important;
+  color: var(--os-paper, #fff) !important;
+}
+
+.shopify-policy__body a {
+  color: var(--os-paper, #fff) !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.shopify-policy__body a:hover {
+  color: var(--os-accent, #ec0016) !important;
+}
+
+.shopify-policy__body table {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+}
+
+.shopify-policy__body th,
+.shopify-policy__body td {
+  border: 1px solid var(--os-line, rgba(255, 255, 255, 0.12)) !important;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.shopify-policy__body th {
+  font-weight: 700 !important;
+  color: var(--os-paper, #fff) !important;
+}
