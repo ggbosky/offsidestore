@@ -71,31 +71,39 @@
           {%- endcomment -%}
           {%- capture polozky -%}
             {%- if block.type == 'zasady' -%}
-                {%- if shop.policies.size > 0 -%}
-                  {%- for zasada in shop.policies -%}
-                    <li><a href="{{ zasada.url }}">{{ zasada.title }}</a></li>
+                {%- comment -%}
+                  Poradi, nazvy i to, co se vubec ukaze, urcuje mapa
+                  v nastaveni bloku. Zasada, ktera v mape neni, se
+                  nezobrazi — tak se da z paticky vyhodit, aniz by se
+                  musela v Shopify rusit.
+                {%- endcomment -%}
+                {%- assign radky = block.settings.policy_names | newline_to_br | split: '<br />' -%}
+                {%- for radek in radky -%}
+                  {%- assign casti = radek | strip | split: '|' -%}
+                  {%- assign klic = casti[0] | strip -%}
+                  {%- if klic == blank -%}{%- continue -%}{%- endif -%}
+
+                  {%- assign nalezena = null -%}
+                  {%- for z in shop.policies -%}
+                    {%- assign h = z.url | split: '/policies/' | last | split: '?' | first | split: '#' | first -%}
+                    {%- if h == klic -%}
+                      {%- assign nalezena = z -%}
+                      {%- break -%}
+                    {%- endif -%}
                   {%- endfor -%}
-                {%- else -%}
-                  {%- comment -%}
-                    Zaloha pro obchody, kde shop.policies neni k dispozici:
-                    projdeme zasady jednotlive. Nezverejnena zasada je prazdna.
-                  {%- endcomment -%}
-                  {%- if shop.refund_policy != blank -%}
-                    <li><a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title }}</a></li>
+
+                  {%- if nalezena -%}
+                    <li>
+                      <a href="{{ nalezena.url }}">
+                        {%- if casti[1] != blank -%}
+                          {{- casti[1] | strip -}}
+                        {%- else -%}
+                          {{- nalezena.title -}}
+                        {%- endif -%}
+                      </a>
+                    </li>
                   {%- endif -%}
-                  {%- if shop.privacy_policy != blank -%}
-                    <li><a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title }}</a></li>
-                  {%- endif -%}
-                  {%- if shop.terms_of_service != blank -%}
-                    <li><a href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title }}</a></li>
-                  {%- endif -%}
-                  {%- if shop.shipping_policy != blank -%}
-                    <li><a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title }}</a></li>
-                  {%- endif -%}
-                  {%- if shop.subscription_policy != blank -%}
-                    <li><a href="{{ shop.subscription_policy.url }}">{{ shop.subscription_policy.title }}</a></li>
-                  {%- endif -%}
-                {%- endif -%}
+                {%- endfor -%}
             {%- else -%}
                 {%- assign radky = block.settings.links | newline_to_br | split: '<br />' -%}
                 {%- for radek in radky -%}
@@ -154,6 +162,30 @@
                   {%- endif -%}
                   Tuhle poznámku vidíš jen ty v editoru motivu.
                 </p>
+              {%- endif -%}
+
+              {%- comment -%}
+                Zverejnena zasada, kterou nemas v seznamu, se v paticce
+                neobjevi. Je to legitimni zpusob, jak ji schovat, ale ma
+                o tom obsluha vedet — at to neni prekvapeni.
+              {%- endcomment -%}
+              {%- if request.design_mode and je_zasady -%}
+                {%- capture vynechane -%}
+                  {%- for z in shop.policies -%}
+                    {%- assign h = z.url | split: '/policies/' | last | split: '?' | first | split: '#' | first -%}
+                    {%- unless block.settings.policy_names contains h -%}
+                      {{ z.title }} (<code>{{ h }}</code>),
+                    {%- endunless -%}
+                  {%- endfor -%}
+                {%- endcapture -%}
+                {%- assign vynechane = vynechane | strip | remove_last: ',' -%}
+                {%- if vynechane != blank -%}
+                  <p class="os-paticka__pozn">
+                    V patičce záměrně není: {{ vynechane }}. Přidáš je řádkem
+                    <code>handle | Název</code> v nastavení tohoto sloupce.
+                    Vidíš jen ty v editoru motivu.
+                  </p>
+                {%- endif -%}
               {%- endif -%}
             </div>
           {%- endif -%}
@@ -250,8 +282,11 @@
       "settings": [
         { "type": "text", "id": "title", "label": "Nadpis sloupce", "default": "Právní" },
         {
-          "type": "paragraph",
-          "content": "Vypíše zásady z Nastavení → Zásady. Co tam zveřejníš, objeví se tady samo — nic se nevyplňuje ručně."
+          "type": "textarea",
+          "id": "policy_names",
+          "label": "Co vypsat a jak to pojmenovat",
+          "info": "Jeden řádek = jedna zásada, ve tvaru: handle | Název. Pořadí řádků určuje pořadí v patičce. Řádek smaž a zásada se v patičce neukáže (v Shopify zůstane). Zásada, kterou nemáš zveřejněnou, se přeskočí.",
+          "default": "terms-of-service | Obchodní podmínky\nrefund-policy | Vrácení a reklamace\nshipping-policy | Doprava a doručení\nprivacy-policy | Ochrana osobních údajů\ncontact-information | Kontaktní údaje\nlegal-notice | Právní upozornění"
         }
       ]
     }

@@ -30,7 +30,7 @@ function kopiruj(src, dest) {
 /* ---------- 1. Nase sekce, styly a skripty ---------- */
 
 let pocet = 0;
-for (const slozka of ["sections", "assets"]) {
+for (const slozka of ["sections", "assets", "snippets"]) {
   const dir = path.join(ROOT, slozka);
   if (!fs.existsSync(dir)) continue;
   for (const f of fs.readdirSync(dir)) {

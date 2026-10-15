@@ -123,9 +123,40 @@ režimu HTML (ikona `<>`) a vlož obsah. V **Šabloně** vyber `page`.
 Admin → **Nastavení → Zásady** (zásady vracení peněz, ochrany osobních
 údajů, podmínky služby, doručování, kontaktní údaje, právní upozornění).
 
-Co tam zveřejníš, objeví se samo ve sloupci **Právní** v patičce. Nic se
-nikam neopisuje a nemůže se to rozejít — patička čte přímo ty zásady.
-Dokud není zveřejněná žádná, sloupec se nezobrazí.
+Co tam zveřejníš, objeví se ve sloupci **Právní** v patičce. Nic se nikam
+neopisuje — patička čte přímo ty zásady.
+
+### Názvy a pořadí
+
+Shopify pojmenovává zásady podle jazyka obchodu, takže dokud není obchod
+česky, vrací *Terms of service* a spol. Názvy si proto určuješ sám:
+editor motivu → **Patička** → blok *Právní zásady* → pole
+**Co vypsat a jak to pojmenovat**. Jeden řádek = jedna zásada:
+
+```
+terms-of-service | Obchodní podmínky
+refund-policy | Vrácení a reklamace
+shipping-policy | Doprava a doručení
+privacy-policy | Ochrana osobních údajů
+contact-information | Kontaktní údaje
+legal-notice | Právní upozornění
+```
+
+- **Pořadí řádků** určuje pořadí v patičce.
+- **Smazání řádku** zásadu z patičky odstraní. V Shopify zůstává zveřejněná
+  a dostupná přes odkaz, jen ji nenabízíš v patičce.
+- Zásada, kterou nemáš zveřejněnou, se přeskočí — řádek může zůstat.
+- Handle poznáš z adresy: `/policies/terms-of-service` → `terms-of-service`.
+
+Stejné pole má i sekce **Offside — Právní zásady**, která určuje nadpis
+na samotné stránce zásady.
+
+### Vzhled stránky
+
+Text zásad se obvykle vkládá z Wordu nebo Dokumentu a nese si s sebou barvy
+písma počítané s bílým papírem — na černém pozadí pak byl text šedý na šedém.
+Motiv tyhle barvy přebíjí, včetně těch zapsaných přímo ve značce, takže
+můžeš vkládat odkudkoliv a číst to půjde vždycky.
 
 ## 8. Publikuj
 

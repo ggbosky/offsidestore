@@ -112,6 +112,25 @@ const ZASADY = process.env.ZASADY === 'zadne' ? [] : [
   { title: 'Právní upozornění', url: '/policies/legal-notice' },
 ];
 
+// Telo zasady schvalne obsahuje inline barvy z vkladani z Dokumentu,
+// at jde overit, ze je styly motivu prebiji.
+const TELO_ZASADY = [
+  '<p style="color:#434343">Tyto všeobecné obchodní podmínky upravují vzájemná práva',
+  'a povinnosti mezi prodávajícím a kupujícím.</p>',
+  '<h2 style="color:#6fa8dc;background:#ffffff">1. Základní ustanovení</h2>',
+  '<p style="color:#666"><span style="color:#999">Prezentace zboží</span> na webu',
+  'je informativního charakteru.</p>',
+  '<ul><li style="color:#434343"><strong>Ceny:</strong> včetně všech daní.</li>',
+  '<li style="color:#434343">Bankovní převod na účet 3702421014/3030.</li></ul>',
+  '<p><a href="/pages/kontakt" style="color:#1155cc">Kontaktuj nás</a></p>',
+].join(' ');
+
+const ZASADA = {
+  title: "Terms of service",
+  url: "/policies/terms-of-service",
+  body: TELO_ZASADY,
+};
+
 const KOLEKCE = {
   id: 1,
   title: "Náramky",
@@ -155,7 +174,7 @@ PRODUKTY.forEach(function (p) {
 /* ---------- Liquid ---------- */
 
 const engine = new Liquid({
-  root: path.join(ROOT, "sections"),
+  root: [path.join(ROOT, "snippets"), path.join(ROOT, "sections")],
   extname: ".liquid",
 });
 
@@ -347,11 +366,26 @@ function obal(telo) {
   ].join("\n");
 }
 
-const SABLONY = { "/": "index", "/produkt": "product", "/kolekce": "collection" };
+const SABLONY = { "/": "index", "/produkt": "product", "/kolekce": "collection", "/zasady": "policy" };
 
 async function stranka(cesta) {
   const jmeno = SABLONY[cesta];
-  const tpl = JSON.parse(fs.readFileSync(path.join(ROOT, "templates", jmeno + ".json"), "utf8"));
+
+  // Sablona muze byt JSON (seznam sekci) nebo Liquid s {% section %}.
+  // Zasady maji Liquid, protoze pro ne Shopify JSON sablonu nepodporuje.
+  const cestaJson = path.join(ROOT, "templates", jmeno + ".json");
+  const cestaLiquid = path.join(ROOT, "templates", jmeno + ".liquid");
+  let tpl = { order: [], sections: {} };
+  let statickeSekce = [];
+
+  if (fs.existsSync(cestaJson)) {
+    tpl = JSON.parse(fs.readFileSync(cestaJson, "utf8"));
+  } else if (fs.existsSync(cestaLiquid)) {
+    const text = fs.readFileSync(cestaLiquid, "utf8");
+    const re = /\{%-?\s*section\s+'([^']+)'\s*-?%\}/g;
+    let m;
+    while ((m = re.exec(text)) !== null) statickeSekce.push(m[1]);
+  }
 
   const kontext = {
     routes: { root_url: "/", cart_url: "/kosik", search_url: "/hledat" },
@@ -363,6 +397,7 @@ async function stranka(cesta) {
     collection: cesta === "/kolekce" ? KOLEKCE : null,
     product: cesta === "/produkt" ? PRODUKTY[0] : null,
     page: null,
+    policy: cesta === "/zasady" ? ZASADA : null,
     cart: { item_count: 0 },
   };
 
@@ -394,6 +429,7 @@ async function stranka(cesta) {
 
   const kusy = [];
   for (const id of tpl.order) kusy.push(await bezpecne(tpl.sections[id]));
+  for (const typ of statickeSekce) kusy.push(await bezpecne({ type: typ }));
   kusy.push(await skupina("footer-group"));
 
   return obal(kusy.join("\n"));

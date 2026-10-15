@@ -1,0 +1,31 @@
+{%- comment -%}
+  Cesky nazev pravni zasady.
+
+  Shopify pojmenovava zasady podle jazyka obchodu, takze dokud je obchod
+  anglicky, vraci "Terms of service". Nazev proto bereme z mapy, kterou
+  si obsluha obchodu muze prepsat v nastaveni sekce.
+
+  Pouziti:
+    {% render 'os-nazev-zasady', zasada: zasada, mapa: section.settings.policy_names %}
+
+  Parametry:
+    zasada — objekt zasady (ma .url a .title)
+    mapa   — radky ve tvaru "handle | Cesky nazev"
+
+  Kdyz handle v mape neni, vrati se puvodni nazev od Shopify.
+{%- endcomment -%}
+
+{%- assign handle = zasada.url | split: '/policies/' | last | split: '?' | first | split: '#' | first -%}
+{%- assign nazev = zasada.title -%}
+
+{%- assign radky = mapa | newline_to_br | split: '<br />' -%}
+{%- for radek in radky -%}
+  {%- assign casti = radek | strip | split: '|' -%}
+  {%- assign klic = casti[0] | strip -%}
+  {%- if klic == handle and casti[1] != blank -%}
+    {%- assign nazev = casti[1] | strip -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{{- nazev -}}
