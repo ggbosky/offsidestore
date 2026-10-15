@@ -89,6 +89,29 @@ const PRODUKTY = KLUBY.map(function (_, i) {
   return produkt(i);
 });
 
+// Obchod zamerne nema vsechny stranky, at jde overit skryvani mrtvych
+// odkazu. STRANKY=vse je vsechny, STRANKY=zadne zadnou.
+const VSECHNY_STRANKY = ['doprava-a-vraceni', 'velikosti', 'pece', 'kontakt', 'pribeh', 'spoluprace'];
+const REZIM_STRANEK = process.env.STRANKY || 'cast';
+const EXISTUJICI = REZIM_STRANEK === 'vse' ? VSECHNY_STRANKY
+  : REZIM_STRANEK === 'zadne' ? []
+  : ['kontakt', 'pribeh'];
+
+const STRANKY = {};
+EXISTUJICI.forEach(function (h) {
+  STRANKY[h] = { handle: h, title: h, url: '/pages/' + h };
+});
+
+// ZASADY=zadne simuluje obchod bez zverejnenych zasad.
+const ZASADY = process.env.ZASADY === 'zadne' ? [] : [
+  { title: 'Zásady vracení peněz', url: '/policies/refund-policy' },
+  { title: 'Zásady ochrany osobních údajů', url: '/policies/privacy-policy' },
+  { title: 'Podmínky služby', url: '/policies/terms-of-service' },
+  { title: 'Zásady pro doručování', url: '/policies/shipping-policy' },
+  { title: 'Kontaktní údaje', url: '/policies/contact-information' },
+  { title: 'Právní upozornění', url: '/policies/legal-notice' },
+];
+
 const KOLEKCE = {
   id: 1,
   title: "Náramky",
@@ -189,6 +212,32 @@ engine.registerFilter("handleize", function (v) {
 });
 engine.registerFilter("divided_by", function (v, d) {
   return Number(v) / Number(d);
+});
+
+// {% form 'customer' %} / {% form 'product', product %} zna jen Shopify.
+// Pro nahled staci, aby se obsah vykreslil uvnitr <form> a aby uvnitr
+// existoval objekt `form`.
+engine.registerTag("form", {
+  parse: function (token, remainTokens) {
+    this.sablony = [];
+    const stream = this.liquid.parser
+      .parseStream(remainTokens)
+      .on("tag:endform", function () {
+        stream.stop();
+      })
+      .on("template", (tpl) => this.sablony.push(tpl))
+      .on("end", function () {
+        throw new Error("chybi endform");
+      });
+    stream.start();
+  },
+  render: function* (ctx, emitter) {
+    emitter.write('<form method="post" action="#">');
+    ctx.push({ form: { posted_successfully: false, errors: null } });
+    yield this.liquid.renderer.renderTemplates(this.sablony, ctx, emitter);
+    ctx.pop();
+    emitter.write("</form>");
+  },
 });
 
 /* ---------- Sekce ---------- */
@@ -306,7 +355,9 @@ async function stranka(cesta) {
 
   const kontext = {
     routes: { root_url: "/", cart_url: "/kosik", search_url: "/hledat" },
-    shop: { name: "OffsideStore", url: "" },
+    shop: { name: "OffsideStore", url: "", policies: ZASADY },
+    pages: STRANKY,
+    collections: { naramky: KOLEKCE },
     request: { design_mode: false, page_type: jmeno },
     all_products: VSECHNY_PRODUKTY,
     collection: cesta === "/kolekce" ? KOLEKCE : null,
@@ -315,23 +366,36 @@ async function stranka(cesta) {
     cart: { item_count: 0 },
   };
 
-  const kusy = [];
-  for (const id of tpl.order) {
-    const s = tpl.sections[id];
-    if (!fs.existsSync(path.join(ROOT, "sections", s.type + ".liquid"))) continue;
+  async function bezpecne(s) {
+    if (!s || !fs.existsSync(path.join(ROOT, "sections", s.type + ".liquid"))) return "";
     try {
-      kusy.push(await vykresliSekci(s.type, s, kontext));
+      return await vykresliSekci(s.type, s, kontext);
     } catch (e) {
-      kusy.push(
-        '<pre style="color:#ff6b6b;padding:24px;white-space:pre-wrap">' +
-          s.type +
-          ": " +
-          String(e.message) +
-          "</pre>",
-      );
       console.error("  chyba v " + s.type + ": " + e.message);
+      return (
+        '<pre style="color:#ff6b6b;padding:24px;white-space:pre-wrap">' +
+        s.type +
+        ": " +
+        String(e.message) +
+        "</pre>"
+      );
     }
   }
+
+  // Hlavicka a paticka zijou ve skupinach sekci, ne v sablone stranky.
+  async function skupina(jmenoSkupiny) {
+    const cestaSkupiny = path.join(ROOT, "sections", jmenoSkupiny + ".json");
+    if (!fs.existsSync(cestaSkupiny)) return "";
+    const g = JSON.parse(fs.readFileSync(cestaSkupiny, "utf8"));
+    const out = [];
+    for (const id of g.order) out.push(await bezpecne(g.sections[id]));
+    return out.join("\n");
+  }
+
+  const kusy = [];
+  for (const id of tpl.order) kusy.push(await bezpecne(tpl.sections[id]));
+  kusy.push(await skupina("footer-group"));
+
   return obal(kusy.join("\n"));
 }
 

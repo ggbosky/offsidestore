@@ -118,7 +118,16 @@ obchodních podmínek a ochrany osobních údajů. U každé je napsaný handle
 Admin → **Internetový obchod → Stránky → Přidat stránku**, přepni editor do
 režimu HTML (ikona `<>`) a vlož obsah. V **Šabloně** vyber `page`.
 
-## 7. Publikuj
+## 7. Zveřejni zásady
+
+Admin → **Nastavení → Zásady** (zásady vracení peněz, ochrany osobních
+údajů, podmínky služby, doručování, kontaktní údaje, právní upozornění).
+
+Co tam zveřejníš, objeví se samo ve sloupci **Právní** v patičce. Nic se
+nikam neopisuje a nemůže se to rozejít — patička čte přímo ty zásady.
+Dokud není zveřejněná žádná, sloupec se nezobrazí.
+
+## 8. Publikuj
 
 Až všechno sedí: **Motivy → Akce → Publikovat**.
 
@@ -168,6 +177,21 @@ Fotka vlevo, kroky vpravo. Každý krok je blok, čísla se přečíslují sama.
 ### Offside — Časté dotazy
 Každá otázka je blok. Rozbaluje se nativně, funguje i bez JavaScriptu. Sekce
 vkládá strukturovaná data, takže se otázky můžou objevit ve výsledcích Googlu.
+
+### Offside — Patička
+Značka, heslo, text, odběr novinek a sloupce odkazů jako bloky. Dva druhy
+sloupců:
+
+- **Sloupec odkazů** — odkazy po řádcích ve tvaru `Text | /cesta`.
+- **Právní zásady** — vypíše zásady z Nastavení → Zásady, nic se nevyplňuje.
+
+Odkaz na stránku nebo prázdnou kolekci, která v obchodě neexistuje, se
+vynechá, a když ve sloupci nezbude nic, zmizí celý sloupec. Patička tak
+nikdy neslibuje odkaz, který končí na 404. Vypínač je v nastavení sekce
+(*Skrýt odkazy na neexistující stránky*).
+
+Výpis všech kolekcí je **vypnutý**. Shopify zakládá i automatické kolekce
+jako *Home page*, takže se v patičce objevovaly věci, které tam nepatří.
 
 ### Offside — Závěrečné CTA
 Dva řádky nadpisu, text a dvě tlačítka.

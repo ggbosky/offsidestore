@@ -1,8 +1,16 @@
 {%- comment -%}
   OffsideStore — PATIČKA
+
   Znacka a heslo vlevo, sloupce odkazu vpravo, dole pravni radek.
-  Kazdy sloupec je blok; odkazy se v nem zadavaji po radcich ve tvaru
-  "Text | /cesta", aby slo mit libovolny pocet bez dalsiho vnorovani.
+
+  Sloupec odkazu je blok; odkazy se zadavaji po radcich ve tvaru
+  "Text | /cesta". Odkaz na stranku nebo kolekci, ktera v obchode
+  neexistuje, se vynecha — paticka tak neslibuje nic, co nikam nevede.
+
+  Blok "Pravni zasady" vypisuje zasady z Nastaveni > Zasady (vraceni
+  penez, ochrana udaju, podminky sluzby, doruceni, kontakt, pravni
+  upozorneni). Nic se nikam neopisuje: co zverejnis v adminu, objevi se
+  v paticce samo.
 {%- endcomment -%}
 
 {{ 'offside.css' | asset_url | stylesheet_tag }}
@@ -56,20 +64,99 @@
 
       <div class="os-paticka__sloupce">
         {%- for block in section.blocks -%}
-          <div {{ block.shopify_attributes }}>
-            <h3 class="os-paticka__nadpis">{{ block.settings.title }}</h3>
-            <ul class="os-paticka__odkazy">
-              {%- assign radky = block.settings.links | newline_to_br | split: '<br />' -%}
-              {%- for radek in radky -%}
-                {%- assign casti = radek | strip | split: '|' -%}
-                {%- if casti[0] != blank -%}
-                  <li>
-                    <a href="{{ casti[1] | strip | default: '#' }}">{{ casti[0] | strip }}</a>
-                  </li>
+          {%- comment -%}
+            Polozky si nejdriv posbirame stranou. Kdyz z nich nic nezbyde,
+            cely sloupec vynechame — samotny nadpis bez odkazu vypada jako
+            rozbita stranka.
+          {%- endcomment -%}
+          {%- capture polozky -%}
+            {%- if block.type == 'zasady' -%}
+                {%- if shop.policies.size > 0 -%}
+                  {%- for zasada in shop.policies -%}
+                    <li><a href="{{ zasada.url }}">{{ zasada.title }}</a></li>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- comment -%}
+                    Zaloha pro obchody, kde shop.policies neni k dispozici:
+                    projdeme zasady jednotlive. Nezverejnena zasada je prazdna.
+                  {%- endcomment -%}
+                  {%- if shop.refund_policy != blank -%}
+                    <li><a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title }}</a></li>
+                  {%- endif -%}
+                  {%- if shop.privacy_policy != blank -%}
+                    <li><a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title }}</a></li>
+                  {%- endif -%}
+                  {%- if shop.terms_of_service != blank -%}
+                    <li><a href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title }}</a></li>
+                  {%- endif -%}
+                  {%- if shop.shipping_policy != blank -%}
+                    <li><a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title }}</a></li>
+                  {%- endif -%}
+                  {%- if shop.subscription_policy != blank -%}
+                    <li><a href="{{ shop.subscription_policy.url }}">{{ shop.subscription_policy.title }}</a></li>
+                  {%- endif -%}
                 {%- endif -%}
-              {%- endfor -%}
-            </ul>
-          </div>
+            {%- else -%}
+                {%- assign radky = block.settings.links | newline_to_br | split: '<br />' -%}
+                {%- for radek in radky -%}
+                  {%- assign casti = radek | strip | split: '|' -%}
+                  {%- if casti[0] != blank -%}
+                    {%- assign cil = casti[1] | strip -%}
+                    {%- assign zobrazit = true -%}
+
+                    {%- comment -%}
+                      Odkaz na neexistujici stranku nebo kolekci radeji
+                      vynechame, nez abychom poslali zakaznika na 404.
+                    {%- endcomment -%}
+                    {%- if section.settings.hide_missing -%}
+                      {%- if cil contains '/pages/' -%}
+                        {%- assign handle = cil | split: '/pages/' | last | split: '?' | first | split: '#' | first -%}
+                        {%- if pages[handle] == blank -%}
+                          {%- assign zobrazit = false -%}
+                        {%- endif -%}
+                      {%- elsif cil contains '/collections/' -%}
+                        {%- assign handle = cil | split: '/collections/' | last | split: '?' | first | split: '#' | first -%}
+                        {%- unless handle == 'all' -%}
+                          {%- if collections[handle] == blank or collections[handle].products_count == 0 -%}
+                            {%- assign zobrazit = false -%}
+                          {%- endif -%}
+                        {%- endunless -%}
+                      {%- endif -%}
+                    {%- endif -%}
+
+                    {%- if zobrazit -%}
+                      <li><a href="{{ cil | default: '#' }}">{{ casti[0] | strip }}</a></li>
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+            {%- endif -%}
+          {%- endcapture -%}
+
+          {%- assign je_zasady = false -%}
+          {%- if block.type == 'zasady' -%}{%- assign je_zasady = true -%}{%- endif -%}
+
+          {%- if polozky != blank or request.design_mode -%}
+            <div {{ block.shopify_attributes }}>
+              <h3 class="os-paticka__nadpis">{{ block.settings.title }}</h3>
+
+              {%- if polozky != blank -%}
+                <ul class="os-paticka__odkazy">{{ polozky }}</ul>
+              {%- endif -%}
+
+              {%- if request.design_mode and polozky == blank -%}
+                <p class="os-paticka__pozn">
+                  {%- if je_zasady -%}
+                    Zatím nemáš zveřejněnou žádnou zásadu — doplníš je v Nastavení
+                    &rarr; Zásady.
+                  {%- else -%}
+                    Žádný z odkazů nikam nevede, takže se sloupec zákazníkům
+                    nezobrazí. Založ ty stránky, nebo odkazy přepiš.
+                  {%- endif -%}
+                  Tuhle poznámku vidíš jen ty v editoru motivu.
+                </p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
         {%- endfor -%}
       </div>
     </div>
@@ -116,8 +203,22 @@
     { "type": "text", "id": "newsletter_placeholder", "label": "Text v poli", "default": "tvuj@email.cz" },
     { "type": "text", "id": "newsletter_button", "label": "Text tlačítka", "default": "Chci vědět" },
     { "type": "header", "content": "Kolekce" },
-    { "type": "checkbox", "id": "show_collections", "label": "Vypsat kolekce", "default": true },
+    {
+      "type": "checkbox",
+      "id": "show_collections",
+      "label": "Vypsat všechny kolekce",
+      "default": false,
+      "info": "Vypíná se, protože Shopify založí i automatické kolekce jako Home page a ty do patičky nepatří."
+    },
     { "type": "text", "id": "collections_title", "label": "Nadpis", "default": "Náramky podle klubu" },
+    { "type": "header", "content": "Odkazy" },
+    {
+      "type": "checkbox",
+      "id": "hide_missing",
+      "label": "Skrýt odkazy na neexistující stránky",
+      "default": true,
+      "info": "Odkaz na stránku nebo prázdnou kolekci, která v obchodě není, se v patičce nezobrazí."
+    },
     { "type": "header", "content": "Ostatní" },
     {
       "type": "text",
@@ -141,8 +242,20 @@
           "default": "Klubové kolekce | /collections/all\nKonfigurátor | /#os-konfigurator"
         }
       ]
+    },
+    {
+      "type": "zasady",
+      "name": "Právní zásady",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Nadpis sloupce", "default": "Právní" },
+        {
+          "type": "paragraph",
+          "content": "Vypíše zásady z Nastavení → Zásady. Co tam zveřejníš, objeví se tady samo — nic se nevyplňuje ručně."
+        }
+      ]
     }
   ],
-  "max_blocks": 4
+  "max_blocks": 5
 }
 {% endschema %}

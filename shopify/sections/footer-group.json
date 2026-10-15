@@ -9,29 +9,31 @@
           "type": "sloupec",
           "settings": {
             "title": "Nákup",
-            "links": "Klubové kolekce | /collections/all\nKonfigurátor | /#os-konfigurator"
+            "links": "Klubové náramky | /collections/all\nKonfigurátor | /#os-konfigurator"
           }
         },
         "f2": {
           "type": "sloupec",
           "settings": {
             "title": "Zákazník",
-            "links": "Doprava a vrácení | /pages/doprava-a-vraceni\nTabulka velikostí | /pages/velikosti\nPéče o náramek | /pages/pece\nKontakt | /pages/kontakt"
+            "links": "Doprava a vrácení | /pages/doprava-a-vraceni\nVelikost | /pages/velikosti\nPéče o náramek | /pages/pece\nKontakt | /pages/kontakt"
           }
         },
         "f3": {
           "type": "sloupec",
           "settings": {
             "title": "Značka",
-            "links": "Náš příběh | /pages/pribeh\nSpolupráce a kluby | /pages/spoluprace\nObchodní podmínky | /pages/obchodni-podminky\nOchrana osobních údajů | /pages/ochrana-osobnich-udaju"
+            "links": "Náš příběh | /pages/pribeh\nSpolupráce a kluby | /pages/spoluprace"
+          }
+        },
+        "f4": {
+          "type": "zasady",
+          "settings": {
+            "title": "Právní"
           }
         }
       },
-      "block_order": [
-        "f1",
-        "f2",
-        "f3"
-      ],
+      "block_order": ["f1", "f2", "f3", "f4"],
       "settings": {
         "brand_1": "Offside",
         "brand_2": "store",
@@ -41,14 +43,13 @@
         "show_newsletter": true,
         "newsletter_placeholder": "tvuj@email.cz",
         "newsletter_button": "Chci vědět",
-        "show_collections": true,
+        "show_collections": false,
         "collections_title": "Náramky podle klubu",
+        "hide_missing": true,
         "disclaimer": "Nejsme oficiálním partnerem uvedených klubů. Názvy a barvy slouží k popisu varianty produktu.",
         "accent": "#ec0016"
       }
     }
   },
-  "order": [
-    "os_footer"
-  ]
+  "order": ["os_footer"]
 }
