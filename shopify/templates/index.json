@@ -187,10 +187,87 @@
         "accent": "#ec0016",
         "accent_text": "#ffffff"
       }
+    },
+    "os_predprodej": {
+      "type": "offside-predprodej",
+      "blocks": {
+        "v1": {
+          "type": "vizual",
+          "settings": {
+            "fallback": "os-predprodej-1.jpg",
+            "title": "Čepice — Pivo u hokeje"
+          }
+        },
+        "v2": {
+          "type": "vizual",
+          "settings": {
+            "fallback": "os-predprodej-2.jpg",
+            "title": "Čepice — Špatný zrak"
+          }
+        },
+        "v3": {
+          "type": "vizual",
+          "settings": {
+            "fallback": "os-predprodej-3.jpg",
+            "title": "Trucker — Pivo u hokeje"
+          }
+        },
+        "v4": {
+          "type": "vizual",
+          "settings": {
+            "fallback": "os-predprodej-4.jpg",
+            "title": "Trucker — Špatný zrak"
+          }
+        },
+        "v5": {
+          "type": "vizual",
+          "settings": {
+            "fallback": "os-predprodej-5.jpg",
+            "title": "Snapback — Pivo u hokeje"
+          }
+        },
+        "v6": {
+          "type": "vizual",
+          "settings": {
+            "fallback": "os-predprodej-6.jpg",
+            "title": "Snapback — Špatný zrak"
+          }
+        },
+        "v7": {
+          "type": "vizual",
+          "settings": {
+            "fallback": "os-predprodej-7.jpg",
+            "title": "Snapback — #HOCKEYSTYLE"
+          }
+        }
+      },
+      "block_order": [
+        "v1",
+        "v2",
+        "v3",
+        "v4",
+        "v5",
+        "v6",
+        "v7"
+      ],
+      "settings": {
+        "eyebrow": "Právě běží",
+        "heading_1": "Spustili jsme",
+        "heading_2": "předprodej.",
+        "text": "<p>Nová kolekce čepic a kšiltovek. Objednávej teď v předprodeji — po termínu se dělá jen to, co je objednané.</p>",
+        "end_date": "2026-12-10",
+        "end_label": "Konec předprodeje",
+        "max_products": 8,
+        "button_label": "Chci je",
+        "note": "Předprodejní cena platí do konce termínu.",
+        "accent": "#ec0016",
+        "accent_text": "#ffffff"
+      }
     }
   },
   "order": [
     "os_hero",
+    "os_predprodej",
     "os_kluby",
     "os_konfigurator",
     "os_vznik",

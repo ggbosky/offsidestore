@@ -462,8 +462,17 @@ http
       }
     }
 
-    const soubor = path.join(ROOT, cesta.replace(/^\/+/, ""));
-    if (!soubor.startsWith(ROOT) || !fs.existsSync(soubor) || fs.statSync(soubor).isDirectory()) {
+    // /assets/os-*.jpg lezi ve zdroji v public/foto/, do assets je
+    // prendava az build. V nahledu je proto hledame i tam.
+    const FOTKY = path.resolve(ROOT, "..", "public", "foto");
+    let soubor = path.resolve(ROOT, cesta.replace(/^\/+/, ""));
+    if (!fs.existsSync(soubor) && cesta.startsWith("/assets/")) {
+      const vFotkach = path.resolve(FOTKY, path.basename(cesta));
+      if (vFotkach.startsWith(FOTKY) && fs.existsSync(vFotkach)) soubor = vFotkach;
+    }
+
+    const uvnitr = soubor.startsWith(ROOT) || soubor.startsWith(FOTKY);
+    if (!uvnitr || !fs.existsSync(soubor) || fs.statSync(soubor).isDirectory()) {
       res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
       return res.end("404");
     }

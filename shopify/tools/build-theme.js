@@ -52,7 +52,23 @@ for (const [zdroj, cil] of Object.entries(fotky)) {
   const p = path.join(PROJECT, "public", "foto", zdroj);
   if (fs.existsSync(p)) kopiruj(p, path.join(DAWN, "assets", cil));
 }
-console.log("fotky: " + Object.keys(fotky).length);
+let pocetFotek = Object.keys(fotky).length;
+
+// Vsechno z public/foto/ pojmenovane os-* jde do assets rovnou pod svym
+// jmenem. Diky tomu staci pridat obrazek do slozky a sekce si na nej muze
+// sahnout pres asset_url, bez zasahu do tohohle skriptu.
+// (shopify/fotky/ je v .gitignore, takze by takovy obrazek zustal jen na
+// jednom pocitaci a build by jinde tise vynechal.)
+const vlastniDir = path.join(PROJECT, "public", "foto");
+if (fs.existsSync(vlastniDir)) {
+  for (const f of fs.readdirSync(vlastniDir)) {
+    if (!f.startsWith("os-")) continue;
+    if (fs.statSync(path.join(vlastniDir, f)).isDirectory()) continue;
+    kopiruj(path.join(vlastniDir, f), path.join(DAWN, "assets", f));
+    pocetFotek++;
+  }
+}
+console.log("fotky: " + pocetFotek);
 
 /* ---------- 3. Sablony ---------- */
 
@@ -138,15 +154,21 @@ const prejmenuj = [
   ["cs.schema.json", "cs.default.schema.json"],
 ];
 
-const chybi = prejmenuj
-  .map(([z]) => z)
-  .filter((f) => !fs.existsSync(path.join(locDir, f)));
-if (chybi.length) throw new Error("v locales chybi: " + chybi.join(", "));
+// Kdyz uz cestina vychozi je (stavime nad drive sestavenym motivem),
+// neni co prehazovat.
+if (fs.existsSync(path.join(locDir, "cs.default.json"))) {
+  console.log("jazyk: cestina uz vychozi je");
+} else {
+  const chybi = prejmenuj
+    .map(([z]) => z)
+    .filter((f) => !fs.existsSync(path.join(locDir, f)));
+  if (chybi.length) throw new Error("v locales chybi: " + chybi.join(", "));
 
-for (const [zdroj, cil] of prejmenuj) {
-  fs.renameSync(path.join(locDir, zdroj), path.join(locDir, cil));
+  for (const [zdroj, cil] of prejmenuj) {
+    fs.renameSync(path.join(locDir, zdroj), path.join(locDir, cil));
+  }
+  console.log("jazyk: vychozi je cestina (cs.default.json)");
 }
-console.log("jazyk: vychozi je cestina (cs.default.json)");
 
 /* ---------- 7. Zabaleni ---------- */
 
