@@ -11,7 +11,7 @@
 
 {{ 'offside.css' | asset_url | stylesheet_tag }}
 
-<section class="os os-section" style="--os-accent: {{ section.settings.accent }}; --os-cols: {{ section.settings.columns }};">
+<section class="os os-section" id="os-zbozi" style="--os-accent: {{ section.settings.accent }}; --os-cols: {{ section.settings.columns }};">
   <div class="os__wrap">
     {%- assign nadpis = section.settings.heading -%}
     {%- if nadpis == blank -%}

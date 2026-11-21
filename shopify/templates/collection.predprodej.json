@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "pas": {
+      "type": "offside-predprodej",
+      "settings": {
+        "eyebrow": "Právě běží",
+        "heading_1": "Předprodej",
+        "heading_2": "exkluzivního merche.",
+        "text": "<p>Čepice a kšiltovky v limitované sérii. Co se do konce termínu objedná, to se ušije — potom už se nedoobjednává.</p>",
+        "banner_alt": "Spustili jsme předprodej exkluzivního merche, konec 10. 12. 2026",
+        "end_date": "2026-12-10",
+        "end_label": "Konec předprodeje",
+        "button_label": "Na zboží",
+        "link": "#os-zbozi",
+        "note": "Předprodejní cena platí do konce termínu.",
+        "accent": "#ec0016",
+        "accent_text": "#ffffff",
+        "hide_text_desktop": false
+      }
+    },
+    "main": {
+      "type": "offside-kolekce",
+      "settings": {
+        "heading": "",
+        "fallback_heading": "Předprodej",
+        "text": "",
+        "columns": 4,
+        "button_label": "",
+        "accent": "#ec0016"
+      }
+    }
+  },
+  "order": [
+    "pas",
+    "main"
+  ]
+}

@@ -1,159 +1,117 @@
 {%- comment -%}
   OffsideStore — PŘEDPRODEJ
 
-  Oznami, ze bezi predprodej, a ukaze, o co jde. Stoji hned pod herem,
-  protoze je to docasna vec, ktera ma byt videt driv nez cokoliv jineho.
+  Oznami, ze bezi predprodej. Stoji hned pod herem, protoze je to docasna
+  vec, ktera ma byt videt driv nez cokoliv jineho.
 
-  Dva rezimy, podle toho, jak daleko je obchod:
+  Hlavni je pas pres celou sirku okna. Cely je prokliknutelny na kolekci,
+  takze slouzi zaroven jako tlacitko.
 
-  1. Kdyz vyberes kolekci, vykresli se produkty z ni — fotka, nazev,
-     cena a proklik. Tohle chces, jakmile mas produkty v Shopify.
-  2. Dokud kolekce neni, vykresli se bloky s promo vizualy. Ty uz maji
-     cenu vypalenou primo v obrazku, takze se pod ne cena nepise znovu.
+  Text nad nim schvalne zustava i kdyz uz ho pas obsahuje: pas ma pomer
+  skoro 2,4:1, takze na telefonu vyjde nizky a pismo v nem necitelne.
+  Nadpis, termin a odpocet jsou proto psane HTML a daji se precist
+  v jakekoliv sirce.
 
-  Datum konce se zadava jako RRRR-MM-DD. Odpocet dopocita prohlizec;
-  bez JavaScriptu zustane videt aspon samotne datum. Po terminu se
-  misto odpoctu objevi, ze predprodej skoncil — at tam nestrasi lhani
-  o case, ktery uz vyprsel.
+  Odpocet dopocita prohlizec z data v nastaveni. Po terminu se misto nej
+  objevi, ze predprodej skoncil — slibovat cas, ktery uz vyprsel, by bylo
+  horsi nez neukazat nic.
 {%- endcomment -%}
 
 {{ 'offside.css' | asset_url | stylesheet_tag }}
 
-{%- assign kolekce = section.settings.collection -%}
+{%- assign cil = section.settings.link | default: '/collections/all' -%}
 
 <section
-  class="os os-section os-predprodej"
+  class="os os-section os-predprodej{% if section.settings.hide_text_desktop %} os-predprodej--bez-textu{% endif %}"
   id="os-predprodej"
   style="--os-accent: {{ section.settings.accent }}; --os-on-accent: {{ section.settings.accent_text }};"
 >
+  {%- comment -%}
+    Na velkych obrazovkach rika tohle same uz pas, takze by se text
+    opakoval dvakrat pod sebou. Na telefonu je ale pas nizky a pismo
+    v nem necitelne, proto tu text zustava — jen se nad danou sirkou
+    schova.
+  {%- endcomment -%}
   <div class="os__wrap">
-    <div class="os-predprodej__hlava">
-      <div>
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="os-predprodej__stitek">
-            <span class="os-predprodej__tecka" aria-hidden="true"></span>
-            {{ section.settings.eyebrow }}
-          </p>
-        {%- endif -%}
+    <div class="os-predprodej__hlava{% if section.settings.hide_text_desktop %} os-predprodej__hlava--jen-uzke{% endif %}">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="os-predprodej__stitek">
+          <span class="os-predprodej__tecka" aria-hidden="true"></span>
+          {{ section.settings.eyebrow }}
+        </p>
+      {%- endif -%}
 
+      {%- if section.settings.heading_1 != blank or section.settings.heading_2 != blank -%}
         <h2 class="os__display os__h2">
           {{ section.settings.heading_1 }}
           {%- if section.settings.heading_2 != blank -%}
             <span class="os__accent-text" style="display:block">{{ section.settings.heading_2 }}</span>
           {%- endif -%}
         </h2>
+      {%- endif -%}
 
-        {%- if section.settings.text != blank -%}
-          <div class="os__lead">{{ section.settings.text }}</div>
-        {%- endif -%}
-      </div>
+      {%- if section.settings.text != blank -%}
+        <div class="os__lead">{{ section.settings.text }}</div>
+      {%- endif -%}
+    </div>
+  </div>
 
+  {%- comment -%}
+    Pas zamerne lezi mimo os__wrap, aby sel od kraje ke kraji okna.
+  {%- endcomment -%}
+  <a class="os-predprodej__pas" href="{{ cil }}">
+    {%- if section.settings.banner != blank -%}
+      {{
+        section.settings.banner
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          sizes: '100vw',
+          widths: '640, 960, 1280, 1600, 2000, 2400',
+          alt: section.settings.banner_alt
+      }}
+    {%- else -%}
+      <img
+        src="{{ 'os-predprodej-pas.webp' | asset_url }}"
+        alt="{{ section.settings.banner_alt | escape }}"
+        loading="lazy"
+        width="1024"
+        height="434"
+      >
+    {%- endif -%}
+  </a>
+
+  <div class="os__wrap">
+    <div class="os-predprodej__akce">
+      <a class="os__btn os__btn--accent" href="{{ cil }}">
+        {{ section.settings.button_label | default: 'Chci je' }}
+      </a>
+
+      {%- comment -%}
+        Odpocet stoji u tlacitka, protoze je to jedina vec, kterou pas
+        rict neumi — datum uz v nem vytisknute je.
+      {%- endcomment -%}
       {%- if section.settings.end_date != blank -%}
-        <div class="os-predprodej__termin" data-os-termin="{{ section.settings.end_date }}">
-          <p class="os-predprodej__termin-popis">{{ section.settings.end_label }}</p>
-          <p class="os-predprodej__termin-datum">
-            {{ section.settings.end_date | date: '%-d. %-m. %Y' }}
-          </p>
-          <p class="os-predprodej__odpocet" data-os-odpocet hidden></p>
-        </div>
+        <p class="os-predprodej__termin" data-os-termin="{{ section.settings.end_date }}">
+          <span class="os-predprodej__termin-popis">{{ section.settings.end_label }}</span>
+          <span class="os-predprodej__termin-datum">
+            {{- section.settings.end_date | date: '%-d. %-m. %Y' -}}
+          </span>
+          <span class="os-predprodej__odpocet" data-os-odpocet hidden></span>
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.note != blank -%}
+        <p class="os-predprodej__pozn">{{ section.settings.note }}</p>
       {%- endif -%}
     </div>
 
-    {%- if kolekce != blank and kolekce.products_count > 0 -%}
-      {%- comment -%} Ostry rezim: produkty z obchodu. {%- endcomment -%}
-      <div class="os-predprodej__mrizka">
-        {%- for produkt in kolekce.products limit: section.settings.max_products -%}
-          <a class="os-predprodej__kus" href="{{ produkt.url }}">
-            <div class="os-predprodej__media">
-              {%- if produkt.featured_image -%}
-                {{
-                  produkt.featured_image
-                  | image_url: width: 900
-                  | image_tag:
-                    loading: 'lazy',
-                    sizes: '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw',
-                    widths: '300, 500, 700, 900',
-                    alt: produkt.featured_image.alt | default: produkt.title
-                }}
-              {%- endif -%}
-              {%- unless produkt.available -%}
-                <span class="os-predprodej__znak">Vyprodáno</span>
-              {%- endunless -%}
-            </div>
-            <div class="os-predprodej__popis">
-              <h3 class="os-predprodej__nazev">{{ produkt.title }}</h3>
-              <span class="os-predprodej__cena">{{ produkt.price | money }}</span>
-            </div>
-          </a>
-        {%- endfor -%}
-      </div>
-
-    {%- elsif section.blocks.size > 0 -%}
-      {%- comment -%}
-        Nahledovy rezim: promo vizualy. Cena uz je v obrazku, nepiseme ji
-        pod nej podruhe.
-      {%- endcomment -%}
-      <div class="os-predprodej__mrizka">
-        {%- for block in section.blocks -%}
-          {%- capture obsah -%}
-            <div class="os-predprodej__media">
-              {%- if block.settings.image != blank -%}
-                {{
-                  block.settings.image
-                  | image_url: width: 900
-                  | image_tag:
-                    loading: 'lazy',
-                    sizes: '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw',
-                    widths: '300, 500, 700, 900',
-                    alt: block.settings.title
-                }}
-              {%- else -%}
-                <img
-                  src="{{ block.settings.fallback | default: 'os-predprodej-1.jpg' | asset_url }}"
-                  alt="{{ block.settings.title | escape }}"
-                  loading="lazy"
-                  width="1080"
-                  height="1350"
-                >
-              {%- endif -%}
-            </div>
-            {%- if block.settings.title != blank -%}
-              <div class="os-predprodej__popis">
-                <h3 class="os-predprodej__nazev">{{ block.settings.title }}</h3>
-              </div>
-            {%- endif -%}
-          {%- endcapture -%}
-
-          {%- if block.settings.link != blank -%}
-            <a class="os-predprodej__kus" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>
-              {{ obsah }}
-            </a>
-          {%- else -%}
-            <div class="os-predprodej__kus" {{ block.shopify_attributes }}>
-              {{ obsah }}
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-
-      {%- if request.design_mode and kolekce == blank -%}
-        <p class="os-konf__upozorneni">
-          Tohle jsou zatím jen obrázky. Jakmile přidáš čepice do Shopify
-          a vybereš tu kolekci v nastavení sekce, nahradí se produkty,
-          které jdou rovnou koupit. Upozornění vidíš jen ty v editoru.
-        </p>
-      {%- endif -%}
-    {%- endif -%}
-
-    {%- if section.settings.button_label != blank -%}
-      <div class="os__buttons os-predprodej__akce">
-        <a class="os__btn os__btn--accent" href="{{ section.settings.button_link | default: '#' }}">
-          {{ section.settings.button_label }}
-        </a>
-        {%- if section.settings.note != blank -%}
-          <p class="os-predprodej__pozn">{{ section.settings.note }}</p>
-        {%- endif -%}
-      </div>
+    {%- if request.design_mode and section.settings.link == blank -%}
+      <p class="os-konf__upozorneni">
+        Pás i tlačítko zatím míří na <code>/collections/all</code>. Založ
+        kolekci s předprodejem a vyber ji v nastavení sekce (<em>Kam vede
+        proklik</em>). Upozornění vidíš jen ty v editoru motivu.
+      </p>
     {%- endif -%}
   </div>
 </section>
@@ -204,14 +162,43 @@
   "tag": "section",
   "class": "offside-section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Štítek nad nadpisem", "default": "Právě běží" },
+    {
+      "type": "collection",
+      "id": "collection_hint",
+      "label": "Kolekce s předprodejem",
+      "info": "Jen pro přehled. Cíl prokliku nastav níž."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Kam vede proklik",
+      "info": "Pás i tlačítko. Bez vyplnění míří na /collections/all."
+    },
+    { "type": "header", "content": "Pás přes celou šířku" },
+    { "type": "image_picker", "id": "banner", "label": "Grafika", "info": "Prázdné = přiložený pás z motivu. Ať je široká aspoň 2000 px, jinak bude na velkých obrazovkách měkká." },
+    {
+      "type": "text",
+      "id": "banner_alt",
+      "label": "Popis grafiky",
+      "default": "Spustili jsme předprodej exkluzivního merche, konec 10. 12. 2026",
+      "info": "Přečte ho hlasový odečítač a zobrazí se, když se obrázek nenačte."
+    },
+    { "type": "header", "content": "Text nad pásem" },
+    {
+      "type": "checkbox",
+      "id": "hide_text_desktop",
+      "label": "Na velkých obrazovkách text skrýt",
+      "default": true,
+      "info": "Tam už to samé říká pás. Na telefonu text zůstává, protože v pásu je písmo malé."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Štítek", "default": "Právě běží" },
     { "type": "text", "id": "heading_1", "label": "Nadpis — první řádek", "default": "Spustili jsme" },
     { "type": "text", "id": "heading_2", "label": "Nadpis — barevný řádek", "default": "předprodej." },
     {
       "type": "richtext",
       "id": "text",
       "label": "Text pod nadpisem",
-      "default": "<p>Nová kolekce čepic a kšiltovek. Objednávej teď v předprodeji — po termínu se dělá jen to, co je objednané.</p>"
+      "default": "<p>Exkluzivní merch — čepice a kšiltovky. Objednávej teď v předprodeji, po termínu se dělá jen to, co je objednané.</p>"
     },
     { "type": "header", "content": "Termín" },
     {
@@ -222,25 +209,8 @@
       "info": "Ve tvaru RRRR-MM-DD. Odpočet se dopočítá sám a po termínu se místo něj zobrazí, že předprodej skončil."
     },
     { "type": "text", "id": "end_label", "label": "Popisek u data", "default": "Konec předprodeje" },
-    { "type": "header", "content": "Produkty" },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "Kolekce s předprodejem",
-      "info": "Když ji vybereš, zobrazí se produkty z obchodu místo obrázků níže."
-    },
-    {
-      "type": "range",
-      "id": "max_products",
-      "min": 2,
-      "max": 12,
-      "step": 1,
-      "label": "Kolik produktů zobrazit",
-      "default": 8
-    },
     { "type": "header", "content": "Tlačítko" },
     { "type": "text", "id": "button_label", "label": "Text tlačítka", "default": "Chci je" },
-    { "type": "url", "id": "button_link", "label": "Cíl tlačítka" },
     {
       "type": "text",
       "id": "note",
@@ -250,24 +220,6 @@
     { "type": "color", "id": "accent", "label": "Akcentní barva", "default": "#ec0016" },
     { "type": "color", "id": "accent_text", "label": "Text na akcentu", "default": "#ffffff" }
   ],
-  "blocks": [
-    {
-      "type": "vizual",
-      "name": "Obrázek produktu",
-      "settings": [
-        { "type": "image_picker", "id": "image", "label": "Fotka" },
-        {
-          "type": "text",
-          "id": "fallback",
-          "label": "Záložní soubor z assets",
-          "info": "Použije se, dokud nevybereš fotku. Např. os-predprodej-1.jpg"
-        },
-        { "type": "text", "id": "title", "label": "Popisek pod fotkou" },
-        { "type": "url", "id": "link", "label": "Odkaz" }
-      ]
-    }
-  ],
-  "max_blocks": 12,
   "presets": [{ "name": "Offside — Předprodej" }]
 }
 {% endschema %}

@@ -307,6 +307,7 @@ async function vykresliSekci(soubor, sablona, kontext) {
   if ("collection" in nast || soubor === "offside-kluby" || soubor === "offside-konfigurator") {
     nast.collection = KOLEKCE;
   }
+  if ("collection_hint" in nast) nast.collection_hint = KOLEKCE_PREDPRODEJ;
   // Zamerne nechavame prazdne, at nahled overi hledani podle handle.
   if ("addon_product" in nast) nast.addon_product = "";
   if ("related_collection" in nast) nast.related_collection = KOLEKCE;
@@ -366,7 +367,56 @@ function obal(telo) {
   ].join("\n");
 }
 
-const SABLONY = { "/": "index", "/produkt": "product", "/kolekce": "collection", "/zasady": "policy" };
+const SABLONY = {
+  "/": "index",
+  "/produkt": "product",
+  "/kolekce": "collection",
+  "/predprodej": "collection.predprodej",
+  "/zasady": "policy",
+};
+
+// Kolekce predprodeje: cepice a ksiltovky s vizualy z public/foto.
+const CEPICE = [
+  ["cepice-pivo", "Čepice — Pivo u hokeje", 52900, 1],
+  ["cepice-zrak", "Čepice — Špatný zrak", 52900, 2],
+  ["trucker-pivo", "Trucker — Pivo u hokeje", 56900, 3],
+  ["trucker-zrak", "Trucker — Špatný zrak", 56900, 4],
+  ["snapback-pivo", "Snapback — Pivo u hokeje", 56900, 5],
+  ["snapback-zrak", "Snapback — Špatný zrak", 56900, 6],
+  ["snapback-hockeystyle", "Snapback — #HOCKEYSTYLE", 56900, 7],
+].map(function (x, i) {
+  const img = obrazek("/assets/predprodej-vizual-" + x[3] + ".jpg");
+  const v = { id: 2000 + i, title: "Default Title", price: x[2], available: true };
+  return {
+    id: 200 + i,
+    handle: x[0],
+    title: x[1],
+    vendor: "OffsideStore",
+    url: "/produkt",
+    price: x[2],
+    price_min: x[2],
+    price_varies: false,
+    available: true,
+    description: "<p>Předprodej. Vyrábí se jen to, co se do konce termínu objedná.</p>",
+    featured_image: img,
+    images: [img],
+    variants: [v],
+    selected_or_first_available_variant: v,
+    first_available_variant: v,
+    metafields: { custom: {} },
+  };
+});
+
+const KOLEKCE_PREDPRODEJ = {
+  id: 2,
+  title: "Předprodej",
+  handle: "predprodej",
+  url: "/predprodej",
+  description: "",
+  products: CEPICE,
+  products_count: CEPICE.length,
+  all_products_count: CEPICE.length,
+};
 
 async function stranka(cesta) {
   const jmeno = SABLONY[cesta];
@@ -394,7 +444,7 @@ async function stranka(cesta) {
     collections: { naramky: KOLEKCE },
     request: { design_mode: false, page_type: jmeno },
     all_products: VSECHNY_PRODUKTY,
-    collection: cesta === "/kolekce" ? KOLEKCE : null,
+    collection: cesta === "/predprodej" ? KOLEKCE_PREDPRODEJ : cesta === "/kolekce" ? KOLEKCE : null,
     product: cesta === "/produkt" ? PRODUKTY[0] : null,
     page: null,
     policy: cesta === "/zasady" ? ZASADA : null,
