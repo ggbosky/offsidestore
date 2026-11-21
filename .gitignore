@@ -13,3 +13,6 @@ shopify/assets/os-*.jpg
 
 # Fotky pro lokalni nahled motivu
 shopify/nahled-fotky/
+
+# Rozbaleny balicek pro vlozeni do motivu (zip se generuje)
+predprodej-do-motivu/
